@@ -84,14 +84,14 @@
             
               <li class="tag-list-container">
                 <a href="javascript:;">标签</a>
-                <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/">Blog</a><span class="tag-list-count">1</span></li></ul>
+                <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/">Blog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C语/">C语</a><span class="tag-list-count">1</span></li></ul>
               </li>
             
           
             
               <li class="archive-list-container">
                 <a href="javascript:;">归档</a>
-                <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">1</span></li></ul>
+                <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">2</span></li></ul>
               </li>
             
           
@@ -144,6 +144,69 @@
 
     <div class="post-list-item article">
       <h3 class="article-header">
+        <a href="/2016/09/03/intro-to-gdb/" >
+  介绍C语言调试工具gdb
+</a>
+
+      </h3>
+      
+
+      <div class="article-info">
+        <a href="/2016/09/03/intro-to-gdb/"><span class="article-date">
+  2016-09-03
+</span>
+</a>
+        
+
+        
+	<span class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C语/">C语</a></li></ul>
+	</span>
+
+
+      </div>
+      <div class="article-entry">
+        
+          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。</p>
+<p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C。</p>
+<p>在终端输入<code>gdb --version</code>可以查看gdb的版本号，如果你的系统上没有的话，直接用系统自带的包管理工具应该就可以安装。我用的是Ubuntu 16.04上安装的7.11.1版本。</p>
+<p>使用gdb调试C程序的一般流程：</p>
+<ul>
+<li>gcc编译C源文件时加-g参数生成调试信息</li>
+<li>gdb a.out开始调试</li>
+<li>用list加函数名查看要调试的函数</li>
+<li>用break加函数名或者行号添加断点</li>
+<li>info break列出所有断点</li>
+<li>clear加行号清除那行的断点，或者clear加函数名清除函数入口处的断点</li>
+<li>run，把程序跑起来，到运行到断点处会自动暂停</li>
+<li>print加变量名查看此时的变量值</li>
+<li>step加行号步进执行</li>
+<li>info locals查看所有局部变量的值</li>
+<li>watch加变量名来监视变量，一旦变量值发生变化或满足设定的条件，就会暂停执行。例如，设置<code>watch i if i &lt; 0</code>，会在i<0时停住，等待调试。><code>&gt;</code></0时停住，等待调试。></li>
+<li>continue继续执行</li>
+<li>quit退出调试</li>
+</ul>
+<p>一些技巧：</p>
+<ul>
+<li>help命令获取帮助，会列出所有可用类。help [<em>cmd/class</em>]，查看具体的命令或者类的帮助信息。</li>
+<li>可以采用<code>函数::变量</code>的形式将函数作为变量的一部分，用于引用一个特定例程的局部变量。比如：<br><code>(gdb) print main::i</code>    显示main中i的值<br><code>(gdb) set var main::i=0</code>   为main中的i赋值<br>需要注意的是，这种方式只能给活动的函数赋值，如果是对非活动的函数，会报错。<br>类似的，可以用<code>&#39;file&#39;::var</code>的形式引用某个文件的全局变量。</li>
+<li>gdb在达到一个断点后，或者在一次单步执行后，列出的是将要执行的代码行，而不是刚执行过的。</li>
+<li>可以用命令bt(backtrack)查看函数的调用栈。</li>
+</ul>
+
+        
+      </div>
+    </div>
+
+  
+
+  
+  
+    
+  
+
+    <div class="post-list-item article">
+      <h3 class="article-header">
         <a href="/2016/08/28/My-Own-Blog/" >
   关于这个博客
 </a>
@@ -167,7 +230,7 @@
       </div>
       <div class="article-entry">
         
-          <p>距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask的过程。后来忙于工作（懒），就只是草草记在自己的笔记软件上。</p>
+          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/have_a_nice_day.jpg" alt="Have A Nice Day"><br>距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask的过程。后来忙于工作（懒），就只是草草记在自己的笔记软件上。</p>
 <p>一直想搭建自己的博客，这样能促使我认真写一些东西分享出来，毕竟，对于属于自己的东西，会多一份责任感。拖了好久，正好这周Crossin先生的公众号上发了两篇教程，于是决定利用这个周末搭一套出来。于是有了这个博客。</p>
 <p>以后会好好维护，记录下自己的学习过程，总结一些对别人有用的东西分享出来。<br>涉及的主题包括（但不限于）：</p>
 <ul>

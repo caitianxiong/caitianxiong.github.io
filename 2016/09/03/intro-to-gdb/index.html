@@ -8,16 +8,28 @@
 
 <title>
   
-    Have A Nice Day
+    介绍C语言调试工具gdb
   
 </title>
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Have A Nice Day">
-<meta property="og:url" content="https://caitianxiong.github.io/index.html">
+<meta name="description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。
+gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C。
+在终端输入gdb --version可以查看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="介绍C语言调试工具gdb">
+<meta property="og:url" content="https://caitianxiong.github.io/2016/09/03/intro-to-gdb/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
+<meta property="og:description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。
+gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C。
+在终端输入gdb --version可以查看">
+<meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png">
+<meta property="og:updated_time" content="2016-09-03T01:12:06.026Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Have A Nice Day">
+<meta name="twitter:title" content="介绍C语言调试工具gdb">
+<meta name="twitter:description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。
+gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C。
+在终端输入gdb --version可以查看">
+<meta name="twitter:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png">
 
 
   <link rel="alternative" href="/atom.xml" title="Have A Nice Day" type="application/atom+xml">
@@ -127,39 +139,30 @@
       
         <div style="max-width: 1000px">
       
-          
-
+          <article id="post-intro-to-gdb" class="article article-type-post">
+  
+    <h1 class="article-header">
+      介绍C语言调试工具gdb
+    </h1>
   
   
-    <div class="post-list">
-  
 
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/09/03/intro-to-gdb/" >
-  介绍C语言调试工具gdb
-</a>
-
-      </h3>
-      
-
-      <div class="article-info">
-        <a href="/2016/09/03/intro-to-gdb/"><span class="article-date">
+  <div class="article-info">
+    <span class="article-date">
   2016-09-03
 </span>
-</a>
-        
 
-        
+    
+
+    
 	<span class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C语/">C语</a></li></ul>
 	</span>
 
 
-      </div>
-      <div class="article-entry">
-        
-          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。</p>
+  </div>
+  <div class="article-entry">
+    <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。</p>
 <p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C。</p>
 <p>在终端输入<code>gdb --version</code>可以查看gdb的版本号，如果你的系统上没有的话，直接用系统自带的包管理工具应该就可以安装。我用的是Ubuntu 16.04上安装的7.11.1版本。</p>
 <p>使用gdb调试C程序的一般流程：</p>
@@ -186,63 +189,29 @@
 <li>可以用命令bt(backtrack)查看函数的调用栈。</li>
 </ul>
 
-        
-      </div>
-    </div>
-
-  
-    </div>
-  
-
-  
-  
-    <div class="post-list">
-  
-
-    <div class="post-list-item article">
-      <h3 class="article-header">
-        <a href="/2016/08/28/My-Own-Blog/" >
-  关于这个博客
-</a>
-
-      </h3>
+  </div>
+  <footer class="article-footer">
+    
+  <div class="cc">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/deed.z" target="_blank" title="署名-相同方式共享">
+      <img src="/images/cc/cc.png">
       
-
-      <div class="article-info">
-        <a href="/2016/08/28/My-Own-Blog/"><span class="article-date">
-  2016-08-28
-</span>
-</a>
+          <img src="/images/cc/by.png">
         
+          <img src="/images/cc/sa.png">
+      
+      <span>
+        本作品采用知识共享 署名-相同方式共享 4.0 国际许可协议进行许可。
+      </span>
+    </a>
+  </div>
 
-        
-	<span class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Blog/">Blog</a></li></ul>
-	</span>
 
+    
 
-      </div>
-      <div class="article-entry">
-        
-          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/have_a_nice_day.jpg" alt="Have A Nice Day"><br>距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask的过程。后来忙于工作（懒），就只是草草记在自己的笔记软件上。</p>
-<p>一直想搭建自己的博客，这样能促使我认真写一些东西分享出来，毕竟，对于属于自己的东西，会多一份责任感。拖了好久，正好这周Crossin先生的公众号上发了两篇教程，于是决定利用这个周末搭一套出来。于是有了这个博客。</p>
-<p>以后会好好维护，记录下自己的学习过程，总结一些对别人有用的东西分享出来。<br>涉及的主题包括（但不限于）：</p>
-<ul>
-<li>Python</li>
-<li>Linux</li>
-<li>Openstack</li>
-<li>Ceph</li>
-</ul>
-<p>另外，这个博客的名字和头像，都是来自我喜欢的摇滚歌手Bon Jovi的同名专辑。</p>
-<center><br><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=16850569&auto=0&height=66"><br></iframe><br></center>
+  </footer>
+</article>
 
-        
-      </div>
-    </div>
-
-  
-    </div>
-  
 
 
 
