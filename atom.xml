@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.github.io/"/>
-  <updated>2016-09-03T02:26:36.695Z</updated>
+  <updated>2016-09-03T05:13:03.547Z</updated>
   <id>https://caitianxiong.github.io/</id>
   
   <generator uri="http://hexo.io/">Hexo</generator>
@@ -15,7 +15,7 @@
     <link href="https://caitianxiong.github.io/2016/09/03/learn-gdb/"/>
     <id>https://caitianxiong.github.io/2016/09/03/learn-gdb/</id>
     <published>2016-09-03T00:21:56.000Z</published>
-    <updated>2016-09-03T02:26:36.695Z</updated>
+    <updated>2016-09-03T05:13:03.547Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。</p>
 <p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C等。gdb的官方介绍：</p>
@@ -35,7 +35,7 @@
 <li>print加变量名查看此时的变量值</li>
 <li>step加行号步进执行</li>
 <li>info locals查看所有局部变量的值</li>
-<li>watch加变量名来监视变量，一旦变量值发生变化或满足设定的条件，就会暂停执行。例如，设置<code>watch i if i &lt; 0</code>，会在i&lt;0时停住，等待调试。</li>
+<li>watch加变量名来监视变量，一旦变量值发生变化或满足设定的条件，就会暂停执行。例如，设置<code>watch i if i &lt; 0</code>，会在<code>i&lt;0</code>时停住，等待调试。</li>
 <li>continue继续执行</li>
 <li>quit退出调试</li>
 </ul>
@@ -46,6 +46,9 @@
 <li>gdb在达到一个断点后，或者在一次单步执行后，列出的是将要执行的代码行，而不是刚执行过的。</li>
 <li>可以用命令bt(backtrack)查看函数的调用栈。</li>
 </ul>
+<blockquote>
+<p>…you can’t be a great programmer until you become highly skilled at Debugging.<br>——《The Pragmatic Programmer》</p>
+</blockquote>
 ]]></content>
     
     <summary type="html">
