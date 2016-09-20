@@ -77,14 +77,14 @@
             
               <li class="tag-list-container">
                 <a href="javascript:;">标签</a>
-                <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/">Blog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C语/">C语</a><span class="tag-list-count">1</span></li></ul>
+                <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/">Blog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C语/">C语</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/">ceph</a><span class="tag-list-count">1</span></li></ul>
               </li>
             
           
             
               <li class="archive-list-container">
                 <a href="javascript:;">归档</a>
-                <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">2</span></li></ul>
+                <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">3</span></li></ul>
               </li>
             
           
@@ -121,6 +121,64 @@
         <div style="max-width: 1000px">
       
           
+
+  
+  
+    <div class="post-list">
+  
+
+    <div class="post-list-item article">
+      <h3 class="article-header">
+        <a href="/2016/09/10/install-ceph-on-xenserver/" >
+  Xenserver 7.0安装ceph 10.2.2
+</a>
+
+      </h3>
+      
+
+      <div class="article-info">
+        <a href="/2016/09/10/install-ceph-on-xenserver/"><span class="article-date">
+  2016-09-10
+</span>
+</a>
+        
+
+        
+	<span class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</span>
+
+
+      </div>
+      <div class="article-entry">
+        
+          <ol>
+<li><p>配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">distributions = &#123;</div><div class="line">        &apos;debian&apos;: debian,</div><div class="line">        &apos;ubuntu&apos;: debian,</div><div class="line">        &apos;centos&apos;: centos,</div><div class="line">        &apos;scientific&apos;: centos,</div><div class="line">        &apos;redhat&apos;: centos,</div><div class="line">        &apos;fedora&apos;: fedora,</div><div class="line">        &apos;suse&apos;: suse,</div><div class="line">        &apos;xenserver&apos;: centos,  # 添加的项</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>然后改yum源，用<code>yum install ceph  ceph-radosgw rdate -y</code>安装ceph主程序。</p>
+</li>
+<li><p>装完用ceph-deploy分配mon/osd节点。</p>
+</li>
+<li><p>如果遇到OSD进程起不来的问题，查看使用路径的FS，只支持ext4和xfs。若要使用ext3，在ceph.conf文件中添加以下两行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">osd max object name len = 256  # ext4或xfs使用2048</div><div class="line">osd max object namespace len = 256</div></pre></td></tr></table></figure>
+</li>
+<li><p>tricks</p>
+</li>
+</ol>
+<ul>
+<li>ubuntu 上用<code>stop ceph-osd id=X</code>来停OSD</li>
+<li>搭单节点的集群，MON/OSD都装在一个host上，然后将pool size改成1，集群状态就可以HEALTH_OK了。</li>
+<li>搭好集群后快速验证是否可用的方法：直接使用<code>rados -p rbd put {$NAME} {$FILE_PATH}</code>存一个文件，然后用<code>rados -p rbd put {$NAME} {$DIST_PATH}</code>取出</li>
+</ul>
+
+        
+      </div>
+    </div>
+
+  
+    </div>
+  
 
   
   
