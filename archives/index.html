@@ -77,14 +77,14 @@
             
               <li class="tag-list-container">
                 <a href="javascript:;">标签</a>
-                <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/">Blog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C语/">C语</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/">ceph</a><span class="tag-list-count">1</span></li></ul>
+                <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/">Blog</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C语/">C语</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/">ceph</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openstack/">openstack</a><span class="tag-list-count">1</span></li></ul>
               </li>
             
           
             
               <li class="archive-list-container">
                 <a href="javascript:;">归档</a>
-                <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">3</span></li></ul>
+                <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/">2016</a><span class="archive-list-count">4</span></li></ul>
               </li>
             
           
@@ -132,6 +132,75 @@
           <h1><a href="/archives/2016" class="archive-year">2016</a></h1>
         </div>
         <div class="post-list">
+    
+  
+
+    <div class="post-list-item article">
+      <h3 class="article-header">
+        <a href="/2016/09/21/intro-to-openstack-dashboard/" >
+  Openstack控制台项目Horizon架构分析
+</a>
+
+      </h3>
+      
+
+      <div class="article-info">
+        <a href="/2016/09/21/intro-to-openstack-dashboard/"><span class="article-date">
+  2016-09-21
+</span>
+</a>
+        
+
+        
+	<span class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openstack/">openstack</a></li></ul>
+	</span>
+
+
+      </div>
+      <div class="article-entry">
+        
+          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg" alt="openstack-components"></p>
+<h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。</p>
+<h2 id="2-Horizon代码架构"><a href="#2-Horizon代码架构" class="headerlink" title="2. Horizon代码架构"></a>2. Horizon代码架构</h2><p>Horizon项目核心的代码包有两个：<code>openstack-dashboard</code>和<code>python-django-horizon</code>。</p>
+<p>第一个包是控制台代码的具体实现，是一个基于Django框架的web应用，安装后主要文件在<code>/usr/share/openstack-dashboard/</code>路径下。第二个包是通用的一些Python类库，也包括一些静态文件，安装后在<code>/usr/lib/python2.7/dist-packages/horizon</code>下。定制化开发，主要是修改业务代码，基本不需要修改<code>python-django-horizon</code>，所以我们分析的重点放在<code>openstack-dashboard</code>这个包上。</p>
+<h3 id="2-1-控制台组件名词说明"><a href="#2-1-控制台组件名词说明" class="headerlink" title="2.1 控制台组件名词说明"></a>2.1 控制台组件名词说明</h3><p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/OpenStack_%20Dashboard.png" alt="openstack-dashboard"></p>
+<p>图中的7个名词在代码中都可以对应上，代码的层级结构还是很清晰的。</p>
+<h3 id="2-1-基于Django，MTV模式"><a href="#2-1-基于Django，MTV模式" class="headerlink" title="2.1 基于Django，MTV模式"></a>2.1 基于Django，MTV模式</h3><p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/Django-workflow.png" alt="Django-workflow"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/usr/share/openstack-dashboard/</div><div class="line">|-- bin                             # </div><div class="line">|-- manage.py                       # 一些django命令</div><div class="line">|-- openstack_dashboard             # 控制台项目代码</div><div class="line">|-- settings.py                     # Django项目配置文件</div><div class="line">└-- static                          # 压缩后的静态文件</div></pre></td></tr></table></figure>
+<p>从最外层目录看，这是一个典型的Django项目。再进去一层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">/usr/share/openstack-dashboard/openstack_dashboard</div><div class="line">|-- __init__.py</div><div class="line">|-- urls.py</div><div class="line">|-- views.py</div><div class="line">|-- settings.py</div><div class="line">|-- api                                # 调用其他服务api接口的代码文件</div><div class="line">|-- conf</div><div class="line">|-- contrib</div><div class="line">|-- dashboards                         # 控制台的每个panel_group和panel</div><div class="line">|-- enabled                            # 定义panel是否显示及显示顺序</div><div class="line">|-- local</div><div class="line">|-- locale                             # 语言包所在</div><div class="line">|-- management</div><div class="line">|--...</div><div class="line">|-- static                             # 压缩前的静态文件</div><div class="line">|-- static_settings.py</div><div class="line">|-- templates                          # 基础模板文件</div><div class="line">|-- templatetags</div><div class="line">|-- themes                             # 主题包所在</div><div class="line">|-- usage                              # 关于项目用量的代码</div><div class="line">|-- utils</div><div class="line">└-- wsgi</div></pre></td></tr></table></figure>
+<p>沿着业务代码<code>dashboards</code>一路往里分析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">dashboards/</div><div class="line">|-- __init__.py</div><div class="line">|-- admin         # 管理员</div><div class="line">|-- identity      # 身份管理</div><div class="line">|-- project       # 项目</div><div class="line">└-- settings      # 用户设置</div></pre></td></tr></table></figure>
+<p>4个包相当于4个Django App，分别对应控制台左侧导航栏的3个dashboard和右上角的设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dashboards/project/</div><div class="line">|-- __init__.py</div><div class="line">|-- dashboard.py</div><div class="line">|-- models.py</div><div class="line">|-- access_and_security</div><div class="line">|-- containers</div><div class="line">|--...</div><div class="line">|-- stacks</div><div class="line">|-- static</div><div class="line">|-- volumes</div><div class="line">└-- vpn</div></pre></td></tr></table></figure>
+<p><code>dashboards/project/</code>这个路径下，每一个包对应控制台导航栏的一个panel。拿其中的<code>access_and_security</code>为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">dashboards/project/access_and_security/</div><div class="line">|-- __init__.py           # python包标记文件</div><div class="line">|-- panel.py              # 定义这个panel的基本参数</div><div class="line">|-- tabs.py               # 定义页面上的tab</div><div class="line">|-- urls.py               # 定义URL绑定</div><div class="line">|-- views.py              # 定义这个panel index页面的视图</div><div class="line">|-- api_access            # 访问API</div><div class="line">|-- floating_ips          # 浮动IP</div><div class="line">|-- keypairs              # 密钥对</div><div class="line">|-- security_groups       # 安全组</div><div class="line">|-- templates             # HTML模板文件</div><div class="line">└-- tests.py              # 测试代码</div></pre></td></tr></table></figure>
+<p>其中，<code>templates</code>路径下是页面模块的模板文件，其他四个文件夹分别对应页面上的四个tab：安全组、密钥对、浮动IP、访问API。详细看下<code>floating_ips</code>下的代码文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">floating_ips/</div><div class="line">|-- __init__.py         # python包标记</div><div class="line">|-- urls.py             # 定义该页面的URL</div><div class="line">|-- views.py            # 定义视图函数</div><div class="line">|-- tables.py           # 定义表格及表格上的操作</div><div class="line">|-- forms.py            # 定义弹出窗的内容</div><div class="line">|-- workflows.py        # 定义一些操作的具体工作流</div><div class="line">└-- tests.py            # 测试代码</div></pre></td></tr></table></figure>
+<p>具体的调用关系，页面上找个操作，根据URL，从<code>urls.py</code>开始，随着代码一路跟过去，就可以梳理出来。</p>
+<h3 id="2-2-Pluggable可插拔式Panel"><a href="#2-2-Pluggable可插拔式Panel" class="headerlink" title="2.2 Pluggable可插拔式Panel"></a>2.2 Pluggable可插拔式Panel</h3><p>模块注册机制，<code>panel</code>注册到<code>dashboard</code>下，<code>dashboard</code>注册到<code>horizon</code>下，主要分这三层结构。<code>panel</code>的可插拔模式，靠配置文件中的定义，运行服务时动态加载<code>enabled/</code>下的文件来实现。要添加一个<code>panel</code>，只需要在响应的路径下添加代码包，然后按照<code>enabled/</code>已有文件的格式添加文件注册。要隐藏一个<code>panel</code>，可以删除<code>enabled/</code>路径下对应的py文件，或者在文件中加上<code>REMOVE_PANEL = True</code>。添加<code>dashboard</code>或者<code>panel_group</code>做法类似。</p>
+<h2 id="3-定制开发"><a href="#3-定制开发" class="headerlink" title="3. 定制开发"></a>3. 定制开发</h2><p>光说不练假把式，参考<a href="http://docs.openstack.org/developer/horizon/tutorials/dashboard.html" target="_blank" rel="external">这个教程</a>  ，可以添加一个简单的<code>dashboard</code>来练手。这个<code>dashboard</code>下有一个<code>panel_group</code>，<code>panel_group</code>下只有一个panel。页面上有一个tab，内容是一个简单的表格，表格上带一些简单的操作。</p>
+<p>官网的<a href="http://docs.openstack.org/developer/horizon/tutorials/table_actions.html" target="_blank" rel="external">这篇教程</a>，可以做出复杂一点的表格操作。如果要开发自己的JS工作流，可以参考<a href="http://docs.openstack.org/developer/horizon/tutorials/workflow_extend.html" target="_blank" rel="external">这篇</a> 。</p>
+<p>对于修改已有代码的开发，需要注意进行充分的测试，确保修改的内容没有对其他模块产生影响。</p>
+<p><strong>参考</strong></p>
+<ol>
+<li><p><a href="http://docs.openstack.org/developer/horizon/" target="_blank" rel="external">官方文档 Horizon: The OpenStack Dashboard Project</a></p>
+</li>
+<li><p><a href="http://longliqiang88.github.io/2015/11/22/OpenStack%E4%B9%8BHorizon%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="external">OpenStack之Horizon源码分析</a></p>
+</li>
+<li><p><a href="http://blog.csdn.net/u011521019/article/details/44525451" target="_blank" rel="external">Horizon 源码阅读（二）—— Horizon 模块注册机制</a> </p>
+</li>
+</ol>
+
+        
+      </div>
+    </div>
+
+  
+
+  
+  
     
   
 
