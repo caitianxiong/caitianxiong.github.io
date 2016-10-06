@@ -86,19 +86,16 @@
 
 
 
-<meta name="description" content="配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】
-12345678910distributions = &amp;#123;        &amp;apos;debian&amp;apos;: debian,        &amp;apos;ubuntu&amp;apos;: debian,        &amp;apos;cen">
+<meta name="description" content="配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Xenserver 7.0安装ceph 10.2.2">
 <meta property="og:url" content="https://caitianxiong.github.io/2016/09/10/install-ceph-on-xenserver/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
-<meta property="og:description" content="配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】
-12345678910distributions = &amp;#123;        &amp;apos;debian&amp;apos;: debian,        &amp;apos;ubuntu&amp;apos;: debian,        &amp;apos;cen">
-<meta property="og:updated_time" content="2016-09-20T12:53:06.851Z">
+<meta property="og:description" content="配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】">
+<meta property="og:updated_time" content="2016-10-06T06:02:36.175Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Xenserver 7.0安装ceph 10.2.2">
-<meta name="twitter:description" content="配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】
-12345678910distributions = &amp;#123;        &amp;apos;debian&amp;apos;: debian,        &amp;apos;ubuntu&amp;apos;: debian,        &amp;apos;cen">
+<meta name="twitter:description" content="配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】">
 
 
 
@@ -310,6 +307,7 @@
       
         <ol>
 <li><p>配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】</p>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">distributions = &#123;</div><div class="line">        &apos;debian&apos;: debian,</div><div class="line">        &apos;ubuntu&apos;: debian,</div><div class="line">        &apos;centos&apos;: centos,</div><div class="line">        &apos;scientific&apos;: centos,</div><div class="line">        &apos;redhat&apos;: centos,</div><div class="line">        &apos;fedora&apos;: fedora,</div><div class="line">        &apos;suse&apos;: suse,</div><div class="line">        &apos;xenserver&apos;: centos,  # 添加的项</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 </li>
 <li><p>然后改yum源，用<code>yum install ceph  ceph-radosgw rdate -y</code>安装ceph主程序。</p>

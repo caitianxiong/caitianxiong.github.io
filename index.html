@@ -310,40 +310,13 @@
 
       
         
-          
-            <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/%E5%8F%8C%E6%8B%BC%E8%87%AA%E7%84%B6%E7%A0%81%E5%B8%83%E5%B1%80.jpg" alt="布局图"></p>
-<h3 id="0-布局图"><a href="#0-布局图" class="headerlink" title="0. 布局图"></a>0. 布局图</h3><p>话说蔡天雄吃完面，决定学习双拼自然码。于是盯着自然码布局图看。看了一会，恍然大悟：啊，我知道了！</p>
-<h3 id="1-基本规则"><a href="#1-基本规则" class="headerlink" title="1. 基本规则"></a>1. 基本规则</h3><p>双拼的第一个字母表示汉字的声母（键位上蓝色的字母），第二个字母表示汉字的韵母（键位上红色的字母串）。</p>
-<h3 id="2-蓝色部分"><a href="#2-蓝色部分" class="headerlink" title="2. 蓝色部分"></a>2. 蓝色部分</h3><p>6个韵母：aoeiuv自身没法当声母，所以AO键没有蓝色编码，E的蓝色编码是单引号’，IUV的蓝色编码分别是ch/sh/zh。于是乎，ii是吃，uu是书，vv是追。其他的字母，自己就可以当声母，所以蓝色的编码就是本身。</p>
-<h3 id="3-红色部分"><a href="#3-红色部分" class="headerlink" title="3. 红色部分"></a>3. 红色部分</h3><p>汉语拼音的韵母很多，我打算按字母个数进行分类：</p>
-<h5 id="1个字母"><a href="#1个字母" class="headerlink" title="1个字母"></a>1个字母</h5><ul>
-<li>aoeiuv，分别在AOEIUV键位上。这样aa是啊，oo是哦，ee是额</li>
-</ul>
-<h5 id="2个字母"><a href="#2个字母" class="headerlink" title="2个字母"></a>2个字母</h5><ul>
-<li>ai/ao/an，分别位于LKJ三个相邻的键上，这样ll是来，kk是靠</li>
-<li>ou，在B上</li>
-<li>ei/en/er，在Z/F/R上，这样zz是贼，ff是分</li>
-<li>iu/ia/ie/in，分别在Q/W/X/N上，于是qq是邱，xx是写，nn是您</li>
-<li>ua/ue/uo/un/ui，分别在W/T/O/P/V上，于是这几个声母和韵母都搭不上，连敲两下没办法拼成一个汉字</li>
-</ul>
-<h5 id="3个字母"><a href="#3个字母" class="headerlink" title="3个字母"></a>3个字母</h5><ul>
-<li>ang，在H上，所以hh是航</li>
-<li>ong，在S上，所以ss是送</li>
-<li>eng，在G上，所以gg是更</li>
-<li>ing/iao/ian，在Y/C/M上，这样yy打出来的是赢，cc是次奥（误），mm是面～</li>
-<li>uan/uai，在R/Y上，这样rr是软…</li>
-</ul>
-<h5 id="4个字母"><a href="#4个字母" class="headerlink" title="4个字母"></a>4个字母</h5><ul>
-<li>iong/iang/uang，在S/D上，比如打“雄”字，只需要敲xs就可以了，可以少敲3个字母</li>
-</ul>
-<h3 id="4-设计规律"><a href="#4-设计规律" class="headerlink" title="4. 设计规律"></a>4. 设计规律</h3><ul>
-<li>将韵母放到发音相近的键位上，如er放在R上，in放在N上，uo放在o上</li>
-<li>将相关的放到相邻，如F/G上分别是en/eng，J/H上分别是an/ang</li>
-<li>位置对称，如ua在W键，uo在O键，指法正确的话，分别在左右手的无名指位置</li>
-<li>其他的，找不出什么规律了，靠熟能生巧吧</li>
-</ul>
-
-          
+          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/%E5%8F%8C%E6%8B%BC%E8%87%AA%E7%84%B6%E7%A0%81%E5%B8%83%E5%B1%80.jpg" alt="布局图"></p>
+<h3 id="0-布局图"><a href="#0-布局图" class="headerlink" title="0. 布局图"></a>0. 布局图</h3><p>话说蔡天雄吃完面，决定学习双拼自然码。于是盯着自然码布局图看。看了一会，恍然大悟：啊，我知道了！<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/10/06/学习双拼自然码/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -441,40 +414,13 @@
 
       
         
-          
-            <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg" alt="openstack-components"></p>
-<h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。</p>
-<h2 id="2-Horizon代码架构"><a href="#2-Horizon代码架构" class="headerlink" title="2. Horizon代码架构"></a>2. Horizon代码架构</h2><p>Horizon项目核心的代码包有两个：<code>openstack-dashboard</code>和<code>python-django-horizon</code>。</p>
-<p>第一个包是控制台代码的具体实现，是一个基于Django框架的web应用，安装后主要文件在<code>/usr/share/openstack-dashboard/</code>路径下。第二个包是通用的一些Python类库，也包括一些静态文件，安装后在<code>/usr/lib/python2.7/dist-packages/horizon</code>下。定制化开发，主要是修改业务代码，基本不需要修改<code>python-django-horizon</code>，所以我们分析的重点放在<code>openstack-dashboard</code>这个包上。</p>
-<h3 id="2-1-控制台组件名词说明"><a href="#2-1-控制台组件名词说明" class="headerlink" title="2.1 控制台组件名词说明"></a>2.1 控制台组件名词说明</h3><p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/OpenStack_%20Dashboard.png" alt="openstack-dashboard"></p>
-<p>图中的7个名词在代码中都可以对应上，代码的层级结构还是很清晰的。</p>
-<h3 id="2-1-基于Django，MTV模式"><a href="#2-1-基于Django，MTV模式" class="headerlink" title="2.1 基于Django，MTV模式"></a>2.1 基于Django，MTV模式</h3><p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/Django-workflow.png" alt="Django-workflow"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/usr/share/openstack-dashboard/</div><div class="line">|-- bin                             # </div><div class="line">|-- manage.py                       # 一些django命令</div><div class="line">|-- openstack_dashboard             # 控制台项目代码</div><div class="line">|-- settings.py                     # Django项目配置文件</div><div class="line">└-- static                          # 压缩后的静态文件</div></pre></td></tr></table></figure>
-<p>从最外层目录看，这是一个典型的Django项目。再进去一层：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">/usr/share/openstack-dashboard/openstack_dashboard</div><div class="line">|-- __init__.py</div><div class="line">|-- urls.py</div><div class="line">|-- views.py</div><div class="line">|-- settings.py</div><div class="line">|-- api                                # 调用其他服务api接口的代码文件</div><div class="line">|-- conf</div><div class="line">|-- contrib</div><div class="line">|-- dashboards                         # 控制台的每个panel_group和panel</div><div class="line">|-- enabled                            # 定义panel是否显示及显示顺序</div><div class="line">|-- local</div><div class="line">|-- locale                             # 语言包所在</div><div class="line">|-- management</div><div class="line">|--...</div><div class="line">|-- static                             # 压缩前的静态文件</div><div class="line">|-- static_settings.py</div><div class="line">|-- templates                          # 基础模板文件</div><div class="line">|-- templatetags</div><div class="line">|-- themes                             # 主题包所在</div><div class="line">|-- usage                              # 关于项目用量的代码</div><div class="line">|-- utils</div><div class="line">└-- wsgi</div></pre></td></tr></table></figure></p>
-<p>沿着业务代码<code>dashboards</code>一路往里分析：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">dashboards/</div><div class="line">|-- __init__.py</div><div class="line">|-- admin         # 管理员</div><div class="line">|-- identity      # 身份管理</div><div class="line">|-- project       # 项目</div><div class="line">└-- settings      # 用户设置</div></pre></td></tr></table></figure>
-<p>4个包相当于4个Django App，分别对应控制台左侧导航栏的3个dashboard和右上角的设置。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dashboards/project/</div><div class="line">|-- __init__.py</div><div class="line">|-- dashboard.py</div><div class="line">|-- models.py</div><div class="line">|-- access_and_security</div><div class="line">|-- containers</div><div class="line">|--...</div><div class="line">|-- stacks</div><div class="line">|-- static</div><div class="line">|-- volumes</div><div class="line">└-- vpn</div></pre></td></tr></table></figure>
-<p><code>dashboards/project/</code>这个路径下，每一个包对应控制台导航栏的一个panel。拿其中的<code>access_and_security</code>为例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">dashboards/project/access_and_security/</div><div class="line">|-- __init__.py           # python包标记文件</div><div class="line">|-- panel.py              # 定义这个panel的基本参数</div><div class="line">|-- tabs.py               # 定义页面上的tab</div><div class="line">|-- urls.py               # 定义URL绑定</div><div class="line">|-- views.py              # 定义这个panel index页面的视图</div><div class="line">|-- api_access            # 访问API</div><div class="line">|-- floating_ips          # 浮动IP</div><div class="line">|-- keypairs              # 密钥对</div><div class="line">|-- security_groups       # 安全组</div><div class="line">|-- templates             # HTML模板文件</div><div class="line">└-- tests.py              # 测试代码</div></pre></td></tr></table></figure>
-<p>其中，<code>templates</code>路径下是页面模块的模板文件，其他四个文件夹分别对应页面上的四个tab：安全组、密钥对、浮动IP、访问API。详细看下<code>floating_ips</code>下的代码文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">floating_ips/</div><div class="line">|-- __init__.py         # python包标记</div><div class="line">|-- urls.py             # 定义该页面的URL</div><div class="line">|-- views.py            # 定义视图函数</div><div class="line">|-- tables.py           # 定义表格及表格上的操作</div><div class="line">|-- forms.py            # 定义弹出窗的内容</div><div class="line">|-- workflows.py        # 定义一些操作的具体工作流</div><div class="line">└-- tests.py            # 测试代码</div></pre></td></tr></table></figure>
-<p>具体的调用关系，页面上找个操作，根据URL，从<code>urls.py</code>开始，随着代码一路跟过去，就可以梳理出来。</p>
-<h3 id="2-2-Pluggable可插拔式Panel"><a href="#2-2-Pluggable可插拔式Panel" class="headerlink" title="2.2 Pluggable可插拔式Panel"></a>2.2 Pluggable可插拔式Panel</h3><p>模块注册机制，<code>panel</code>注册到<code>dashboard</code>下，<code>dashboard</code>注册到<code>horizon</code>下，主要分这三层结构。<code>panel</code>的可插拔模式，靠配置文件中的定义，运行服务时动态加载<code>enabled/</code>下的文件来实现。要添加一个<code>panel</code>，只需要在响应的路径下添加代码包，然后按照<code>enabled/</code>已有文件的格式添加文件注册。要隐藏一个<code>panel</code>，可以删除<code>enabled/</code>路径下对应的py文件，或者在文件中加上<code>REMOVE_PANEL = True</code>。添加<code>dashboard</code>或者<code>panel_group</code>做法类似。</p>
-<h2 id="3-定制开发"><a href="#3-定制开发" class="headerlink" title="3. 定制开发"></a>3. 定制开发</h2><p>光看不练假把式，参考<a href="http://docs.openstack.org/developer/horizon/tutorials/dashboard.html" target="_blank" rel="external">这个教程</a>  ，可以添加一个简单的<code>dashboard</code>来练手。这个<code>dashboard</code>下有一个<code>panel_group</code>，<code>panel_group</code>下只有一个panel。页面上有一个tab，内容是一个简单的表格，表格上带一些简单的操作。</p>
-<p>官网的<a href="http://docs.openstack.org/developer/horizon/tutorials/table_actions.html" target="_blank" rel="external">这篇教程</a>，可以做出复杂一点的表格操作。如果要开发自己的JS工作流，可以参考<a href="http://docs.openstack.org/developer/horizon/tutorials/workflow_extend.html" target="_blank" rel="external">这篇</a> 。</p>
-<p>对于修改已有代码的开发，需要注意进行充分的测试，确保修改的内容没有对其他模块产生影响。</p>
-<p><strong>参考</strong></p>
-<ol>
-<li><p><a href="http://docs.openstack.org/developer/horizon/" target="_blank" rel="external">官方文档 Horizon: The OpenStack Dashboard Project</a></p>
-</li>
-<li><p><a href="http://longliqiang88.github.io/2015/11/22/OpenStack%E4%B9%8BHorizon%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="external">OpenStack之Horizon源码分析</a></p>
-</li>
-<li><p><a href="http://blog.csdn.net/u011521019/article/details/44525451" target="_blank" rel="external">Horizon 源码阅读（二）—— Horizon 模块注册机制</a> </p>
-</li>
-</ol>
-
-          
+          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg" alt="openstack-components"></p>
+<h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/09/21/intro-to-openstack-dashboard/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -572,28 +518,13 @@
 
       
         
-          
-            <ol>
+          <ol>
 <li><p>配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">distributions = &#123;</div><div class="line">        &apos;debian&apos;: debian,</div><div class="line">        &apos;ubuntu&apos;: debian,</div><div class="line">        &apos;centos&apos;: centos,</div><div class="line">        &apos;scientific&apos;: centos,</div><div class="line">        &apos;redhat&apos;: centos,</div><div class="line">        &apos;fedora&apos;: fedora,</div><div class="line">        &apos;suse&apos;: suse,</div><div class="line">        &apos;xenserver&apos;: centos,  # 添加的项</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>然后改yum源，用<code>yum install ceph  ceph-radosgw rdate -y</code>安装ceph主程序。</p>
-</li>
-<li><p>装完用ceph-deploy分配mon/osd节点。</p>
-</li>
-<li><p>如果遇到OSD进程起不来的问题，查看使用路径的FS，只支持ext4和xfs。若要使用ext3，在ceph.conf文件中添加以下两行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">osd max object name len = 256  # ext4或xfs使用2048</div><div class="line">osd max object namespace len = 256</div></pre></td></tr></table></figure>
-</li>
-<li><p>tricks</p>
-</li>
-</ol>
-<ul>
-<li>ubuntu 上用<code>stop ceph-osd id=X</code>来停OSD</li>
-<li>搭单节点的集群，MON/OSD都装在一个host上，然后将pool size改成1，集群状态就可以HEALTH_OK了。</li>
-<li>搭好集群后快速验证是否可用的方法：直接使用<code>rados -p rbd put {$NAME} {$FILE_PATH}</code>存一个文件，然后用<code>rados -p rbd put {$NAME} {$DIST_PATH}</code>取出</li>
-</ul>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/09/10/install-ceph-on-xenserver/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -691,41 +622,12 @@
 
       
         
-          
-            <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。</p>
-<p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C等。gdb的官方介绍：</p>
-<blockquote>
-<p>What is GDB?<br>GDB, the GNU Project debugger, allows you to see what is going on `inside’ another program while it executes – or what another program was doing at the moment it crashed.<br>GDB can do four main kinds of things (plus other things in support of these) to help you catch bugs in the act:<br>Start your program, specifying anything that might affect its behavior.<br>Make your program stop on specified conditions.<br>Examine what has happened, when your program has stopped.<br>Change things in your program, so you can experiment with correcting the effects of one bug and go on to learn about another.<br>The program being debugged can be written in Ada, C, C++, Objective-C, Pascal (and many other languages). Those programs might be executing on the same machine as GDB (native) or on another machine (remote). GDB can run on most popular UNIX and Microsoft Windows variants.</p>
-</blockquote>
-<p>在终端输入<code>gdb --version</code>可以查看gdb的版本号，如果你的系统上没有的话，直接用系统自带的包管理工具应该就可以安装。我用的是Ubuntu 16.04上安装的7.11.1版本。</p>
-<p>使用gdb调试C程序的一般流程：</p>
-<ul>
-<li>gcc编译C源文件时加-g参数生成调试信息</li>
-<li>gdb a.out开始调试</li>
-<li>用list加函数名查看要调试的函数</li>
-<li>用break加函数名或者行号添加断点</li>
-<li>info break列出所有断点</li>
-<li>clear加行号清除那行的断点，或者clear加函数名清除函数入口处的断点</li>
-<li>run，把程序跑起来，到运行到断点处会自动暂停</li>
-<li>print加变量名查看此时的变量值</li>
-<li>step加行号步进执行</li>
-<li>info locals查看所有局部变量的值</li>
-<li>watch加变量名来监视变量，一旦变量值发生变化或满足设定的条件，就会暂停执行。例如，设置<code>watch i if i &lt; 0</code>，会在<code>i&lt;0</code>时停住，等待调试。</li>
-<li>continue继续执行</li>
-<li>quit退出调试</li>
-</ul>
-<p>一些技巧：</p>
-<ul>
-<li>help命令获取帮助，会列出所有可用类。help [<em>cmd/class</em>]，查看具体的命令或者类的帮助信息。</li>
-<li>可以采用<code>函数::变量</code>的形式将函数作为变量的一部分，用于引用一个特定例程的局部变量。比如：<br><code>(gdb) print main::i</code>    显示main中i的值<br><code>(gdb) set var main::i=0</code>   为main中的i赋值<br>需要注意的是，这种方式只能给活动的函数赋值，如果是对非活动的函数，会报错。<br>类似的，可以用<code>&#39;file&#39;::var</code>的形式引用某个文件的全局变量。</li>
-<li>gdb在达到一个断点后，或者在一次单步执行后，列出的是将要执行的代码行，而不是刚执行过的。</li>
-<li>可以用命令bt(backtrack)查看函数的调用栈。</li>
-</ul>
-<blockquote>
-<p>…you can’t be a great programmer until you become highly skilled at Debugging.<br>——《The Pragmatic Programmer》</p>
-</blockquote>
-
-          
+          <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/09/03/learn-gdb/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>

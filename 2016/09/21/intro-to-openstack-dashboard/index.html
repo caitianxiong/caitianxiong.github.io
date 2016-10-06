@@ -86,22 +86,19 @@
 
 
 
-<meta name="description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。
-2. Horizon代码架构Horizon项目核心的代码包有两个：openstack-dashboard和python-django-hori">
+<meta name="description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Openstack控制台项目Horizon后台代码结构分析">
 <meta property="og:url" content="https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
-<meta property="og:description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。
-2. Horizon代码架构Horizon项目核心的代码包有两个：openstack-dashboard和python-django-hori">
+<meta property="og:description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。">
 <meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg">
 <meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/OpenStack_%20Dashboard.png">
 <meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/Django-workflow.png">
-<meta property="og:updated_time" content="2016-09-23T01:24:52.004Z">
+<meta property="og:updated_time" content="2016-10-06T06:02:16.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Openstack控制台项目Horizon后台代码结构分析">
-<meta name="twitter:description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。
-2. Horizon代码架构Horizon项目核心的代码包有两个：openstack-dashboard和python-django-hori">
+<meta name="twitter:description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。">
 <meta name="twitter:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg">
 
 
@@ -313,7 +310,7 @@
 
       
         <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg" alt="openstack-components"></p>
-<h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。</p>
+<h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。<br><a id="more"></a></p>
 <h2 id="2-Horizon代码架构"><a href="#2-Horizon代码架构" class="headerlink" title="2. Horizon代码架构"></a>2. Horizon代码架构</h2><p>Horizon项目核心的代码包有两个：<code>openstack-dashboard</code>和<code>python-django-horizon</code>。</p>
 <p>第一个包是控制台代码的具体实现，是一个基于Django框架的web应用，安装后主要文件在<code>/usr/share/openstack-dashboard/</code>路径下。第二个包是通用的一些Python类库，也包括一些静态文件，安装后在<code>/usr/lib/python2.7/dist-packages/horizon</code>下。定制化开发，主要是修改业务代码，基本不需要修改<code>python-django-horizon</code>，所以我们分析的重点放在<code>openstack-dashboard</code>这个包上。</p>
 <h3 id="2-1-控制台组件名词说明"><a href="#2-1-控制台组件名词说明" class="headerlink" title="2.1 控制台组件名词说明"></a>2.1 控制台组件名词说明</h3><p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/OpenStack_%20Dashboard.png" alt="openstack-dashboard"></p>
