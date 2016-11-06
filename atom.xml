@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.github.io/"/>
-  <updated>2016-11-06T07:18:56.141Z</updated>
+  <updated>2016-11-06T11:27:31.695Z</updated>
   <id>https://caitianxiong.github.io/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Web应用设置缓存总结</title>
+    <link href="https://caitianxiong.github.io/2016/11/06/summary-of-web-cache/"/>
+    <id>https://caitianxiong.github.io/2016/11/06/summary-of-web-cache/</id>
+    <published>2016-11-06T11:17:54.000Z</published>
+    <updated>2016-11-06T11:27:31.695Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/web_cache.png" alt="web_cache"></p>
+<p>给Web应用设置缓存好处多多，可以提高访问速度，改善用户体验，减轻服务器压力等。本篇主要整理一下前段时间设置服务器端和浏览器端缓存的方法，以及几种做法的优点与弊端。虽然只是来自Django的经验，但我相信对于其他编程语言和框架，原理上应该是一样的。<br><a id="more"></a><br>首先，我们从一个HTTP请求的生命周期来看看，可以在哪些地方设置缓存。一个HTTP请求从浏览器发出，经过网络传输到硬件层面的服务器上，这台服务器上通常会配置有服务器软件（比如Nginx或者Apache），还可能配置有缓冲软件（比如Redis或者Memcached），然后才是正真干活处理请求的代码层面的server。</p>
+<p>从多级缓存的角度看，一般是越近的存储，访问速度越快。我们web应用发送的HTTP请求，如果能在client本地就获取到请求的HTML文档（JS/CSS/图片文件都由解析HTML得到请求路径，为方便起见，我们这里只讨论HTML），那必然再快不过。于是有了第一类缓存方式：浏览器本地缓存。</p>
+<h3 id="浏览器端判断是否使用缓存的方式分两类"><a href="#浏览器端判断是否使用缓存的方式分两类" class="headerlink" title="浏览器端判断是否使用缓存的方式分两类"></a>浏览器端判断是否使用缓存的方式分两类</h3><h4 id="1-需要跟服务器通信的：（validator）"><a href="#1-需要跟服务器通信的：（validator）" class="headerlink" title="1. 需要跟服务器通信的：（validator）"></a>1. 需要跟服务器通信的：（validator）</h4><ul>
+<li>response头带<code>Last-Modified</code>属性，再次request时带上<code>If-Modified-Since</code>头部，由服务器来判断是否可以使用缓存；</li>
+<li>response头带<code>ETag</code>属性，再次request时带<code>If-None-Match</code>，同样由服务器决定，若可以用cache，返回304。</li>
+</ul>
+<h4 id="2-不用跟服务器通信的：（freshness）"><a href="#2-不用跟服务器通信的：（freshness）" class="headerlink" title="2. 不用跟服务器通信的：（freshness）"></a>2. 不用跟服务器通信的：（freshness）</h4><ul>
+<li>response头带<code>Expires</code>属性，再次request时浏览器将系统时间与<code>Expires</code>值比较，若没过期则直接使用缓存；</li>
+<li>response头带<code>Cache-Control</code>属性，值为<code>max-age=XXXX</code>的形式，在过期时间内，request直接使用本地缓存。</li>
+</ul>
+<p>那么怎么让浏览器知道那些HTML要缓存哪些不要呢？这就要看server给返回的HTTP响应头部的参数了，现在的主流做法是设置<code>Cache-Control</code>，比如<code>Cache-Control: max-age=3600</code>，<code>max-age</code>的单位是秒，这样设置表示将这个资源在浏览器本地保留3600秒，除非用户手动删除，否则在这一小时内，浏览器再有对这个资源的请求时，就会直接从本地的缓存里取。是不是想想都有快感～</p>
+<h3 id="浏览器端缓存设置方式"><a href="#浏览器端缓存设置方式" class="headerlink" title="浏览器端缓存设置方式"></a>浏览器端缓存设置方式</h3><h4 id="1-在Apache-Nginx中设置响应头"><a href="#1-在Apache-Nginx中设置响应头" class="headerlink" title="1. 在Apache/Nginx中设置响应头"></a>1. 在Apache/Nginx中设置响应头</h4><p>比如在Apache的配置文件中添加<code>Header set Cache-Control &quot;max-age=3600&quot;</code>。这种方式时全局的，任何响应都会加上配置的头部参数，粒度最大。这样设置的缓存会保留在用户的浏览器上。</p>
+<h4 id="2-自定义一个中间件"><a href="#2-自定义一个中间件" class="headerlink" title="2. 自定义一个中间件"></a>2. 自定义一个中间件</h4><p>调用<code>django.utils.cache</code>模块，过滤request的参数，可以根据自定义的条件批量设置缓存。这种方式对程序员来说最友好，不用改动已有的代码，设置效率比较高。但这样要对每个request都进行过滤，看是否符合设置缓存的条件，势必会增加响应时间的消耗。这种方式的缓存也是存在浏览器上的。</p>
+<p>如果本地没有缓存的话，那没辙，老老实实向server请求吧。</p>
+<h3 id="服务器端缓存设置方式"><a href="#服务器端缓存设置方式" class="headerlink" title="服务器端缓存设置方式"></a>服务器端缓存设置方式</h3><p>使用Django的<code>django.views.decorators.cache</code>模块，在定义URL映射关系或者定义视图函数时，使用<code>@cache_control</code>或者<code>@cache_page</code>装饰器。这种方式粒度较小，可以控制的比较精细，但设置起来也比较繁琐。如此设置的缓存，是保留在Django配置的缓存后端里的。<br>Django通过配置Memcached（具体的配置方法请参阅文末附的Django文档），可以将某个URL的整个HTML文档存到Memcached中，这样下次有这个URL的请求时，就从Memcached中直接响应给request，请求不用server处理。这样的好处显而易见，一来可以提高响应速度，二来可以减轻server端的压力。一举两得，看起来简直完美，但是有没有弊端呢？这个世界是守恒的，上帝给你打开一扇窗的同时必然要从其他地方找补点回来。这种做法的弊端就是，存在Memcached中的HTML文档，如果有动态数据的话，在过期时间内它不会更新。所以，如果打算采用这种方法设置缓存，对于数据过期问题需要进行详细的考量。</p>
+<p>这里只是记录下学习Django使用缓存的一些总结，没有涉及到具体的代码和配置项，如有需求，请查阅参考中附的文档及博客。</p>
+<h5 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h5><ol>
+<li>Django文档——<a href="https://docs.djangoproject.com/en/1.9/topics/cache/" target="_blank" rel="external">Django’s cache framework</a> </li>
+<li><a href="http://www.zhangxinxu.com/wordpress/2013/05/caching-tutorial-for-web-authors-and-webmasters/" target="_blank" rel="external">翻译：web制作、开发人员需知的Web缓存知识</a> </li>
+<li><a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn" target="_blank" rel="external">HTTP 缓存</a> </li>
+<li><a href="http://www.alloyteam.com/2012/03/web-cache-2-browser-cache/" target="_blank" rel="external">【Web缓存机制系列】2 – Web浏览器的缓存机制</a> </li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;http://ock7ps6a9.bkt.clouddn.com/image/blog/web_cache.png&quot; alt=&quot;web_cache&quot;&gt;&lt;/p&gt;
+&lt;p&gt;给Web应用设置缓存好处多多，可以提高访问速度，改善用户体验，减轻服务器压力等。本篇主要整理一下前段时间设置服务器端和浏览器端缓存的方法，以及几种做法的优点与弊端。虽然只是来自Django的经验，但我相信对于其他编程语言和框架，原理上应该是一样的。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Web" scheme="https://caitianxiong.github.io/tags/Web/"/>
+    
+  </entry>
   
   <entry>
     <title>学习双拼自然码</title>
@@ -165,7 +209,7 @@
     <link href="https://caitianxiong.github.io/2016/09/03/learn-gdb/"/>
     <id>https://caitianxiong.github.io/2016/09/03/learn-gdb/</id>
     <published>2016-09-03T00:21:56.000Z</published>
-    <updated>2016-10-06T06:02:58.899Z</updated>
+    <updated>2016-11-06T11:21:30.058Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。<br><a id="more"></a></p>
 <p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C等。gdb的官方介绍：</p>
