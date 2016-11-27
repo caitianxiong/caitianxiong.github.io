@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.github.io/"/>
-  <updated>2016-11-06T11:27:31.695Z</updated>
+  <updated>2016-11-06T11:27:31.000Z</updated>
   <id>https://caitianxiong.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caitianxiong.github.io/2016/11/06/summary-of-web-cache/"/>
     <id>https://caitianxiong.github.io/2016/11/06/summary-of-web-cache/</id>
     <published>2016-11-06T11:17:54.000Z</published>
-    <updated>2016-11-06T11:27:31.695Z</updated>
+    <updated>2016-11-06T11:27:31.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/web_cache.png" alt="web_cache"></p>
 <p>给Web应用设置缓存好处多多，可以提高访问速度，改善用户体验，减轻服务器压力等。本篇主要整理一下前段时间设置服务器端和浏览器端缓存的方法，以及几种做法的优点与弊端。虽然只是来自Django的经验，但我相信对于其他编程语言和框架，原理上应该是一样的。<br><a id="more"></a><br>首先，我们从一个HTTP请求的生命周期来看看，可以在哪些地方设置缓存。一个HTTP请求从浏览器发出，经过网络传输到硬件层面的服务器上，这台服务器上通常会配置有服务器软件（比如Nginx或者Apache），还可能配置有缓冲软件（比如Redis或者Memcached），然后才是正真干活处理请求的代码层面的server。</p>
@@ -64,7 +64,7 @@
     <link href="https://caitianxiong.github.io/2016/10/06/%E5%AD%A6%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%87%AA%E7%84%B6%E7%A0%81/"/>
     <id>https://caitianxiong.github.io/2016/10/06/学习双拼自然码/</id>
     <published>2016-10-06T03:10:30.000Z</published>
-    <updated>2016-11-06T07:18:56.141Z</updated>
+    <updated>2016-11-06T07:18:56.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/%E5%8F%8C%E6%8B%BC%E8%87%AA%E7%84%B6%E7%A0%81%E5%B8%83%E5%B1%80.jpg" alt="布局图"></p>
 <h3 id="0-布局图"><a href="#0-布局图" class="headerlink" title="0. 布局图"></a>0. 布局图</h3><p>话说Leon吃完面，决定学习双拼自然码。于是盯着自然码布局图看。看了一会，恍然大悟：啊，我知道了！<br><a id="more"></a></p>
@@ -116,7 +116,7 @@
     <link href="https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/"/>
     <id>https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/</id>
     <published>2016-09-21T13:02:29.000Z</published>
-    <updated>2016-10-06T06:02:16.803Z</updated>
+    <updated>2016-10-06T06:02:16.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg" alt="openstack-components"></p>
 <h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。<br><a id="more"></a></p>
@@ -168,7 +168,7 @@
     <link href="https://caitianxiong.github.io/2016/09/10/install-ceph-on-xenserver/"/>
     <id>https://caitianxiong.github.io/2016/09/10/install-ceph-on-xenserver/</id>
     <published>2016-09-10T12:51:37.000Z</published>
-    <updated>2016-10-06T06:02:36.175Z</updated>
+    <updated>2016-10-06T06:02:36.000Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li><p>配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】</p>
@@ -209,7 +209,7 @@
     <link href="https://caitianxiong.github.io/2016/09/03/learn-gdb/"/>
     <id>https://caitianxiong.github.io/2016/09/03/learn-gdb/</id>
     <published>2016-09-03T00:21:56.000Z</published>
-    <updated>2016-11-06T11:21:30.058Z</updated>
+    <updated>2016-11-06T11:21:30.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。<br><a id="more"></a></p>
 <p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C等。gdb的官方介绍：</p>
@@ -261,7 +261,7 @@
     <link href="https://caitianxiong.github.io/2016/08/28/My-Own-Blog/"/>
     <id>https://caitianxiong.github.io/2016/08/28/My-Own-Blog/</id>
     <published>2016-08-28T05:01:50.000Z</published>
-    <updated>2016-10-06T06:03:15.635Z</updated>
+    <updated>2016-10-06T06:03:15.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/have_a_nice_day.jpg" alt="Have A Nice Day"><br>距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask的过程。后来忙于工作（懒），就只是草草记在自己的笔记软件上。</p>
 <p>一直想搭建自己的博客，这样能促使我认真写一些东西分享出来，毕竟，对于属于自己的东西，会多一份责任感。拖了好久，正好这周Crossin先生的公众号上发了两篇教程，于是决定利用这个周末搭一套出来。于是有了这个博客。</p>
