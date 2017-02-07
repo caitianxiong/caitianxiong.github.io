@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.github.io/"/>
-  <updated>2016-11-06T11:27:31.000Z</updated>
+  <updated>2017-02-07T11:01:47.000Z</updated>
   <id>https://caitianxiong.github.io/</id>
   
   <author>
@@ -14,6 +14,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>蔡旺作品展示</title>
+    <link href="https://caitianxiong.github.io/2017/02/07/caiwang-works/"/>
+    <id>https://caitianxiong.github.io/2017/02/07/caiwang-works/</id>
+    <published>2017-02-07T10:44:58.000Z</published>
+    <updated>2017-02-07T11:01:47.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>本篇用来展示蔡旺的设计及摄影作品。(可点击放大查看)<br><a id="more"></a></p>
+<h3 id="摄影作品"><a href="#摄影作品" class="headerlink" title="摄影作品"></a>摄影作品</h3><h3 id="PS作品"><a href="#PS作品" class="headerlink" title="PS作品"></a>PS作品</h3><ul>
+<li><p>01 海报设计<br><img src="http://ock7ps6a9.bkt.clouddn.com/caiwang03.jpeg" alt="01 海报设计"></p>
+</li>
+<li><p>02 产品Banner图<br><img src="http://ock7ps6a9.bkt.clouddn.com/caiwang02.jpeg" alt="02 产品Banner图"></p>
+</li>
+<li><p>03 网页切图<br><img src="http://ock7ps6a9.bkt.clouddn.com/caiwang01.jpeg" alt="03 网页切图"></p>
+</li>
+</ul>
+<h3 id="其他作品"><a href="#其他作品" class="headerlink" title="其他作品"></a>其他作品</h3>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇用来展示蔡旺的设计及摄影作品。(可点击放大查看)&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Web应用设置缓存总结</title>
