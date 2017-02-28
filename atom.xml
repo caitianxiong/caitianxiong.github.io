@@ -533,9 +533,9 @@
     <link href="https://caitianxiong.github.io/2016/08/28/My-Own-Blog/"/>
     <id>https://caitianxiong.github.io/2016/08/28/My-Own-Blog/</id>
     <published>2016-08-28T05:01:50.000Z</published>
-    <updated>2016-10-06T06:03:15.000Z</updated>
+    <updated>2017-02-28T07:59:59.000Z</updated>
     
-    <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/have_a_nice_day.jpg" alt="Have A Nice Day"><br>距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask的过程。后来忙于工作（懒），就只是草草记在自己的笔记软件上。</p>
+    <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/have_a_nice_day.jpg" alt="Have A Nice Day"><br><a id="more"></a><br>距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask的过程。后来忙于工作（懒），就只是草草记在自己的笔记软件上。</p>
 <p>一直想搭建自己的博客，这样能促使我认真写一些东西分享出来，毕竟，对于属于自己的东西，会多一份责任感。拖了好久，正好这周Crossin先生的公众号上发了两篇教程，于是决定利用这个周末搭一套出来。于是有了这个博客。</p>
 <p>以后会好好维护，记录下自己的学习过程，总结一些对别人有用的东西分享出来。<br>涉及的主题包括（但不限于）：</p>
 <ul>
@@ -550,7 +550,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;&lt;img src=&quot;http://ock7ps6a9.bkt.clouddn.com/image/blog/have_a_nice_day.jpg&quot; alt=&quot;Have A Nice Day&quot;&gt;&lt;br&gt;距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask
+      &lt;p&gt;&lt;img src=&quot;http://ock7ps6a9.bkt.clouddn.com/image/blog/have_a_nice_day.jpg&quot; alt=&quot;Have A Nice Day&quot;&gt;&lt;br&gt;
     
     </summary>
     
