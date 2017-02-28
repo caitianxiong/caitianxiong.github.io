@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="C语," />
+  <meta name="keywords" content="Ceph," />
 
 
 
@@ -86,18 +86,16 @@
 
 
 
-<meta name="description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。">
+<meta name="description" content="环境1234[root@node1 ~]# uname -r3.10.0-327.28.3.el7.x86_64[root@node1 ~]# cat /etc/redhat-releaseCentOS Linux release 7.3.1611 (Core)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习C语言调试工具gdb">
-<meta property="og:url" content="https://caitianxiong.github.io/2016/09/03/learn-gdb/index.html">
+<meta property="og:title" content="手动部署Ceph集群">
+<meta property="og:url" content="https://caitianxiong.github.io/2017/02/25/deploy-ceph-cluster-manually/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
-<meta property="og:description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。">
-<meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png">
-<meta property="og:updated_time" content="2016-11-06T11:21:30.000Z">
+<meta property="og:description" content="环境1234[root@node1 ~]# uname -r3.10.0-327.28.3.el7.x86_64[root@node1 ~]# cat /etc/redhat-releaseCentOS Linux release 7.3.1611 (Core)">
+<meta property="og:updated_time" content="2017-02-28T07:03:50.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习C语言调试工具gdb">
-<meta name="twitter:description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。">
-<meta name="twitter:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png">
+<meta name="twitter:title" content="手动部署Ceph集群">
+<meta name="twitter:description" content="环境1234[root@node1 ~]# uname -r3.10.0-327.28.3.el7.x86_64[root@node1 ~]# cat /etc/redhat-releaseCentOS Linux release 7.3.1611 (Core)">
 
 
 
@@ -118,9 +116,9 @@
 
 
 
-  <link rel="canonical" href="https://caitianxiong.github.io/2016/09/03/learn-gdb/"/>
+  <link rel="canonical" href="https://caitianxiong.github.io/2017/02/25/deploy-ceph-cluster-manually/"/>
 
-  <title> 学习C语言调试工具gdb | Have A Nice Day </title>
+  <title> 手动部署Ceph集群 | Have A Nice Day </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -260,7 +258,7 @@
             
             
               
-                学习C语言调试工具gdb
+                手动部署Ceph集群
               
             
           </h1>
@@ -272,8 +270,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-03T08:21:56+08:00" content="2016-09-03">
-              2016-09-03
+            <time itemprop="dateCreated" datetime="2017-02-25T19:16:30+08:00" content="2017-02-25">
+              2017-02-25
             </time>
           </span>
 
@@ -283,8 +281,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/03/learn-gdb/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/learn-gdb/" itemprop="commentsCount"></span>
+                <a href="/2017/02/25/deploy-ceph-cluster-manually/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/25/deploy-ceph-cluster-manually/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -294,7 +292,7 @@
 
           
           
-             <span id="/2016/09/03/learn-gdb/" class="leancloud_visitors" data-flag-title="学习C语言调试工具gdb">
+             <span id="/2017/02/25/deploy-ceph-cluster-manually/" class="leancloud_visitors" data-flag-title="手动部署Ceph集群">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -316,38 +314,85 @@
       
 
       
-        <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。<br><a id="more"></a></p>
-<p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C等。gdb的官方介绍：</p>
-<blockquote>
-<p>What is GDB?<br>GDB, the GNU Project debugger, allows you to see what is going on `inside’ another program while it executes – or what another program was doing at the moment it crashed.<br>GDB can do four main kinds of things (plus other things in support of these) to help you catch bugs in the act:<br>Start your program, specifying anything that might affect its behavior.<br>Make your program stop on specified conditions.<br>Examine what has happened, when your program has stopped.<br>Change things in your program, so you can experiment with correcting the effects of one bug and go on to learn about another.<br>The program being debugged can be written in Ada, C, C++, Objective-C, Pascal (and many other languages). Those programs might be executing on the same machine as GDB (native) or on another machine (remote). GDB can run on most popular UNIX and Microsoft Windows variants.</p>
-</blockquote>
-<p>在终端输入<code>gdb --version</code>可以查看gdb的版本号，如果你的系统上没有的话，直接用系统自带的包管理工具应该就可以安装。我用的是Ubuntu 16.04上安装的7.11.1版本。</p>
-<p>使用gdb调试C程序的一般流程：</p>
-<ul>
-<li>gcc编译C源文件时加-g参数生成调试信息</li>
-<li>gdb a.out开始调试</li>
-<li>用list加函数名查看要调试的函数</li>
-<li>用break加函数名或者行号添加断点</li>
-<li>info break列出所有断点</li>
-<li>clear加行号清除那行的断点，或者clear加函数名清除函数入口处的断点</li>
-<li>run，把程序跑起来，到运行到断点处会自动暂停</li>
-<li>print加变量名查看此时的变量值</li>
-<li>step加行号步进执行</li>
-<li>info locals查看所有局部变量的值</li>
-<li>watch加变量名来监视变量，一旦变量值发生变化或满足设定的条件，就会暂停执行。例如，设置<code>watch i if i &lt; 0</code>，会在<code>i&lt;0</code>时停住，等待调试。</li>
-<li>continue继续执行</li>
-<li>quit退出调试</li>
+        <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]# uname -r</div><div class="line">3.10.0-327.28.3.el7.x86_64</div><div class="line">[root@node1 ~]# cat /etc/redhat-release</div><div class="line">CentOS Linux release 7.3.1611 (Core)</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="安装Ceph-10-2-5"><a href="#安装Ceph-10-2-5" class="headerlink" title="安装Ceph-10.2.5"></a>安装Ceph-10.2.5</h2><ul>
+<li>添加KEYS <code>sudo rpm --import &#39;https://download.ceph.com/keys/release.asc&#39;</code></li>
+<li><p>添加yum源<code>ceph.repo</code>，其中<code>jewel/el7</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">[ceph]</div><div class="line">name=Ceph packages for $basearch</div><div class="line">baseurl=https://download.ceph.com/rpm-&#123;ceph-release&#125;/&#123;distro&#125;/$basearch</div><div class="line">enabled=1</div><div class="line">priority=2</div><div class="line">gpgcheck=1</div><div class="line">gpgkey=https://download.ceph.com/keys/release.asc</div><div class="line"></div><div class="line">[ceph-noarch]</div><div class="line">name=Ceph noarch packages</div><div class="line">baseurl=https://download.ceph.com/rpm-&#123;ceph-release&#125;/&#123;distro&#125;/noarch</div><div class="line">enabled=1</div><div class="line">priority=2</div><div class="line">gpgcheck=1</div><div class="line">gpgkey=https://download.ceph.com/keys/release.asc</div><div class="line"></div><div class="line">[ceph-source]</div><div class="line">name=Ceph source packages</div><div class="line">baseurl=https://download.ceph.com/rpm-&#123;ceph-release&#125;/&#123;distro&#125;/SRPMS</div><div class="line">enabled=0</div><div class="line">priority=2</div><div class="line">gpgcheck=1</div><div class="line">gpgkey=https://download.ceph.com/keys/release.asc</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装依赖 <code>sudo yum install snappy leveldb gdisk python-argparse gperftools-libs -y</code>【其中的leveldb需要先安装epel的yum源，<code>yum install epel-release -y</code>】</p>
+</li>
+<li>安装ceph，<code>yum install ceph -y</code></li>
 </ul>
-<p>一些技巧：</p>
-<ul>
-<li>help命令获取帮助，会列出所有可用类。help [<em>cmd/class</em>]，查看具体的命令或者类的帮助信息。</li>
-<li>可以采用<code>函数::变量</code>的形式将函数作为变量的一部分，用于引用一个特定例程的局部变量。比如：<br><code>(gdb) print main::i</code>    显示main中i的值<br><code>(gdb) set var main::i=0</code>   为main中的i赋值<br>需要注意的是，这种方式只能给活动的函数赋值，如果是对非活动的函数，会报错。<br>类似的，可以用<code>&#39;file&#39;::var</code>的形式引用某个文件的全局变量。</li>
-<li>gdb在达到一个断点后，或者在一次单步执行后，列出的是将要执行的代码行，而不是刚执行过的。</li>
-<li>可以用命令bt(backtrack)查看函数的调用栈。</li>
+<h2 id="安装块设备虚拟化"><a href="#安装块设备虚拟化" class="headerlink" title="安装块设备虚拟化"></a>安装块设备虚拟化</h2><ul>
+<li>QEMU <code>yum update &amp;&amp; yum install qemu-kvm qemu-kvm-tools qemu-im</code></li>
+<li>libvirt <code>yum install libvirt -y</code></li>
 </ul>
-<blockquote>
-<p>…you can’t be a great programmer until you become highly skilled at Debugging.<br>——《The Pragmatic Programmer》</p>
+<h2 id="部署ceph集群"><a href="#部署ceph集群" class="headerlink" title="部署ceph集群"></a>部署ceph集群</h2><p>参考官方文档<a href="http://docs.ceph.com/docs/master/install/manual-deployment/" target="_blank" rel="external">手动部署</a>，其中的启动命令过时了，应该用<code>systemctl</code>。具体步骤如下：</p>
+<h3 id="MON"><a href="#MON" class="headerlink" title="MON"></a>MON</h3><ol>
+<li>生成uuid</li>
+<li><p>创建<code>ceph.conf</code>文件。<code>uuidgen</code> 生成uuid，写到<code>/etc/ceph/ceph.conf</code> 中作为<code>fsid</code>，同时写入mon信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fsid = a7f64266-0894-4f1e-a635-d0aeaca0e993</div><div class="line">mon initial members = node1</div><div class="line">mon host = 192.168.1.43</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建keyring文件，并生成一个 monitor 秘钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon &apos;allow *&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成administrator keyring，生成client.admin用户，并将用户添加到keyring</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo ceph-authtool --create-keyring /etc/ceph/ceph.client.admin.keyring --gen-key -n client.admin --set-uid=0 --cap mon &apos;allow *&apos; --cap osd &apos;allow *&apos; --cap mds &apos;allow&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加<code>client.admin</code> key到<code>ceph.mon.keyring</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph-authtool /tmp/ceph.mon.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用hostname、IP、FSID生成一个monitor map，保存到<code>/tmp/monmap</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">monmaptool --create --add &#123;hostname&#125; &#123;ip-address&#125; --fsid &#123;uuid&#125; /tmp/monmap</div></pre></td></tr></table></figure>
+</li>
+<li><p>在monitor主机上创建默认的数据目录，并修改属主为ceph</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir /var/lib/ceph/mon/&#123;cluster-name&#125;-&#123;hostname&#125;</div><div class="line">chown -R ceph.ceph /var/lib/ceph/mon</div></pre></td></tr></table></figure>
+</li>
+<li><p>将monitor map和keyring<strong>保存到（populate）</strong>monitor守护进程中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u ceph ceph-mon [--cluster &#123;cluster-name&#125;] --mkfs -i &#123;hostname&#125; --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p>检查ceph.conf配置文件，根据需求，添加必要项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[global]</div><div class="line">fsid = &#123;cluster-id&#125;</div><div class="line">mon initial members = &#123;hostname&#125;[, &#123;hostname&#125;]</div><div class="line">mon host = &#123;ip-address&#125;[, &#123;ip-address&#125;]</div><div class="line">public network = &#123;network&#125;[, &#123;network&#125;]</div><div class="line">cluster network = &#123;network&#125;[, &#123;network&#125;]</div><div class="line">auth cluster required = cephx</div><div class="line">auth service required = cephx</div><div class="line">auth client required = cephx</div><div class="line">osd journal size = &#123;n&#125;</div><div class="line">osd pool default size = &#123;n&#125;  # Write an object n times.</div><div class="line">osd pool default min size = &#123;n&#125; # Allow writing n copy in a degraded state.</div><div class="line">osd pool default pg num = &#123;n&#125;</div><div class="line">osd pool default pgp num = &#123;n&#125;</div><div class="line">osd crush chooseleaf type = &#123;n&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建<code>done</code>文件，<code>touch /var/lib/ceph/mon/ceph-node1/done</code></p>
+</li>
+<li>启动monitor，<code>systemctl start ceph-mon@node1</code></li>
+<li>查看集群状态，<code>ceph -s</code>，因为此时还没有OSD，所以集群是HEALTH_ERR状态，pg都是creating状态</li>
+</ol>
+<h3 id="OSD"><a href="#OSD" class="headerlink" title="OSD"></a>OSD</h3><ol>
+<li>首先，将mon节点上的<code>/etc/ceph/ceph.conf</code>和<code>/etc/ceph/ceph.client.admin.keyring</code>文件复制到<code>/etc/ceph/</code>目录下</li>
+<li>生成uuid，<code>uuidgen</code></li>
+<li>创建OSD：<code>ceph osd create [{uuid}]</code>，这个命令会输出OSD的编号osd-num</li>
+<li><p>创建OSD默认目录，并修改属主</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir /var/lib/ceph/osd/&#123;cluster-name&#125;-&#123;osd-num&#125;</div><div class="line">chown -R ceph.ceph /var/lib/ceph/osd</div></pre></td></tr></table></figure>
+</li>
+<li><p>格式化磁盘，<code>mkfs -t xfs /dev/{hdd}</code>；挂载到osd目录，<code>mount -o defaults /dev/{hdd} /var/lib/ceph/osd/{cluster-name}-{osd-number}</code></p>
+</li>
+<li>初始化OSD数据目录，执行这条命令前，目录必须是空的！<code>ceph-osd -i {osd-num} --mkfs --mkkey --osd-uuid {osd-uuid}</code></li>
+<li>注册OSD认证key，<code>ceph auth add osd.{osd-num} osd &#39;allow *&#39; mon &#39;allow profile osd&#39; -i /var/lib/ceph/osd/{cluster-name}-{osd-num}/keyring</code></li>
+<li>把Ceph节点添加到CRUSH map，<code>ceph [--cluster {cluster-name}] osd crush add-bucket {hostname} host</code></li>
+<li>把Ceph节点移到<code>default</code>根下，<code>ceph osd crush move {hostname} root=default</code></li>
+<li><p>把OSD添加到CRUSH map来让它接收数据。也可以反编译CRUSH map，把host加成一个bucket，把OSD加到host下的device list中，分配一个weight，然后重现编译导入。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ceph [--cluster &#123;cluster-name&#125;] osd crush add &#123;id-or-name&#125; &#123;weight&#125; [&#123;bucket-type&#125;=&#123;bucket-name&#125; ...]</div><div class="line"># 例如：ceph osd crush add osd.0 1.0 host=node1</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动OSD，<code>systemctl start ceph-osd@0</code></p>
+</li>
+<li>查看集群状态，<code>ceph -s</code>。待OSD数等于<code>pool size</code>时，所有pg会逐渐创建成功，pg状态变为<code>active+clean</code>，集群状态变为<code>HEALTH_OK</code></li>
+</ol>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="MON-1"><a href="#MON-1" class="headerlink" title="MON"></a>MON</h3><ul>
+<li>记得将mon的data目录 <code>/var/lib/ceph/mon</code> 属主改成 <code>ceph.ceph</code></li>
+<li>无法启动mon。【解决】官方文档的命令过时了，用 <code>systemctl start ceph-mon@node2</code> 这样启动，如果启动有问题，<blockquote>
+<p>可以通过 <code>systemctl status ceph-mon@ceph-k-node1.service</code> 和 <code>journalctl -b _PID=‘pid’</code> 定位出错原因</p>
 </blockquote>
+</li>
+</ul>
+<h3 id="OSD-1"><a href="#OSD-1" class="headerlink" title="OSD"></a>OSD</h3><ul>
+<li>执行<code>ceph osd create [uuid id]</code> 之前，需要把MON节点上的集群配置文件和admin.keyring文件复制过来。<code>/etc/ceph/[ceph.conf|ceph.client.admin.keyring]</code></li>
+<li>需要将 <code>/var/lib/ceph/</code> 目录属主改成<code>ceph.ceph</code></li>
+</ul>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="http://docs.ceph.com/docs/master/install/manual-deployment/" target="_blank" rel="external">Ceph官方文档-手动部署</a></p>
 
       
     </div>
@@ -391,7 +436,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/C语/" rel="tag">#C语</a>
+            <a href="/tags/Ceph/" rel="tag">#Ceph</a>
           
         </div>
       
@@ -400,16 +445,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/28/My-Own-Blog/" rel="next" title="关于这个博客">
-                <i class="fa fa-chevron-left"></i> 关于这个博客
+              <a href="/2017/02/07/caiwang-works/" rel="next" title="蔡旺作品展示">
+                <i class="fa fa-chevron-left"></i> 蔡旺作品展示
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/10/install-ceph-on-xenserver/" rel="prev" title="Xenserver 7.0安装Ceph-10.2.2">
-                Xenserver 7.0安装Ceph-10.2.2 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/02/28/integrate-ceph-into-devstack/" rel="prev" title="集成Ceph到DevStack">
+                集成Ceph到DevStack <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -459,8 +504,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/09/03/learn-gdb/"
-           data-title="学习C语言调试工具gdb" data-url="https://caitianxiong.github.io/2016/09/03/learn-gdb/">
+      <div class="ds-thread" data-thread-key="2017/02/25/deploy-ceph-cluster-manually/"
+           data-title="手动部署Ceph集群" data-url="https://caitianxiong.github.io/2017/02/25/deploy-ceph-cluster-manually/">
       </div>
     
   </div>
@@ -597,7 +642,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Ceph-10-2-5"><span class="nav-text">安装Ceph-10.2.5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装块设备虚拟化"><span class="nav-text">安装块设备虚拟化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署ceph集群"><span class="nav-text">部署ceph集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MON"><span class="nav-text">MON</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OSD"><span class="nav-text">OSD</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#踩坑记录"><span class="nav-text">踩坑记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MON-1"><span class="nav-text">MON</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OSD-1"><span class="nav-text">OSD</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考"><span class="nav-text">参考</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.github.io/"/>
-  <updated>2017-02-13T11:24:04.000Z</updated>
+  <updated>2017-02-28T06:55:30.000Z</updated>
   <id>https://caitianxiong.github.io/</id>
   
   <author>
@@ -14,6 +14,241 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>集成Ceph到DevStack</title>
+    <link href="https://caitianxiong.github.io/2017/02/28/integrate-ceph-into-devstack/"/>
+    <id>https://caitianxiong.github.io/2017/02/28/integrate-ceph-into-devstack/</id>
+    <published>2017-02-28T06:35:53.000Z</published>
+    <updated>2017-02-28T06:55:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
+<li>已经搭建好的 <code>Mon*1 + OSD*3</code> 的Ceph-10.2.5测试集群</li>
+<li>All-In-One的Newton版DevStack环境，参考<a href="https://docs.openstack.org/developer/devstack/" target="_blank" rel="external">DevStack部署文档</a><a id="more"></a>
+</li>
+</ul>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="创建pool"><a href="#创建pool" class="headerlink" title="创建pool"></a>创建pool</h2><ul>
+<li>Ceph集群创建几个pool：images/volumes/backups/vms<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ceph osd pool create volumes 128 (pg大小根据自己的Ceph集群规模调整）</div><div class="line">ceph osd pool create images 128</div><div class="line">ceph osd pool create backups 128</div><div class="line">ceph osd pool create vms 128</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="配置OpenStack-Ceph客户端"><a href="#配置OpenStack-Ceph客户端" class="headerlink" title="配置OpenStack Ceph客户端"></a>配置OpenStack Ceph客户端</h2><ul>
+<li>将ceph.conf配置文件复制到openstack节点，包括：运行 glance-api, cinder-volume, nova-compute 和 cinder-backup 的节点，都作为Ceph client。</li>
+</ul>
+<h3 id="安装Ceph客户端"><a href="#安装Ceph客户端" class="headerlink" title="安装Ceph客户端"></a>安装Ceph客户端</h3><ul>
+<li>在运行glance-api的节点，安装<code>python-rbd</code>库，<code>yum install python-rbd -y</code></li>
+<li>在运行nova-compute, cinder-backup 和 cinder-volume 节点，安装python-rbd库和ceph命令行工具：<code>yum install python-rbd ceph-common -y</code></li>
+</ul>
+<h3 id="配置Ceph客户端认证"><a href="#配置Ceph客户端认证" class="headerlink" title="配置Ceph客户端认证"></a>配置Ceph客户端认证</h3><ul>
+<li><p>为Nova/Cinder/Glance创建新用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.glance mon &apos;allow r&apos; osd &apos;allow class-read object_prefix rbd_children, allow rwx pool=images&apos;</div><div class="line">ceph auth get-or-create client.cinder-backup mon &apos;allow r&apos; osd &apos;allow class-read object_prefix rbd_children, allow rwx pool=backups&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Mitaka及之后的版本，引入了RBD快照的支持（做Nova实例的快照），因此需要配置<code>client.cinder</code> key对images pool的写权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.cinder mon &apos;allow r&apos; osd &apos;allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rwx pool=images&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>将<code>client.cinder, client.glance, 和 client.cinder-backup</code>的 keyring 添加到相应的节点，并改变其属主：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.glance | ssh &#123;your-glance-api-server&#125; sudo tee /etc/ceph/ceph.client.glance.keyring</div><div class="line">ssh &#123;your-glance-api-server&#125; sudo chown glance:glance /etc/ceph/ceph.client.glance.keyring</div><div class="line">ceph auth get-or-create client.cinder | ssh &#123;your-volume-server&#125; sudo tee /etc/ceph/ceph.client.cinder.keyring</div><div class="line">ssh &#123;your-cinder-volume-server&#125; sudo chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring</div><div class="line">ceph auth get-or-create client.cinder-backup | ssh &#123;your-cinder-backup-server&#125; sudo tee /etc/ceph/ceph.client.cinder-backup.keyring</div><div class="line">ssh &#123;your-cinder-backup-server&#125; sudo chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p>运行nova-compute进程的节点也需要client.cinder的keyring文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.cinder | ssh &#123;your-nova-compute-server&#125; sudo tee /etc/ceph/ceph.client.cinder.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>计算节点</strong>上，还需要把client.cinder的keyring文件保存到libvirt中。libvirt进程从Cinder挂载一个块设备时，需要访问jCeph集群。</p>
+<ul>
+<li>创建一个临时文件 <code>ceph auth get-key client.cinder | ssh {your-compute-node} tee client.cinder.key</code></li>
+<li><p>将秘钥加到libvirt中，并删除临时文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">uuidgen</div><div class="line">457eb676-33da-42ec-9a8c-9293d545c337</div><div class="line"></div><div class="line">cat &gt; secret.xml &lt;&lt;EOF</div><div class="line">&lt;secret ephemeral=&apos;no&apos; private=&apos;no&apos;&gt;</div><div class="line">  &lt;uuid&gt;457eb676-33da-42ec-9a8c-9293d545c337&lt;/uuid&gt;</div><div class="line">  &lt;usage type=&apos;ceph&apos;&gt;</div><div class="line">    &lt;name&gt;client.cinder secret&lt;/name&gt;</div><div class="line">  &lt;/usage&gt;</div><div class="line">&lt;/secret&gt;</div><div class="line">EOF</div><div class="line">sudo virsh secret-define --file secret.xml</div><div class="line">Secret 457eb676-33da-42ec-9a8c-9293d545c337 created</div><div class="line">sudo virsh secret-set-value --secret 457eb676-33da-42ec-9a8c-9293d545c337 --base64 $(cat client.cinder.key) &amp;&amp; rm client.cinder.key secret.xml</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看libvirt保存的秘钥的uuid的方法：<code>virsh secret-list</code></p>
+</li>
+<li>查看secret-value: <code>virsh secret-get-value UUID</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="配置OpenStack来使用Ceph【改配置文件之前最好备份】"><a href="#配置OpenStack来使用Ceph【改配置文件之前最好备份】" class="headerlink" title="配置OpenStack来使用Ceph【改配置文件之前最好备份】"></a>配置OpenStack来使用Ceph【改配置文件之前最好备份】</h3><h4 id="配置Glance"><a href="#配置Glance" class="headerlink" title="配置Glance"></a>配置Glance</h4><ul>
+<li>编辑<code>/etc/glance/glance-api.conf</code> :<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[DEFAULT]</div><div class="line">...</div><div class="line">show_image_direct_url = True # 启用images的copy-on-write克隆</div><div class="line">...</div><div class="line">[glance_store]</div><div class="line">stores = rbd</div><div class="line">default_store = rbd</div><div class="line">rbd_store_pool = images</div><div class="line">rbd_store_user = glance</div><div class="line">rbd_store_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">rbd_store_chunk_size = 8</div><div class="line">...</div><div class="line">[paste_deploy]</div><div class="line">flavor = keystone # 不缓存镜像</div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="配置Cinder"><a href="#配置Cinder" class="headerlink" title="配置Cinder"></a>配置Cinder</h4><ul>
+<li><p>编辑<code>/etc/cinder/cinder.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[DEFAULT]</div><div class="line">...</div><div class="line">enabled_backends = ceph</div><div class="line">...</div><div class="line">[ceph]</div><div class="line">volume_driver = cinder.volume.drivers.rbd.RBDDriver</div><div class="line">volume_backend_name = ceph</div><div class="line">rbd_pool = volumes</div><div class="line">rbd_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">rbd_flatten_volume_from_snapshot = false</div><div class="line">rbd_max_clone_depth = 5</div><div class="line">rbd_store_chunk_size = 4</div><div class="line">rados_connect_timeout = -1</div><div class="line">glance_api_version = 2</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果开启了cephx认证，还需要libvirt中保存的秘钥的user和uuid</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[ceph]</div><div class="line">...</div><div class="line">rbd_user = cinder</div><div class="line">rbd_secret_uuid = $UUID # 使用之前存在libvirt中的UUID</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="配置Cinder-Backup"><a href="#配置Cinder-Backup" class="headerlink" title="配置Cinder Backup"></a>配置Cinder Backup</h4><ul>
+<li>修改<code>/etc/cinder/cinder.conf</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">backup_driver = cinder.backup.drivers.ceph</div><div class="line">backup_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">backup_ceph_user = cinder-backup</div><div class="line">backup_ceph_chunk_size = 134217728</div><div class="line">backup_ceph_pool = backups</div><div class="line">backup_ceph_stripe_unit = 0</div><div class="line">backup_ceph_stripe_count = 0</div><div class="line">restore_discard_excess_bytes = true</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="配置Nova"><a href="#配置Nova" class="headerlink" title="配置Nova"></a>配置Nova</h4><ul>
+<li>修改<code>/etc/nova/nova.conf</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[libvirt]</div><div class="line">virt_type = qemu</div><div class="line">images_type = rbd</div><div class="line">images_rbd_pool = vms</div><div class="line">images_rbd_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">rbd_user = cinder</div><div class="line">rbd_secret_uuid = $UUID</div><div class="line">disk_cachemodes=&quot;network=writeback&quot;</div><div class="line">live_migration_flag=&quot;VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED&quot;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="重启相关服务"><a href="#重启相关服务" class="headerlink" title="重启相关服务"></a>重启相关服务</h1><h2 id="需要重启的服务"><a href="#需要重启的服务" class="headerlink" title="需要重启的服务"></a>需要重启的服务</h2><ul>
+<li>glance-api (g-api)</li>
+<li>glance-registry (g-reg)</li>
+<li>nova-compute (n-cpu)</li>
+<li>cinder-volume (<code>c-vol*</code>)</li>
+<li>cinder-api (c-api)</li>
+<li>cinder-schduler (c-sch)</li>
+</ul>
+<h2 id="重启方法"><a href="#重启方法" class="headerlink" title="重启方法"></a>重启方法</h2><p>由于devstack启动服务的方式比较特殊，安装的所有服务都运行在screen中，要重启服务，需要找到对应的screen，在其中进行重启操作。参考<a href="http://1.chaoxu.sinaapp.com/archives/3311" target="_blank" rel="external">这篇博客</a>。</p>
+<ul>
+<li><p>输入<code>screen -list</code>，查看当前用户开启的所有screen</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[stack@devstack devstack]$ screen -list</div><div class="line">There is a screen on:</div><div class="line">    2756.stack    (Detached)</div><div class="line">1 Socket in /var/run/screen/S-stack.</div></pre></td></tr></table></figure>
+</li>
+<li><p>附加到screen：<code>screen -r $screen_id # 上面的2756</code></p>
+</li>
+<li>依次执行<code>control + a</code> 和 <code>control + d</code> 来退出当前的screen</li>
+<li>进入某个screen的方法，<code>control + a + &#39;</code>，然后输入屏幕下方的数字，敲回车，切换到相应的screen。</li>
+<li>停止服务<code>control + c</code>，重新启动<code>↑ + enter</code></li>
+</ul>
+<h1 id="测试验证"><a href="#测试验证" class="headerlink" title="测试验证"></a>测试验证</h1><ul>
+<li>用openstack命令创建镜像：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@devstack devstack]# openstack image create &quot;cirros-raw&quot; --file files/cirros-0.3.4-x86_64-disk.raw --disk-format qcow2 --container-format bare --public</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>成功后可以用<code>rbd ls images</code>查看到</p>
+<ul>
+<li>在控制台创建新卷，成功后可以用<code>rbd ls volumes</code> 查到到</li>
+<li>在控制台用新上传的镜像启动云主机，成功后可以用<code>rbs ls vms</code>查看到。【此处不知为何没有生效，新建的云主机镜像文件保存到了volumes pool中】</li>
+</ul>
+<h1 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h1><h3 id="控制台创建卷时，卷类型没有CEPH可选，显示无类型"><a href="#控制台创建卷时，卷类型没有CEPH可选，显示无类型" class="headerlink" title="控制台创建卷时，卷类型没有CEPH可选，显示无类型"></a>控制台创建卷时，卷类型没有CEPH可选，显示无类型</h3><ul>
+<li>需要在cinder节点上添加：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cinder type-list # 只能看到一个lvmdirver-1</div><div class="line">cinder type-create --is-public True ceph</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此时再到控制台创建，就可以看到有CEPH类型可选了。</p>
+<h3 id="无法创建VM，报错Block-Device-Mapping-is-Invalid"><a href="#无法创建VM，报错Block-Device-Mapping-is-Invalid" class="headerlink" title="无法创建VM，报错Block Device Mapping is Invalid"></a>无法创建VM，报错<code>Block Device Mapping is Invalid</code></h3><ul>
+<li>问题在于用的启动镜像，还是用之前的file镜像，跟ceph配置冲突。使用新上传到glance中的镜像进行启动就可以了</li>
+</ul>
+<h3 id="创建云主机时报错：No-valid-host-available"><a href="#创建云主机时报错：No-valid-host-available" class="headerlink" title="创建云主机时报错：No valid host available"></a>创建云主机时报错：No valid host available</h3><ul>
+<li>首先用<code>free</code>等命令确认物理机资源足够flavor使用</li>
+<li>最后发现，问题出在nova.conf配置文件中的virt_type项，参考博客设置的qemu，改回kvm就好了</li>
+<li>关于这个配置项，在OpenStack官方文档找到如下的解释：<blockquote>
+<p>Describes the virtualization type (or so called domain type) libvirt should use.<br>The choice of this type must match the underlying virtualization strategy you have chosen for this host.</p>
+</blockquote>
+</li>
+</ul>
+<p>用来指定libvirt使用的虚拟化类型，必须和宿主机上选择的虚拟化策略一致。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li>Ceph 官方文档 <a href="http://docs.ceph.com/docs/master/rbd/rbd-openstack/" target="_blank" rel="external">BLOCK DEVICES AND OPENSTACK</a>。文档中是按多节点部署的环境说明的，我部署的环境是All-In-One的单节点环境，所有服务的用户都是<code>stack.stack</code>，在相应的命令中替换掉即可。</li>
+<li><a href="https://docs.openstack.org/developer/devstack/" target="_blank" rel="external">部署DevStack文档</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;环境&quot;&gt;&lt;a href=&quot;#环境&quot; class=&quot;headerlink&quot; title=&quot;环境&quot;&gt;&lt;/a&gt;环境&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;已经搭建好的 &lt;code&gt;Mon*1 + OSD*3&lt;/code&gt; 的Ceph-10.2.5测试集群&lt;/li&gt;
+&lt;li&gt;All-In-One的Newton版DevStack环境，参考&lt;a href=&quot;https://docs.openstack.org/developer/devstack/&quot;&gt;DevStack部署文档&lt;/a&gt;
+    
+    </summary>
+    
+    
+      <category term="Ceph" scheme="https://caitianxiong.github.io/tags/Ceph/"/>
+    
+      <category term="OpenStack" scheme="https://caitianxiong.github.io/tags/OpenStack/"/>
+    
+      <category term="DevStack" scheme="https://caitianxiong.github.io/tags/DevStack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>手动部署Ceph集群</title>
+    <link href="https://caitianxiong.github.io/2017/02/25/deploy-ceph-cluster-manually/"/>
+    <id>https://caitianxiong.github.io/2017/02/25/deploy-ceph-cluster-manually/</id>
+    <published>2017-02-25T11:16:30.000Z</published>
+    <updated>2017-02-28T07:03:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]# uname -r</div><div class="line">3.10.0-327.28.3.el7.x86_64</div><div class="line">[root@node1 ~]# cat /etc/redhat-release</div><div class="line">CentOS Linux release 7.3.1611 (Core)</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="安装Ceph-10-2-5"><a href="#安装Ceph-10-2-5" class="headerlink" title="安装Ceph-10.2.5"></a>安装Ceph-10.2.5</h2><ul>
+<li>添加KEYS <code>sudo rpm --import &#39;https://download.ceph.com/keys/release.asc&#39;</code></li>
+<li><p>添加yum源<code>ceph.repo</code>，其中<code>jewel/el7</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">[ceph]</div><div class="line">name=Ceph packages for $basearch</div><div class="line">baseurl=https://download.ceph.com/rpm-&#123;ceph-release&#125;/&#123;distro&#125;/$basearch</div><div class="line">enabled=1</div><div class="line">priority=2</div><div class="line">gpgcheck=1</div><div class="line">gpgkey=https://download.ceph.com/keys/release.asc</div><div class="line"></div><div class="line">[ceph-noarch]</div><div class="line">name=Ceph noarch packages</div><div class="line">baseurl=https://download.ceph.com/rpm-&#123;ceph-release&#125;/&#123;distro&#125;/noarch</div><div class="line">enabled=1</div><div class="line">priority=2</div><div class="line">gpgcheck=1</div><div class="line">gpgkey=https://download.ceph.com/keys/release.asc</div><div class="line"></div><div class="line">[ceph-source]</div><div class="line">name=Ceph source packages</div><div class="line">baseurl=https://download.ceph.com/rpm-&#123;ceph-release&#125;/&#123;distro&#125;/SRPMS</div><div class="line">enabled=0</div><div class="line">priority=2</div><div class="line">gpgcheck=1</div><div class="line">gpgkey=https://download.ceph.com/keys/release.asc</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装依赖 <code>sudo yum install snappy leveldb gdisk python-argparse gperftools-libs -y</code>【其中的leveldb需要先安装epel的yum源，<code>yum install epel-release -y</code>】</p>
+</li>
+<li>安装ceph，<code>yum install ceph -y</code></li>
+</ul>
+<h2 id="安装块设备虚拟化"><a href="#安装块设备虚拟化" class="headerlink" title="安装块设备虚拟化"></a>安装块设备虚拟化</h2><ul>
+<li>QEMU <code>yum update &amp;&amp; yum install qemu-kvm qemu-kvm-tools qemu-im</code></li>
+<li>libvirt <code>yum install libvirt -y</code></li>
+</ul>
+<h2 id="部署ceph集群"><a href="#部署ceph集群" class="headerlink" title="部署ceph集群"></a>部署ceph集群</h2><p>参考官方文档<a href="http://docs.ceph.com/docs/master/install/manual-deployment/" target="_blank" rel="external">手动部署</a>，其中的启动命令过时了，应该用<code>systemctl</code>。具体步骤如下：</p>
+<h3 id="MON"><a href="#MON" class="headerlink" title="MON"></a>MON</h3><ol>
+<li>生成uuid</li>
+<li><p>创建<code>ceph.conf</code>文件。<code>uuidgen</code> 生成uuid，写到<code>/etc/ceph/ceph.conf</code> 中作为<code>fsid</code>，同时写入mon信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fsid = a7f64266-0894-4f1e-a635-d0aeaca0e993</div><div class="line">mon initial members = node1</div><div class="line">mon host = 192.168.1.43</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建keyring文件，并生成一个 monitor 秘钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon &apos;allow *&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成administrator keyring，生成client.admin用户，并将用户添加到keyring</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo ceph-authtool --create-keyring /etc/ceph/ceph.client.admin.keyring --gen-key -n client.admin --set-uid=0 --cap mon &apos;allow *&apos; --cap osd &apos;allow *&apos; --cap mds &apos;allow&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加<code>client.admin</code> key到<code>ceph.mon.keyring</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph-authtool /tmp/ceph.mon.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用hostname、IP、FSID生成一个monitor map，保存到<code>/tmp/monmap</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">monmaptool --create --add &#123;hostname&#125; &#123;ip-address&#125; --fsid &#123;uuid&#125; /tmp/monmap</div></pre></td></tr></table></figure>
+</li>
+<li><p>在monitor主机上创建默认的数据目录，并修改属主为ceph</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir /var/lib/ceph/mon/&#123;cluster-name&#125;-&#123;hostname&#125;</div><div class="line">chown -R ceph.ceph /var/lib/ceph/mon</div></pre></td></tr></table></figure>
+</li>
+<li><p>将monitor map和keyring<strong>保存到（populate）</strong>monitor守护进程中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -u ceph ceph-mon [--cluster &#123;cluster-name&#125;] --mkfs -i &#123;hostname&#125; --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p>检查ceph.conf配置文件，根据需求，添加必要项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[global]</div><div class="line">fsid = &#123;cluster-id&#125;</div><div class="line">mon initial members = &#123;hostname&#125;[, &#123;hostname&#125;]</div><div class="line">mon host = &#123;ip-address&#125;[, &#123;ip-address&#125;]</div><div class="line">public network = &#123;network&#125;[, &#123;network&#125;]</div><div class="line">cluster network = &#123;network&#125;[, &#123;network&#125;]</div><div class="line">auth cluster required = cephx</div><div class="line">auth service required = cephx</div><div class="line">auth client required = cephx</div><div class="line">osd journal size = &#123;n&#125;</div><div class="line">osd pool default size = &#123;n&#125;  # Write an object n times.</div><div class="line">osd pool default min size = &#123;n&#125; # Allow writing n copy in a degraded state.</div><div class="line">osd pool default pg num = &#123;n&#125;</div><div class="line">osd pool default pgp num = &#123;n&#125;</div><div class="line">osd crush chooseleaf type = &#123;n&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建<code>done</code>文件，<code>touch /var/lib/ceph/mon/ceph-node1/done</code></p>
+</li>
+<li>启动monitor，<code>systemctl start ceph-mon@node1</code></li>
+<li>查看集群状态，<code>ceph -s</code>，因为此时还没有OSD，所以集群是HEALTH_ERR状态，pg都是creating状态</li>
+</ol>
+<h3 id="OSD"><a href="#OSD" class="headerlink" title="OSD"></a>OSD</h3><ol>
+<li>首先，将mon节点上的<code>/etc/ceph/ceph.conf</code>和<code>/etc/ceph/ceph.client.admin.keyring</code>文件复制到<code>/etc/ceph/</code>目录下</li>
+<li>生成uuid，<code>uuidgen</code></li>
+<li>创建OSD：<code>ceph osd create [{uuid}]</code>，这个命令会输出OSD的编号osd-num</li>
+<li><p>创建OSD默认目录，并修改属主</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir /var/lib/ceph/osd/&#123;cluster-name&#125;-&#123;osd-num&#125;</div><div class="line">chown -R ceph.ceph /var/lib/ceph/osd</div></pre></td></tr></table></figure>
+</li>
+<li><p>格式化磁盘，<code>mkfs -t xfs /dev/{hdd}</code>；挂载到osd目录，<code>mount -o defaults /dev/{hdd} /var/lib/ceph/osd/{cluster-name}-{osd-number}</code></p>
+</li>
+<li>初始化OSD数据目录，执行这条命令前，目录必须是空的！<code>ceph-osd -i {osd-num} --mkfs --mkkey --osd-uuid {osd-uuid}</code></li>
+<li>注册OSD认证key，<code>ceph auth add osd.{osd-num} osd &#39;allow *&#39; mon &#39;allow profile osd&#39; -i /var/lib/ceph/osd/{cluster-name}-{osd-num}/keyring</code></li>
+<li>把Ceph节点添加到CRUSH map，<code>ceph [--cluster {cluster-name}] osd crush add-bucket {hostname} host</code></li>
+<li>把Ceph节点移到<code>default</code>根下，<code>ceph osd crush move {hostname} root=default</code></li>
+<li><p>把OSD添加到CRUSH map来让它接收数据。也可以反编译CRUSH map，把host加成一个bucket，把OSD加到host下的device list中，分配一个weight，然后重现编译导入。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ceph [--cluster &#123;cluster-name&#125;] osd crush add &#123;id-or-name&#125; &#123;weight&#125; [&#123;bucket-type&#125;=&#123;bucket-name&#125; ...]</div><div class="line"># 例如：ceph osd crush add osd.0 1.0 host=node1</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动OSD，<code>systemctl start ceph-osd@0</code></p>
+</li>
+<li>查看集群状态，<code>ceph -s</code>。待OSD数等于<code>pool size</code>时，所有pg会逐渐创建成功，pg状态变为<code>active+clean</code>，集群状态变为<code>HEALTH_OK</code></li>
+</ol>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="MON-1"><a href="#MON-1" class="headerlink" title="MON"></a>MON</h3><ul>
+<li>记得将mon的data目录 <code>/var/lib/ceph/mon</code> 属主改成 <code>ceph.ceph</code></li>
+<li>无法启动mon。【解决】官方文档的命令过时了，用 <code>systemctl start ceph-mon@node2</code> 这样启动，如果启动有问题，<blockquote>
+<p>可以通过 <code>systemctl status ceph-mon@ceph-k-node1.service</code> 和 <code>journalctl -b _PID=‘pid’</code> 定位出错原因</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="OSD-1"><a href="#OSD-1" class="headerlink" title="OSD"></a>OSD</h3><ul>
+<li>执行<code>ceph osd create [uuid id]</code> 之前，需要把MON节点上的集群配置文件和admin.keyring文件复制过来。<code>/etc/ceph/[ceph.conf|ceph.client.admin.keyring]</code></li>
+<li>需要将 <code>/var/lib/ceph/</code> 目录属主改成<code>ceph.ceph</code></li>
+</ul>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="http://docs.ceph.com/docs/master/install/manual-deployment/" target="_blank" rel="external">Ceph官方文档-手动部署</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;环境&quot;&gt;&lt;a href=&quot;#环境&quot; class=&quot;headerlink&quot; title=&quot;环境&quot;&gt;&lt;/a&gt;环境&lt;/h2&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;[root@node1 ~]# uname -r&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3.10.0-327.28.3.el7.x86_64&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;[root@node1 ~]# cat /etc/redhat-release&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;CentOS Linux release 7.3.1611 (Core)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="Ceph" scheme="https://caitianxiong.github.io/tags/Ceph/"/>
+    
+  </entry>
   
   <entry>
     <title>蔡旺作品展示</title>
@@ -153,7 +388,7 @@
     <link href="https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/"/>
     <id>https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/</id>
     <published>2016-09-21T13:02:29.000Z</published>
-    <updated>2016-10-06T06:02:16.000Z</updated>
+    <updated>2017-02-28T06:30:37.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg" alt="openstack-components"></p>
 <h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。<br><a id="more"></a></p>
@@ -196,16 +431,16 @@
     </summary>
     
     
-      <category term="openstack" scheme="https://caitianxiong.github.io/tags/openstack/"/>
+      <category term="OpenStack" scheme="https://caitianxiong.github.io/tags/OpenStack/"/>
     
   </entry>
   
   <entry>
-    <title>Xenserver 7.0安装ceph 10.2.2</title>
+    <title>Xenserver 7.0安装Ceph-10.2.2</title>
     <link href="https://caitianxiong.github.io/2016/09/10/install-ceph-on-xenserver/"/>
     <id>https://caitianxiong.github.io/2016/09/10/install-ceph-on-xenserver/</id>
     <published>2016-09-10T12:51:37.000Z</published>
-    <updated>2016-10-06T06:02:36.000Z</updated>
+    <updated>2017-02-28T06:29:41.000Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li><p>配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】</p>
@@ -237,7 +472,7 @@
     </summary>
     
     
-      <category term="ceph" scheme="https://caitianxiong.github.io/tags/ceph/"/>
+      <category term="Ceph" scheme="https://caitianxiong.github.io/tags/Ceph/"/>
     
   </entry>
   

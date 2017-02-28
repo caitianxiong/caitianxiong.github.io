@@ -1,0 +1,948 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ceph,OpenStack,DevStack," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Have A Nice Day" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="环境
+已经搭建好的 Mon*1 + OSD*3 的Ceph-10.2.5测试集群
+All-In-One的Newton版DevStack环境，参考DevStack部署文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集成Ceph到DevStack">
+<meta property="og:url" content="https://caitianxiong.github.io/2017/02/28/integrate-ceph-into-devstack/index.html">
+<meta property="og:site_name" content="Have A Nice Day">
+<meta property="og:description" content="环境
+已经搭建好的 Mon*1 + OSD*3 的Ceph-10.2.5测试集群
+All-In-One的Newton版DevStack环境，参考DevStack部署文档">
+<meta property="og:updated_time" content="2017-02-28T06:55:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="集成Ceph到DevStack">
+<meta name="twitter:description" content="环境
+已经搭建好的 Mon*1 + OSD*3 的Ceph-10.2.5测试集群
+All-In-One的Newton版DevStack环境，参考DevStack部署文档">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://caitianxiong.github.io/2017/02/28/integrate-ceph-into-devstack/"/>
+
+  <title> 集成Ceph到DevStack | Have A Nice Day </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a85e033404111b6034dd3aa973708f20";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Have A Nice Day</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                集成Ceph到DevStack
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-28T14:35:53+08:00" content="2017-02-28">
+              2017-02-28
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/28/integrate-ceph-into-devstack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/28/integrate-ceph-into-devstack/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/28/integrate-ceph-into-devstack/" class="leancloud_visitors" data-flag-title="集成Ceph到DevStack">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
+<li>已经搭建好的 <code>Mon*1 + OSD*3</code> 的Ceph-10.2.5测试集群</li>
+<li>All-In-One的Newton版DevStack环境，参考<a href="https://docs.openstack.org/developer/devstack/" target="_blank" rel="external">DevStack部署文档</a><a id="more"></a>
+</li>
+</ul>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="创建pool"><a href="#创建pool" class="headerlink" title="创建pool"></a>创建pool</h2><ul>
+<li>Ceph集群创建几个pool：images/volumes/backups/vms<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ceph osd pool create volumes 128 (pg大小根据自己的Ceph集群规模调整）</div><div class="line">ceph osd pool create images 128</div><div class="line">ceph osd pool create backups 128</div><div class="line">ceph osd pool create vms 128</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="配置OpenStack-Ceph客户端"><a href="#配置OpenStack-Ceph客户端" class="headerlink" title="配置OpenStack Ceph客户端"></a>配置OpenStack Ceph客户端</h2><ul>
+<li>将ceph.conf配置文件复制到openstack节点，包括：运行 glance-api, cinder-volume, nova-compute 和 cinder-backup 的节点，都作为Ceph client。</li>
+</ul>
+<h3 id="安装Ceph客户端"><a href="#安装Ceph客户端" class="headerlink" title="安装Ceph客户端"></a>安装Ceph客户端</h3><ul>
+<li>在运行glance-api的节点，安装<code>python-rbd</code>库，<code>yum install python-rbd -y</code></li>
+<li>在运行nova-compute, cinder-backup 和 cinder-volume 节点，安装python-rbd库和ceph命令行工具：<code>yum install python-rbd ceph-common -y</code></li>
+</ul>
+<h3 id="配置Ceph客户端认证"><a href="#配置Ceph客户端认证" class="headerlink" title="配置Ceph客户端认证"></a>配置Ceph客户端认证</h3><ul>
+<li><p>为Nova/Cinder/Glance创建新用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.glance mon &apos;allow r&apos; osd &apos;allow class-read object_prefix rbd_children, allow rwx pool=images&apos;</div><div class="line">ceph auth get-or-create client.cinder-backup mon &apos;allow r&apos; osd &apos;allow class-read object_prefix rbd_children, allow rwx pool=backups&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Mitaka及之后的版本，引入了RBD快照的支持（做Nova实例的快照），因此需要配置<code>client.cinder</code> key对images pool的写权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.cinder mon &apos;allow r&apos; osd &apos;allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rwx pool=images&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>将<code>client.cinder, client.glance, 和 client.cinder-backup</code>的 keyring 添加到相应的节点，并改变其属主：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.glance | ssh &#123;your-glance-api-server&#125; sudo tee /etc/ceph/ceph.client.glance.keyring</div><div class="line">ssh &#123;your-glance-api-server&#125; sudo chown glance:glance /etc/ceph/ceph.client.glance.keyring</div><div class="line">ceph auth get-or-create client.cinder | ssh &#123;your-volume-server&#125; sudo tee /etc/ceph/ceph.client.cinder.keyring</div><div class="line">ssh &#123;your-cinder-volume-server&#125; sudo chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring</div><div class="line">ceph auth get-or-create client.cinder-backup | ssh &#123;your-cinder-backup-server&#125; sudo tee /etc/ceph/ceph.client.cinder-backup.keyring</div><div class="line">ssh &#123;your-cinder-backup-server&#125; sudo chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p>运行nova-compute进程的节点也需要client.cinder的keyring文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ceph auth get-or-create client.cinder | ssh &#123;your-nova-compute-server&#125; sudo tee /etc/ceph/ceph.client.cinder.keyring</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>计算节点</strong>上，还需要把client.cinder的keyring文件保存到libvirt中。libvirt进程从Cinder挂载一个块设备时，需要访问jCeph集群。</p>
+<ul>
+<li>创建一个临时文件 <code>ceph auth get-key client.cinder | ssh {your-compute-node} tee client.cinder.key</code></li>
+<li><p>将秘钥加到libvirt中，并删除临时文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">uuidgen</div><div class="line">457eb676-33da-42ec-9a8c-9293d545c337</div><div class="line"></div><div class="line">cat &gt; secret.xml &lt;&lt;EOF</div><div class="line">&lt;secret ephemeral=&apos;no&apos; private=&apos;no&apos;&gt;</div><div class="line">  &lt;uuid&gt;457eb676-33da-42ec-9a8c-9293d545c337&lt;/uuid&gt;</div><div class="line">  &lt;usage type=&apos;ceph&apos;&gt;</div><div class="line">    &lt;name&gt;client.cinder secret&lt;/name&gt;</div><div class="line">  &lt;/usage&gt;</div><div class="line">&lt;/secret&gt;</div><div class="line">EOF</div><div class="line">sudo virsh secret-define --file secret.xml</div><div class="line">Secret 457eb676-33da-42ec-9a8c-9293d545c337 created</div><div class="line">sudo virsh secret-set-value --secret 457eb676-33da-42ec-9a8c-9293d545c337 --base64 $(cat client.cinder.key) &amp;&amp; rm client.cinder.key secret.xml</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看libvirt保存的秘钥的uuid的方法：<code>virsh secret-list</code></p>
+</li>
+<li>查看secret-value: <code>virsh secret-get-value UUID</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="配置OpenStack来使用Ceph【改配置文件之前最好备份】"><a href="#配置OpenStack来使用Ceph【改配置文件之前最好备份】" class="headerlink" title="配置OpenStack来使用Ceph【改配置文件之前最好备份】"></a>配置OpenStack来使用Ceph【改配置文件之前最好备份】</h3><h4 id="配置Glance"><a href="#配置Glance" class="headerlink" title="配置Glance"></a>配置Glance</h4><ul>
+<li>编辑<code>/etc/glance/glance-api.conf</code> :<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[DEFAULT]</div><div class="line">...</div><div class="line">show_image_direct_url = True # 启用images的copy-on-write克隆</div><div class="line">...</div><div class="line">[glance_store]</div><div class="line">stores = rbd</div><div class="line">default_store = rbd</div><div class="line">rbd_store_pool = images</div><div class="line">rbd_store_user = glance</div><div class="line">rbd_store_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">rbd_store_chunk_size = 8</div><div class="line">...</div><div class="line">[paste_deploy]</div><div class="line">flavor = keystone # 不缓存镜像</div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="配置Cinder"><a href="#配置Cinder" class="headerlink" title="配置Cinder"></a>配置Cinder</h4><ul>
+<li><p>编辑<code>/etc/cinder/cinder.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[DEFAULT]</div><div class="line">...</div><div class="line">enabled_backends = ceph</div><div class="line">...</div><div class="line">[ceph]</div><div class="line">volume_driver = cinder.volume.drivers.rbd.RBDDriver</div><div class="line">volume_backend_name = ceph</div><div class="line">rbd_pool = volumes</div><div class="line">rbd_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">rbd_flatten_volume_from_snapshot = false</div><div class="line">rbd_max_clone_depth = 5</div><div class="line">rbd_store_chunk_size = 4</div><div class="line">rados_connect_timeout = -1</div><div class="line">glance_api_version = 2</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果开启了cephx认证，还需要libvirt中保存的秘钥的user和uuid</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[ceph]</div><div class="line">...</div><div class="line">rbd_user = cinder</div><div class="line">rbd_secret_uuid = $UUID # 使用之前存在libvirt中的UUID</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="配置Cinder-Backup"><a href="#配置Cinder-Backup" class="headerlink" title="配置Cinder Backup"></a>配置Cinder Backup</h4><ul>
+<li>修改<code>/etc/cinder/cinder.conf</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">backup_driver = cinder.backup.drivers.ceph</div><div class="line">backup_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">backup_ceph_user = cinder-backup</div><div class="line">backup_ceph_chunk_size = 134217728</div><div class="line">backup_ceph_pool = backups</div><div class="line">backup_ceph_stripe_unit = 0</div><div class="line">backup_ceph_stripe_count = 0</div><div class="line">restore_discard_excess_bytes = true</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="配置Nova"><a href="#配置Nova" class="headerlink" title="配置Nova"></a>配置Nova</h4><ul>
+<li>修改<code>/etc/nova/nova.conf</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[libvirt]</div><div class="line">virt_type = qemu</div><div class="line">images_type = rbd</div><div class="line">images_rbd_pool = vms</div><div class="line">images_rbd_ceph_conf = /etc/ceph/ceph.conf</div><div class="line">rbd_user = cinder</div><div class="line">rbd_secret_uuid = $UUID</div><div class="line">disk_cachemodes=&quot;network=writeback&quot;</div><div class="line">live_migration_flag=&quot;VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED&quot;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="重启相关服务"><a href="#重启相关服务" class="headerlink" title="重启相关服务"></a>重启相关服务</h1><h2 id="需要重启的服务"><a href="#需要重启的服务" class="headerlink" title="需要重启的服务"></a>需要重启的服务</h2><ul>
+<li>glance-api (g-api)</li>
+<li>glance-registry (g-reg)</li>
+<li>nova-compute (n-cpu)</li>
+<li>cinder-volume (<code>c-vol*</code>)</li>
+<li>cinder-api (c-api)</li>
+<li>cinder-schduler (c-sch)</li>
+</ul>
+<h2 id="重启方法"><a href="#重启方法" class="headerlink" title="重启方法"></a>重启方法</h2><p>由于devstack启动服务的方式比较特殊，安装的所有服务都运行在screen中，要重启服务，需要找到对应的screen，在其中进行重启操作。参考<a href="http://1.chaoxu.sinaapp.com/archives/3311" target="_blank" rel="external">这篇博客</a>。</p>
+<ul>
+<li><p>输入<code>screen -list</code>，查看当前用户开启的所有screen</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[stack@devstack devstack]$ screen -list</div><div class="line">There is a screen on:</div><div class="line">    2756.stack    (Detached)</div><div class="line">1 Socket in /var/run/screen/S-stack.</div></pre></td></tr></table></figure>
+</li>
+<li><p>附加到screen：<code>screen -r $screen_id # 上面的2756</code></p>
+</li>
+<li>依次执行<code>control + a</code> 和 <code>control + d</code> 来退出当前的screen</li>
+<li>进入某个screen的方法，<code>control + a + &#39;</code>，然后输入屏幕下方的数字，敲回车，切换到相应的screen。</li>
+<li>停止服务<code>control + c</code>，重新启动<code>↑ + enter</code></li>
+</ul>
+<h1 id="测试验证"><a href="#测试验证" class="headerlink" title="测试验证"></a>测试验证</h1><ul>
+<li>用openstack命令创建镜像：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@devstack devstack]# openstack image create &quot;cirros-raw&quot; --file files/cirros-0.3.4-x86_64-disk.raw --disk-format qcow2 --container-format bare --public</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>成功后可以用<code>rbd ls images</code>查看到</p>
+<ul>
+<li>在控制台创建新卷，成功后可以用<code>rbd ls volumes</code> 查到到</li>
+<li>在控制台用新上传的镜像启动云主机，成功后可以用<code>rbs ls vms</code>查看到。【此处不知为何没有生效，新建的云主机镜像文件保存到了volumes pool中】</li>
+</ul>
+<h1 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h1><h3 id="控制台创建卷时，卷类型没有CEPH可选，显示无类型"><a href="#控制台创建卷时，卷类型没有CEPH可选，显示无类型" class="headerlink" title="控制台创建卷时，卷类型没有CEPH可选，显示无类型"></a>控制台创建卷时，卷类型没有CEPH可选，显示无类型</h3><ul>
+<li>需要在cinder节点上添加：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cinder type-list # 只能看到一个lvmdirver-1</div><div class="line">cinder type-create --is-public True ceph</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此时再到控制台创建，就可以看到有CEPH类型可选了。</p>
+<h3 id="无法创建VM，报错Block-Device-Mapping-is-Invalid"><a href="#无法创建VM，报错Block-Device-Mapping-is-Invalid" class="headerlink" title="无法创建VM，报错Block Device Mapping is Invalid"></a>无法创建VM，报错<code>Block Device Mapping is Invalid</code></h3><ul>
+<li>问题在于用的启动镜像，还是用之前的file镜像，跟ceph配置冲突。使用新上传到glance中的镜像进行启动就可以了</li>
+</ul>
+<h3 id="创建云主机时报错：No-valid-host-available"><a href="#创建云主机时报错：No-valid-host-available" class="headerlink" title="创建云主机时报错：No valid host available"></a>创建云主机时报错：No valid host available</h3><ul>
+<li>首先用<code>free</code>等命令确认物理机资源足够flavor使用</li>
+<li>最后发现，问题出在nova.conf配置文件中的virt_type项，参考博客设置的qemu，改回kvm就好了</li>
+<li>关于这个配置项，在OpenStack官方文档找到如下的解释：<blockquote>
+<p>Describes the virtualization type (or so called domain type) libvirt should use.<br>The choice of this type must match the underlying virtualization strategy you have chosen for this host.</p>
+</blockquote>
+</li>
+</ul>
+<p>用来指定libvirt使用的虚拟化类型，必须和宿主机上选择的虚拟化策略一致。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li>Ceph 官方文档 <a href="http://docs.ceph.com/docs/master/rbd/rbd-openstack/" target="_blank" rel="external">BLOCK DEVICES AND OPENSTACK</a>。文档中是按多节点部署的环境说明的，我部署的环境是All-In-One的单节点环境，所有服务的用户都是<code>stack.stack</code>，在相应的命令中替换掉即可。</li>
+<li><a href="https://docs.openstack.org/developer/devstack/" target="_blank" rel="external">部署DevStack文档</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="http://ock7ps6a9.bkt.clouddn.com/image/blog/qrcode_for_gh_8a6254079e00_430.jpg" alt="Leon wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ock7ps6a9.bkt.clouddn.com/image/blog/534612710.jpg" alt="Leon WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Ceph/" rel="tag">#Ceph</a>
+          
+            <a href="/tags/OpenStack/" rel="tag">#OpenStack</a>
+          
+            <a href="/tags/DevStack/" rel="tag">#DevStack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/25/deploy-ceph-cluster-manually/" rel="next" title="手动部署Ceph集群">
+                <i class="fa fa-chevron-left"></i> 手动部署Ceph集群
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/28/integrate-ceph-into-devstack/"
+           data-title="集成Ceph到DevStack" data-url="https://caitianxiong.github.io/2017/02/28/integrate-ceph-into-devstack/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ock7ps6a9.bkt.clouddn.com/image/blog/avatar.png"
+               alt="Leon" />
+          <p class="site-author-name" itemprop="name">Leon</p>
+          <p class="site-description motion-element" itemprop="description">人生很长，什么都有可能发生。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caitianxiong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/darkhacker" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友链
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fullstack.love/" title="醉己斋" target="_blank">醉己斋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.blog.szcoder.com/" title="Neo Blog" target="_blank">Neo Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://unkownarea.com/" title="未知地界" target="_blank">未知地界</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tcztzy.github.io/" title="Tcztzy" target="_blank">Tcztzy</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境"><span class="nav-text">环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建pool"><span class="nav-text">创建pool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置OpenStack-Ceph客户端"><span class="nav-text">配置OpenStack Ceph客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Ceph客户端"><span class="nav-text">安装Ceph客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Ceph客户端认证"><span class="nav-text">配置Ceph客户端认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置OpenStack来使用Ceph【改配置文件之前最好备份】"><span class="nav-text">配置OpenStack来使用Ceph【改配置文件之前最好备份】</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Glance"><span class="nav-text">配置Glance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Cinder"><span class="nav-text">配置Cinder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Cinder-Backup"><span class="nav-text">配置Cinder Backup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Nova"><span class="nav-text">配置Nova</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重启相关服务"><span class="nav-text">重启相关服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需要重启的服务"><span class="nav-text">需要重启的服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重启方法"><span class="nav-text">重启方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试验证"><span class="nav-text">测试验证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#踩坑记录"><span class="nav-text">踩坑记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#控制台创建卷时，卷类型没有CEPH可选，显示无类型"><span class="nav-text">控制台创建卷时，卷类型没有CEPH可选，显示无类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无法创建VM，报错Block-Device-Mapping-is-Invalid"><span class="nav-text">无法创建VM，报错Block Device Mapping is Invalid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建云主机时报错：No-valid-host-available"><span class="nav-text">创建云主机时报错：No valid host available</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"caitianxiong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("YIJ5gxbEG1DDJrtEsLB5yzeE-gzGzoHsz", "q1UAnxXkMVrNVaH2FSq7DATV");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
