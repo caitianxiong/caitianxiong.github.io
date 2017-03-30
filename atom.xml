@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.github.io/"/>
-  <updated>2017-02-28T06:55:30.000Z</updated>
+  <updated>2017-03-30T11:49:22.000Z</updated>
   <id>https://caitianxiong.github.io/</id>
   
   <author>
@@ -14,6 +14,202 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>OLTP场景测试工具——Orion</title>
+    <link href="https://caitianxiong.github.io/2017/03/30/oltp-orion/"/>
+    <id>https://caitianxiong.github.io/2017/03/30/oltp-orion/</id>
+    <published>2017-03-30T11:45:01.000Z</published>
+    <updated>2017-03-30T11:49:22.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="1-OLTP场景介绍"><a href="#1-OLTP场景介绍" class="headerlink" title="1. OLTP场景介绍"></a>1. OLTP场景介绍</h3><p>关于OLTP和其他相关概念的介绍见上篇，本篇不再赘述。<br><a id="more"></a></p>
+<h3 id="2-Orion介绍"><a href="#2-Orion介绍" class="headerlink" title="2. Orion介绍"></a>2. Orion介绍</h3><p>Orion是 Oracle IO Numbers的缩写，是Oracle公司提供的一个测试工具。<a href="http://www.oracle.com/technetwork/cn/topics/index-088165-zhs.html" target="_blank" rel="external">官网</a>介绍：</p>
+<blockquote>
+<p>ORION (Oracle I/O Calibration Tool) 是校准用于 Oracle 数据库的存储系统 I/O 性能的独立工具。校准结果对于了解存储系统的性能有很大帮助，不仅可以找出影响 Oracle 数据库性能的问题，还能测量新数据库安装的大小。由于 ORION 是一个独立工具，用户不需要创建和运行 Oracle 数据库。 </p>
+<p>为了尽可能地模拟 Oracle 数据库，ORION 使用和 Oracle 相同的 I/O 软件集生成一个合成的 I/O 负载。可以将 ORION 配置为生成很多 I/O 负载，包括一个模拟 OLTP 和数据仓库负载的 I/O 负载。</p>
+</blockquote>
+<h3 id="3-Orion的安装"><a href="#3-Orion的安装" class="headerlink" title="3. Orion的安装"></a>3. Orion的安装</h3><p>Orion的下载需要去Oracle网站。<br>1) 进入www.oracle.com/technetwork/cn/topics/index-088165-zhs.html<br>2) 点击“接受许可协议”，选择Linux(x86_64)版本下载，可能要求输入Oracle ID<br>3) 解压缩安装包 <code>gzip -d orion_linux_x86-64.gz</code><br>4) 解压后得到一个文件，赋予执行权限 <code>chmod +x orion_linux_x86-64</code></p>
+<h3 id="4-Orion的用法"><a href="#4-Orion的用法" class="headerlink" title="4. Orion的用法"></a>4. Orion的用法</h3><p>命令行语法 <code>./orion_linux_x86_64 -run [opiton] [-testname] &lt;testname&gt;</code></p>
+<h3 id="4-1-常用测试参数说明"><a href="#4-1-常用测试参数说明" class="headerlink" title="4.1 常用测试参数说明"></a>4.1 常用测试参数说明</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">必选参数：</div><div class="line">run			要运行的负载类型(simple, normal, advanced, dss, oltp)</div><div class="line">			simple - 在不同负载下先测试8k随机小IO，然后测试随机1M大IO。</div><div class="line">			normal - 测试随机8k小IO和随机1M大IO的组合。</div><div class="line">			advanced - 运行用户用可选参数指定的负载。</div><div class="line">			dss - 运行负载渐增的1M随机大 IO 来测定最大的 吞吐量。</div><div class="line">			oltp - 运行负载渐增的8k随机小 IO 来测定最大的 IOPS。</div><div class="line">可选参数:</div><div class="line">testname    测试名</div><div class="line">num_disks	磁盘数（物理主轴数）。默认是 &lt;testname&gt;.lun 中的 LUN 数量。</div><div class="line">size_small	小 IO 的大小 (KB) - 默认8</div><div class="line">size_large  大 IO 的大小 (KB) - 默认 1024</div><div class="line">type        大 IO 类型 (rand, seq) - 默认 rand</div><div class="line">			  rand - 随机大 IO</div><div class="line">			  seq -  大 IO 的顺序流</div><div class="line">num_streamIO 每个流并发IO数 (只有当type设置为seq时) - 默认 4</div><div class="line">write	    写比例 (会损坏已有数据) - 默认 0</div><div class="line"></div><div class="line">cache_size	阵列缓存的大小（MB）。除非这个选项被设置为0，否则Orion在每个顺序数据点之前会做一定量的随机IO。</div><div class="line">                        如果指定了值，缓存热身会读或写指定大小的IO。默认行为：在每个数据点前填充cache持续2分钟。</div><div class="line">duration    每个数据点测试时长 (秒) - 默认 60</div><div class="line">num_small	outstanding 小 IO 数量 (只有当matrix 是point, col, or max时) - 无默认</div><div class="line">num_large	随机读写情况下，outstanding大IO数量。</div><div class="line">			顺序读写情况下，流数量。 (只有当matrix 是point, col, or max时) - 无默认</div><div class="line">matrix		一个由不同大小IO负载级别组成的Orion测试。这些数据点可以表示为二维矩阵，矩阵的每一列代表一个固定的小IO负载，每一行代表一个固定的大IO负载。第一行没有大IO负载，第一列没有小IO负载。一个Orion测试可以是一个单独的点、一行、一列或者整个矩阵，依赖如下选项值的设定（默认basic）：</div><div class="line">			  basic - 测试第一行和第一列</div><div class="line">			  detailed - 测试整个矩阵</div><div class="line">			  point - 在负载级别 num_small, num_large 这一数据点测试</div><div class="line">			  col - 在num_small 指定小IO下遍历大IO</div><div class="line">			  row - 在num_large指定大IO下遍历小IO</div><div class="line">			  max - 遍历大小IO最大到num_large, num_small</div><div class="line">verbose		如果设定了，打印过程信息到标准输出。默认 -- 未设定</div></pre></td></tr></table></figure>
+<p>Orion对于oltp参数的说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">oltp - run with random 8K small IOs at increasing loads to determine the maximum IOPS</div><div class="line">用负载渐增的8k随机小 IO 来测定最大的 IOPS</div></pre></td></tr></table></figure></p>
+<h3 id="4-2-测试步骤"><a href="#4-2-测试步骤" class="headerlink" title="4.2 测试步骤"></a>4.2 测试步骤</h3><p>1) 创建测试文件<br>文件名为<code>&lt;testname&gt;.lun</code>，如 <code>mytest.lun</code> ，在里面写入测试的目标磁盘，每行一个，比如<code>/dev/vdc</code> 。<br>2) 执行OLTP测试<br><code>./orion_linux_x86-64 -run oltp -testname mytest</code><br><code>-testname</code> 后接的参数要与上一步创建的文件名一致，此处为<code>mytest</code>。这个测试会进行几组8K大小的随机读写和1M大小的连续读写测试。前者用来测定IOPS能力，后者测定吞吐量</p>
+<h3 id="5-测试注意点"><a href="#5-测试注意点" class="headerlink" title="5. 测试注意点"></a>5. 测试注意点</h3><ul>
+<li>Orion的写测试直接在磁盘级进行，会损坏已有的数据，所以最好要用空磁盘进行测试。</li>
+<li>Orion模拟的OLTP测试场景无大IO，只是测试随机8k小IO的最大IOPS。可以带-write和-duration参数，可指定-size_small指定IO大小。 -type, -matrix, -num_small or -num_large这些参数不是能设置的。-size_large参数设置了也没有用处。</li>
+</ul>
+<h3 id="6-测试结果解读"><a href="#6-测试结果解读" class="headerlink" title="6. 测试结果解读"></a>6. 测试结果解读</h3><p>Orion的每次测试，会输出5个测试结果的文件。输出的各个文件说明如下：（以测试名为<code>mytest</code>为例）</p>
+<ul>
+<li><p>mytest_YYYYMMDD_HHmm_summary.txt<br><code>YYYYMMDD_HHmm</code>表示日期时间，下同。测试结果的概括，该文件包括命令行输入的参数、大随机/顺序负载下的最大吞吐量、小随机负载下的最大IOPS和小随机负载下的最小时延。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">ORION VERSION 11.1.0.7.0</div><div class="line"></div><div class="line">Commandline:</div><div class="line">-run oltp -testname oltp</div><div class="line"></div><div class="line">This maps to this test:</div><div class="line">Test: oltp</div><div class="line">Small IO size: 8 KB</div><div class="line">Large IO size: 1024 KB</div><div class="line">IO Types: Small Random IOs, Large Random IOs</div><div class="line">Simulated Array Type: CONCAT</div><div class="line">Write: 0%</div><div class="line">Cache Size: Not Entered</div><div class="line">Duration for each Data Point: 60 seconds</div><div class="line">Small Columns:,      1,      2,      3,      4,      5,      6,      7,      8,      9,     10,     11,     12,     13,     14,     15,     16,     17,     18,     19,     20</div><div class="line">Large Columns:,      0</div><div class="line">Total Data Points: 21</div><div class="line"></div><div class="line">Name: /dev/vdc  Size: 107374182400</div><div class="line">1 FILEs found.</div><div class="line"></div><div class="line">Maximum Small IOPS=24249 @ Small=18 and Large=0  # 小IOPS最大值</div><div class="line">Minimum Small Latency=0.46 @ Small=4 and Large=0   # 最小延迟时间</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_mbps.csv<br>大随机/顺序负载下的最大吞吐量数据的csv文件。（OLTP场景下这个文件是没有数据的）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">arge/Small,      2,      4,      6,      8,     10,     12,     14,     16,     18,     20,     22,     24,     26,     28,     30,     32,     34,     36,     38,     40</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_iops.csv<br>IOPS数据的csv文件。OLTP场景的测试，只有小IO的负载，因此只有一行数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Large/Small,      2,      4,      6,      8,     10,     12,     14,     16,     18,     20,     22,     24,     26,     28,     30,     32,     34,     36,     38,     40</div><div class="line">          0,  24141,  40656,  37475,  39398,  40970,  40851,  40530,  39910,  39082,  39361,  38264,  37785,  37637,  38017,  38405,  37918,  37968,  37367,  38493,  38823</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_lat.csv<br>延时数据的csv文件。同样，只有小IO的负载，因此只有一行数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Large/Small,      2,      4,      6,      8,     10,     12,     14,     16,     18,     20,     22,     24,     26,     28,     30,     32,     34,     36,     38,     40</div><div class="line">          0,   0.08,   0.10,   0.16,   0.20,   0.24,   0.29,   0.34,   0.40,   0.46,   0.51,   0.57,   0.63,   0.69,   0.74,   0.78,   0.84,   0.89,   0.96,   0.99,   1.03</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_trace.txt<br>跟踪了测试过程中各个数据点的各项数据，最为详细。可以看到随着数据点的增加，small的负载在不断增加，而large的负载保持为0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">ran (small): VLun = 0 Size = 107372216832</div><div class="line">ran (small): Index = 0  Count = 724213  Avg Lat =   0.08</div><div class="line">ran (small): Index = 1  Count = 724256  Avg Lat =   0.08</div><div class="line">ran (small): nio=1448469 nior=1448469 niow=0 req w%=0 act w%=0</div><div class="line">ran (small): my   2 oth   0 iops 24141 size 8 K lat   0.08 ms bw = 188.60 MBps dur  60.00 s READ</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">TEST START</div><div class="line"></div><div class="line">Point 1 (small=2, large=0) of 22</div><div class="line">Valid small 1 Valid large 1</div><div class="line">Valid</div><div class="line"></div><div class="line">ran (small): VLun = 0 Size = 107372216832</div><div class="line">ran (small): Index = 0  Count = 609842  Avg Lat =   0.10</div><div class="line">ran (small): Index = 1  Count = 609883  Avg Lat =   0.10</div><div class="line">ran (small): Index = 2  Count = 609788  Avg Lat =   0.10</div><div class="line">ran (small): Index = 3  Count = 609869  Avg Lat =   0.10</div><div class="line">ran (small): nio=2439382 nior=2439382 niow=0 req w%=0 act w%=0</div><div class="line">ran (small): my   4 oth   0 iops 40656 size 8 K lat   0.10 ms bw = 317.63 MBps dur  60.00 s READ</div><div class="line"></div><div class="line">Point 2 (small=4, large=0) of 22</div><div class="line">Valid small 1 Valid large 1</div><div class="line">Valid</div><div class="line"></div><div class="line">ran (small): VLun = 0 Size = 107372216832</div><div class="line">ran (small): Index = 0  Count = 374727  Avg Lat =   0.16</div><div class="line">ran (small): Index = 1  Count = 374789  Avg Lat =   0.16</div><div class="line">ran (small): Index = 2  Count = 374671  Avg Lat =   0.16</div><div class="line">ran (small): Index = 3  Count = 374833  Avg Lat =   0.16</div><div class="line">ran (small): Index = 4  Count = 374772  Avg Lat =   0.16</div><div class="line">ran (small): Index = 5  Count = 374718  Avg Lat =   0.16</div><div class="line">ran (small): nio=2248510 nior=2248510 niow=0 req w%=0 act w%=0</div><div class="line">ran (small): my   6 oth   0 iops 37475 size 8 K lat   0.16 ms bw = 292.77 MBps dur  60.00 s READ</div><div class="line"></div><div class="line">Point 3 (small=6, large=0) of 22</div><div class="line">...</div><div class="line"></div><div class="line">Point 20 (small=40, large=0) of 22</div><div class="line">Valid small 1 Valid large 1</div><div class="line">Valid</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">TEST END</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="7-Orion的优缺点"><a href="#7-Orion的优缺点" class="headerlink" title="7. Orion的优缺点"></a>7. Orion的优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>不需要安装Oracle数据库，不需要准备测试数据</li>
+<li>测试结束自动输出csv文件，方便画图分析<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4></li>
+<li>闭源工具，只有一个二进制的可执行文件，无法分析测试原理和具体实现</li>
+<li>无法自定义测试的总时间、加压幅度，完全是软件自动设置</li>
+<li>Oracle不对Orion提供支持</li>
+</ul>
+<h3 id="8-参考资料"><a href="#8-参考资料" class="headerlink" title="8. 参考资料"></a>8. 参考资料</h3><ul>
+<li><a href="http://www.oracle.com/technetwork/cn/topics/index-088165-zhs.html" target="_blank" rel="external">Oracle官网上对Orion的介绍及用户指南</a></li>
+<li><a href="https://yq.aliyun.com/articles/62615" target="_blank" rel="external">阿里云ECS使用Oracle</a></li>
+<li><a href="http://dbaplus.cn/news-10-190-1.html" target="_blank" rel="external">Oracle IO性能测试工具Orion详解</a></li>
+<li><a href="https://wenku.baidu.com/view/a2177b80680203d8ce2f24ff.html" target="_blank" rel="external">orion使用介绍</a></li>
+<li><a href="http://blog.csdn.net/shaunfang/article/details/11194289" target="_blank" rel="external">国内公有云对比（2）- 性能篇</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;1-OLTP场景介绍&quot;&gt;&lt;a href=&quot;#1-OLTP场景介绍&quot; class=&quot;headerlink&quot; title=&quot;1. OLTP场景介绍&quot;&gt;&lt;/a&gt;1. OLTP场景介绍&lt;/h3&gt;&lt;p&gt;关于OLTP和其他相关概念的介绍见上篇，本篇不再赘述。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="测试" scheme="https://caitianxiong.github.io/tags/%E6%B5%8B%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>OLTP场景测试工具——sysbench</title>
+    <link href="https://caitianxiong.github.io/2017/03/30/oltp-sysbench/"/>
+    <id>https://caitianxiong.github.io/2017/03/30/oltp-sysbench/</id>
+    <published>2017-03-30T11:38:07.000Z</published>
+    <updated>2017-03-30T11:44:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="1-OLTP场景介绍"><a href="#1-OLTP场景介绍" class="headerlink" title="1. OLTP场景介绍"></a>1. OLTP场景介绍</h3><p>On-Line Transaction Processing (OLTP) 在线事务处理，是典型的数据库应用场景，随机读写频繁，IOPS是关键指标。在证券交易系统中，单个数据库每秒处理的事务往往超过几百个，设置几千个；select语句的执行数量每秒几千甚至几万个。例如银行、证券交易、机票预订、电子商务系统、大型商场eBay的业务管理数据库系统就是很典型的OLTP数据库。<br><a id="more"></a></p>
+<h4 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h4><ul>
+<li>TPS<br>Transaction Per Second，数据库每秒执行的事务数，以 commit 为准。 </li>
+<li>QPS<br>QueryPerSecond，数据库每秒执行的 SQL 数(含 insert、select、update、delete 等)。 </li>
+</ul>
+<h3 id="2-sysbench介绍"><a href="#2-sysbench介绍" class="headerlink" title="2. sysbench介绍"></a>2. sysbench介绍</h3><p>sysbench是一个跨平台且支持多线程的模块化基准测试工具，可以用来进行CPU、内存、磁盘I/O、线程、数据库的性能测试。目前支持的数据库有MySQL、Oracle和PostgreSQL。<br>本次调研主要关注 sysbench 的数据库性能测试功能。使用sysbench可以绕过复杂的数据库基准设置，甚至在没有安装数据库的前提下，快速了解数据库系统的性能。 </p>
+<h3 id="3-sysbench的安装"><a href="#3-sysbench的安装" class="headerlink" title="3. sysbench的安装"></a>3. sysbench的安装</h3><p>调研的 SysBench 版本为 0.5，下载地址为 <a href="https://github.com/akopytov/sysbench" target="_blank" rel="external">https://github.com/akopytov/sysbench</a><br>在CentOS 7.2上，确保已经安装了MariaDB：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># mysql --version</div><div class="line">mysql  Ver 15.1 Distrib 10.1.20-MariaDB, for Linux (x86_64) using  EditLine wrapper</div></pre></td></tr></table></figure></p>
+<p>执行如下命令安装 SysBench：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># yum install gcc gcc-c++ autoconf automake make libtool bzr mysql-devel</div><div class="line"># unzip ysbench-0.5.zip</div><div class="line"># cd sysbench-0.5</div><div class="line"># ./autogen.sh</div><div class="line"># ./configure --prefix=/usr --mandir=/usr/share/man</div><div class="line"># make</div></pre></td></tr></table></figure></p>
+<h3 id="4-sysbench的用法"><a href="#4-sysbench的用法" class="headerlink" title="4. sysbench的用法"></a>4. sysbench的用法</h3><p>命令行语法：<code>sysbench [options]... [testname] [command]</code> </p>
+<h4 id="4-1-常用测试参数说明"><a href="#4-1-常用测试参数说明" class="headerlink" title="4.1 常用测试参数说明"></a>4.1 常用测试参数说明</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--num-threads</code></td>
+<td>测试创建的线程数，模拟客户端连接数</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>--max-requests</code></td>
+<td>最大总请求数，默认值0表示不限制</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>--max-time</code></td>
+<td>测试执行总时间秒数，0表示不限制</td>
+<td>10</td>
+</tr>
+<tr>
+<td><code>--test</code></td>
+<td>测试类型，可选值有fileio、cpu、memory、threads、mutex、oltp</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--oltp-table-size</code></td>
+<td>OLTP 测试表数据行数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--oltp-table-count</code></td>
+<td>OLTP 测试表数目</td>
+<td></td>
+</tr>
+<tr>
+<td><code>–oltp-test-mode</code></td>
+<td>指定测试模式，可选值有simeple、complex、nontrx</td>
+<td>complex</td>
+</tr>
+<tr>
+<td><code>--db-driver</code></td>
+<td>数据库驱动</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--mysql-table-engine</code></td>
+<td>mysql数据库存储引擎</td>
+<td>innodb</td>
+</tr>
+<tr>
+<td><code>--mysql-host</code></td>
+<td>mysql服务器主机名</td>
+<td>localhost</td>
+</tr>
+<tr>
+<td><code>--mysql-port</code></td>
+<td>mysql服务器端口</td>
+<td>3306</td>
+</tr>
+<tr>
+<td><code>--mysql-user</code></td>
+<td>mysql用户名</td>
+<td>sbtest</td>
+</tr>
+<tr>
+<td><code>--mysql-password</code></td>
+<td>mysql密码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--report-interval</code></td>
+<td>指定输出中间结果的周期秒数，0表示关闭周期输出</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>--percentile</code></td>
+<td>有效查询返回时间百分比</td>
+<td>95</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4-2-测试步骤"><a href="#4-2-测试步骤" class="headerlink" title="4.2 测试步骤"></a>4.2 测试步骤</h4><p>使用的测试参数根据使用的环境进行设置调整。执行以下命令前，需要手动在MariaDB中创建测试用的数据库<code>sbtest</code>，执行准备命令只是在指定的database中创建table，并不会创建database。</p>
+<h5 id="创建测试表"><a href="#创建测试表" class="headerlink" title="创建测试表"></a>创建测试表</h5><p>创建时间较长，建议提前准备。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sysbench --report-interval=$interval --num-threads=$threads --max-time=$runtime --max-requests=999999999 --test=oltp --oltp-table-size=$rows --oltp-tables-count=$tables --db-driver=mysql --mysql-table-engine=innodb --mysql-host=$DB_HOST --mysql-port=3306 --mysql-user=$DB_USER --mysql-password=$DB_PW  prepare</div></pre></td></tr></table></figure></p>
+<p>创建的测试表的结构如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">MariaDB [sbtest]&gt; desc sbtest1;</div><div class="line">+-------+------------------+------+-----+---------+----------------+</div><div class="line">| Field | Type             | Null | Key | Default | Extra          |</div><div class="line">+-------+------------------+------+-----+---------+----------------+</div><div class="line">| id    | int(10) unsigned | NO   | PRI | NULL    | auto_increment |</div><div class="line">| k     | int(10) unsigned | NO   | MUL | 0       |                |</div><div class="line">| c     | char(120)        | NO   |     |         |                |</div><div class="line">| pad   | char(60)         | NO   |     |         |                |</div><div class="line">+-------+------------------+------+-----+---------+----------------+</div><div class="line">4 rows in set (0.02 sec)</div></pre></td></tr></table></figure></p>
+<h5 id="正式测试"><a href="#正式测试" class="headerlink" title="正式测试"></a>正式测试</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sysbench --report-interval=$interval --num-threads=$threads --max-time=$runtime --max-requests=999999999 --test=oltp --oltp-table-size=$rows --oltp-tables-count=$tables --db-driver=mysql --mysql-table-engine=innodb --mysql-host=$DB_HOST --mysql-port=3306 --mysql-user=$DB_USER --mysql-password=$DB_PW run</div></pre></td></tr></table></figure>
+<h5 id="清理测试数据"><a href="#清理测试数据" class="headerlink" title="清理测试数据"></a>清理测试数据</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sysbench --report-interval=$interval --num-threads=$threads --max-time=$runtime --max-requests=999999999 --test=oltp --oltp-table-size=$rows --oltp-tables-count=$tables --db-driver=mysql --mysql-table-engine=innodb --mysql-host=$DB_HOST --mysql-port=3306 --mysql-user=$DB_USER --mysql-password=$DB_PW cleanup</div></pre></td></tr></table></figure>
+<h3 id="5-测试注意点"><a href="#5-测试注意点" class="headerlink" title="5. 测试注意点"></a>5. 测试注意点</h3><p>如何评断一个测试的准确性呢？相同的条件下稳定再现。 只有这样，才能用于分析，才是一个可靠的数据。<br>因为sysbench 0.5 没有提供warmup功能，需要提供warmup时间，时间的长短与数据量也有很大关系。需要具体情况具体分析，根据sysbench周期输出的结果，取tps稳定阶段的数据作为有效数据，必要时可借助Excel画曲线图判断。 另外，建议每次测试前重启进程，清空之前的影响（数据库缓存、文件系统缓存等）。</p>
+<h3 id="6-测试结果解读"><a href="#6-测试结果解读" class="headerlink" title="6. 测试结果解读"></a>6. 测试结果解读</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">sysbench 0.5:  multi-threaded system evaluation benchmark</div><div class="line"></div><div class="line">Running the test with following options:</div><div class="line">Number of threads: 1024</div><div class="line">Report intermediate results every 10 second(s)</div><div class="line">Random number generator seed is 0 and will be ignored</div><div class="line"></div><div class="line"></div><div class="line">Initializing worker threads...</div><div class="line"></div><div class="line">Threads started!</div><div class="line"></div><div class="line">OLTP test statistics:</div><div class="line">    queries performed:</div><div class="line">        read:                            77109648  # 读总数</div><div class="line">        write:                           22031328  # 写总数</div><div class="line">        other:                           11015664  # 其他操作总数(SELECT、INSERT、UPDATE、DELETE之外的操作，例如COMMIT等)</div><div class="line">        total:                           110156640  # 全部总数</div><div class="line">    transactions:                        5507832 (3059.53 per sec.)  # 执行的事务总数，括号内的值即为tps，需重点关注</div><div class="line">    read/write requests:                 99140976 (55071.48 per sec.) # 读写总数，括号内的值为qps</div><div class="line">    other operations:                    11015664 (6119.05 per sec.)  # 其他操作总数(每秒其他操作次数)</div><div class="line">    ignored errors:                      0      (0.00 per sec.)</div><div class="line">    reconnects:                          0      (0.00 per sec.)</div><div class="line"></div><div class="line">General statistics:</div><div class="line">    total time:                          1800.2234s  # 总耗时</div><div class="line">    total number of events:              5507832  # 共事务数</div><div class="line">    total time taken by event execution: 1843297.8803s  # 所有事务耗时相加(不考虑并行因素)</div><div class="line">    response time:</div><div class="line">         min:                                 24.46ms     # 最小耗时</div><div class="line">         avg:                                334.67ms    # 平均耗时</div><div class="line">         max:                               1174.87ms  # 最大耗时</div><div class="line">         approx.  95 percentile:             591.16ms  # 95%的tps完成的平均时间</div><div class="line"></div><div class="line">Threads fairness:</div><div class="line">    events (avg/stddev):           5378.7422/86.23</div><div class="line">    execution time (avg/stddev):   1800.0956/0.04</div></pre></td></tr></table></figure>
+<p>需要重点关注的是tps、qps和响应的平均耗时。</p>
+<h3 id="7-sysbench的优缺点"><a href="#7-sysbench的优缺点" class="headerlink" title="7. sysbench的优缺点"></a>7. sysbench的优缺点</h3><p>sysbench的优点是，不用安装数据库，就可以快速了解数据库系统的性能。缺点是测试表结构太简单，并不能百分百模拟实际业务场景；另外，输出的测试结果概括性太强，需要配合编写其他脚本来收集系统资源的数据，若要画图还需要进一步转化为csv文件。<br>总的来说，是一种方便快捷的benchmark工具，有助于快速了解服务器的性能。</p>
+<h3 id="8-参考资料"><a href="#8-参考资料" class="headerlink" title="8. 参考资料"></a>8. 参考资料</h3><ol>
+<li><a href="http://mingxinglai.com/cn/2013/07/sysbench/" target="_blank" rel="external">sysbench 0.5使用手册</a></li>
+<li><a href="http://www.cnblogs.com/zhoujinyi/archive/2013/04/19/3029134.html" target="_blank" rel="external">sysbench 安装、使用和测试</a></li>
+<li><a href="https://github.com/akopytov/sysbench" target="_blank" rel="external">sysbench GitHub主页</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;1-OLTP场景介绍&quot;&gt;&lt;a href=&quot;#1-OLTP场景介绍&quot; class=&quot;headerlink&quot; title=&quot;1. OLTP场景介绍&quot;&gt;&lt;/a&gt;1. OLTP场景介绍&lt;/h3&gt;&lt;p&gt;On-Line Transaction Processing (OLTP) 在线事务处理，是典型的数据库应用场景，随机读写频繁，IOPS是关键指标。在证券交易系统中，单个数据库每秒处理的事务往往超过几百个，设置几千个；select语句的执行数量每秒几千甚至几万个。例如银行、证券交易、机票预订、电子商务系统、大型商场eBay的业务管理数据库系统就是很典型的OLTP数据库。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="测试" scheme="https://caitianxiong.github.io/tags/%E6%B5%8B%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>集成Ceph到DevStack</title>

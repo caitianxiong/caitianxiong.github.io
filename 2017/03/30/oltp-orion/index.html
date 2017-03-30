@@ -1,0 +1,799 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="测试," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Have A Nice Day" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="http://ock7ps6a9.bkt.clouddn.com/leon.jpg?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="1. OLTP场景介绍关于OLTP和其他相关概念的介绍见上篇，本篇不再赘述。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OLTP场景测试工具——Orion">
+<meta property="og:url" content="https://caitianxiong.github.io/2017/03/30/oltp-orion/index.html">
+<meta property="og:site_name" content="Have A Nice Day">
+<meta property="og:description" content="1. OLTP场景介绍关于OLTP和其他相关概念的介绍见上篇，本篇不再赘述。">
+<meta property="og:updated_time" content="2017-03-30T11:49:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OLTP场景测试工具——Orion">
+<meta name="twitter:description" content="1. OLTP场景介绍关于OLTP和其他相关概念的介绍见上篇，本篇不再赘述。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://caitianxiong.github.io/2017/03/30/oltp-orion/"/>
+
+  <title> OLTP场景测试工具——Orion | Have A Nice Day </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a85e033404111b6034dd3aa973708f20";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Have A Nice Day</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                OLTP场景测试工具——Orion
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-30T19:45:01+08:00" content="2017-03-30">
+              2017-03-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/30/oltp-orion/" class="leancloud_visitors" data-flag-title="OLTP场景测试工具——Orion">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-OLTP场景介绍"><a href="#1-OLTP场景介绍" class="headerlink" title="1. OLTP场景介绍"></a>1. OLTP场景介绍</h3><p>关于OLTP和其他相关概念的介绍见上篇，本篇不再赘述。<br><a id="more"></a></p>
+<h3 id="2-Orion介绍"><a href="#2-Orion介绍" class="headerlink" title="2. Orion介绍"></a>2. Orion介绍</h3><p>Orion是 Oracle IO Numbers的缩写，是Oracle公司提供的一个测试工具。<a href="http://www.oracle.com/technetwork/cn/topics/index-088165-zhs.html" target="_blank" rel="external">官网</a>介绍：</p>
+<blockquote>
+<p>ORION (Oracle I/O Calibration Tool) 是校准用于 Oracle 数据库的存储系统 I/O 性能的独立工具。校准结果对于了解存储系统的性能有很大帮助，不仅可以找出影响 Oracle 数据库性能的问题，还能测量新数据库安装的大小。由于 ORION 是一个独立工具，用户不需要创建和运行 Oracle 数据库。 </p>
+<p>为了尽可能地模拟 Oracle 数据库，ORION 使用和 Oracle 相同的 I/O 软件集生成一个合成的 I/O 负载。可以将 ORION 配置为生成很多 I/O 负载，包括一个模拟 OLTP 和数据仓库负载的 I/O 负载。</p>
+</blockquote>
+<h3 id="3-Orion的安装"><a href="#3-Orion的安装" class="headerlink" title="3. Orion的安装"></a>3. Orion的安装</h3><p>Orion的下载需要去Oracle网站。<br>1) 进入www.oracle.com/technetwork/cn/topics/index-088165-zhs.html<br>2) 点击“接受许可协议”，选择Linux(x86_64)版本下载，可能要求输入Oracle ID<br>3) 解压缩安装包 <code>gzip -d orion_linux_x86-64.gz</code><br>4) 解压后得到一个文件，赋予执行权限 <code>chmod +x orion_linux_x86-64</code></p>
+<h3 id="4-Orion的用法"><a href="#4-Orion的用法" class="headerlink" title="4. Orion的用法"></a>4. Orion的用法</h3><p>命令行语法 <code>./orion_linux_x86_64 -run [opiton] [-testname] &lt;testname&gt;</code></p>
+<h3 id="4-1-常用测试参数说明"><a href="#4-1-常用测试参数说明" class="headerlink" title="4.1 常用测试参数说明"></a>4.1 常用测试参数说明</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">必选参数：</div><div class="line">run			要运行的负载类型(simple, normal, advanced, dss, oltp)</div><div class="line">			simple - 在不同负载下先测试8k随机小IO，然后测试随机1M大IO。</div><div class="line">			normal - 测试随机8k小IO和随机1M大IO的组合。</div><div class="line">			advanced - 运行用户用可选参数指定的负载。</div><div class="line">			dss - 运行负载渐增的1M随机大 IO 来测定最大的 吞吐量。</div><div class="line">			oltp - 运行负载渐增的8k随机小 IO 来测定最大的 IOPS。</div><div class="line">可选参数:</div><div class="line">testname    测试名</div><div class="line">num_disks	磁盘数（物理主轴数）。默认是 &lt;testname&gt;.lun 中的 LUN 数量。</div><div class="line">size_small	小 IO 的大小 (KB) - 默认8</div><div class="line">size_large  大 IO 的大小 (KB) - 默认 1024</div><div class="line">type        大 IO 类型 (rand, seq) - 默认 rand</div><div class="line">			  rand - 随机大 IO</div><div class="line">			  seq -  大 IO 的顺序流</div><div class="line">num_streamIO 每个流并发IO数 (只有当type设置为seq时) - 默认 4</div><div class="line">write	    写比例 (会损坏已有数据) - 默认 0</div><div class="line"></div><div class="line">cache_size	阵列缓存的大小（MB）。除非这个选项被设置为0，否则Orion在每个顺序数据点之前会做一定量的随机IO。</div><div class="line">                        如果指定了值，缓存热身会读或写指定大小的IO。默认行为：在每个数据点前填充cache持续2分钟。</div><div class="line">duration    每个数据点测试时长 (秒) - 默认 60</div><div class="line">num_small	outstanding 小 IO 数量 (只有当matrix 是point, col, or max时) - 无默认</div><div class="line">num_large	随机读写情况下，outstanding大IO数量。</div><div class="line">			顺序读写情况下，流数量。 (只有当matrix 是point, col, or max时) - 无默认</div><div class="line">matrix		一个由不同大小IO负载级别组成的Orion测试。这些数据点可以表示为二维矩阵，矩阵的每一列代表一个固定的小IO负载，每一行代表一个固定的大IO负载。第一行没有大IO负载，第一列没有小IO负载。一个Orion测试可以是一个单独的点、一行、一列或者整个矩阵，依赖如下选项值的设定（默认basic）：</div><div class="line">			  basic - 测试第一行和第一列</div><div class="line">			  detailed - 测试整个矩阵</div><div class="line">			  point - 在负载级别 num_small, num_large 这一数据点测试</div><div class="line">			  col - 在num_small 指定小IO下遍历大IO</div><div class="line">			  row - 在num_large指定大IO下遍历小IO</div><div class="line">			  max - 遍历大小IO最大到num_large, num_small</div><div class="line">verbose		如果设定了，打印过程信息到标准输出。默认 -- 未设定</div></pre></td></tr></table></figure>
+<p>Orion对于oltp参数的说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">oltp - run with random 8K small IOs at increasing loads to determine the maximum IOPS</div><div class="line">用负载渐增的8k随机小 IO 来测定最大的 IOPS</div></pre></td></tr></table></figure></p>
+<h3 id="4-2-测试步骤"><a href="#4-2-测试步骤" class="headerlink" title="4.2 测试步骤"></a>4.2 测试步骤</h3><p>1) 创建测试文件<br>文件名为<code>&lt;testname&gt;.lun</code>，如 <code>mytest.lun</code> ，在里面写入测试的目标磁盘，每行一个，比如<code>/dev/vdc</code> 。<br>2) 执行OLTP测试<br><code>./orion_linux_x86-64 -run oltp -testname mytest</code><br><code>-testname</code> 后接的参数要与上一步创建的文件名一致，此处为<code>mytest</code>。这个测试会进行几组8K大小的随机读写和1M大小的连续读写测试。前者用来测定IOPS能力，后者测定吞吐量</p>
+<h3 id="5-测试注意点"><a href="#5-测试注意点" class="headerlink" title="5. 测试注意点"></a>5. 测试注意点</h3><ul>
+<li>Orion的写测试直接在磁盘级进行，会损坏已有的数据，所以最好要用空磁盘进行测试。</li>
+<li>Orion模拟的OLTP测试场景无大IO，只是测试随机8k小IO的最大IOPS。可以带-write和-duration参数，可指定-size_small指定IO大小。 -type, -matrix, -num_small or -num_large这些参数不是能设置的。-size_large参数设置了也没有用处。</li>
+</ul>
+<h3 id="6-测试结果解读"><a href="#6-测试结果解读" class="headerlink" title="6. 测试结果解读"></a>6. 测试结果解读</h3><p>Orion的每次测试，会输出5个测试结果的文件。输出的各个文件说明如下：（以测试名为<code>mytest</code>为例）</p>
+<ul>
+<li><p>mytest_YYYYMMDD_HHmm_summary.txt<br><code>YYYYMMDD_HHmm</code>表示日期时间，下同。测试结果的概括，该文件包括命令行输入的参数、大随机/顺序负载下的最大吞吐量、小随机负载下的最大IOPS和小随机负载下的最小时延。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">ORION VERSION 11.1.0.7.0</div><div class="line"></div><div class="line">Commandline:</div><div class="line">-run oltp -testname oltp</div><div class="line"></div><div class="line">This maps to this test:</div><div class="line">Test: oltp</div><div class="line">Small IO size: 8 KB</div><div class="line">Large IO size: 1024 KB</div><div class="line">IO Types: Small Random IOs, Large Random IOs</div><div class="line">Simulated Array Type: CONCAT</div><div class="line">Write: 0%</div><div class="line">Cache Size: Not Entered</div><div class="line">Duration for each Data Point: 60 seconds</div><div class="line">Small Columns:,      1,      2,      3,      4,      5,      6,      7,      8,      9,     10,     11,     12,     13,     14,     15,     16,     17,     18,     19,     20</div><div class="line">Large Columns:,      0</div><div class="line">Total Data Points: 21</div><div class="line"></div><div class="line">Name: /dev/vdc  Size: 107374182400</div><div class="line">1 FILEs found.</div><div class="line"></div><div class="line">Maximum Small IOPS=24249 @ Small=18 and Large=0  # 小IOPS最大值</div><div class="line">Minimum Small Latency=0.46 @ Small=4 and Large=0   # 最小延迟时间</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_mbps.csv<br>大随机/顺序负载下的最大吞吐量数据的csv文件。（OLTP场景下这个文件是没有数据的）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">arge/Small,      2,      4,      6,      8,     10,     12,     14,     16,     18,     20,     22,     24,     26,     28,     30,     32,     34,     36,     38,     40</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_iops.csv<br>IOPS数据的csv文件。OLTP场景的测试，只有小IO的负载，因此只有一行数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Large/Small,      2,      4,      6,      8,     10,     12,     14,     16,     18,     20,     22,     24,     26,     28,     30,     32,     34,     36,     38,     40</div><div class="line">          0,  24141,  40656,  37475,  39398,  40970,  40851,  40530,  39910,  39082,  39361,  38264,  37785,  37637,  38017,  38405,  37918,  37968,  37367,  38493,  38823</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_lat.csv<br>延时数据的csv文件。同样，只有小IO的负载，因此只有一行数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Large/Small,      2,      4,      6,      8,     10,     12,     14,     16,     18,     20,     22,     24,     26,     28,     30,     32,     34,     36,     38,     40</div><div class="line">          0,   0.08,   0.10,   0.16,   0.20,   0.24,   0.29,   0.34,   0.40,   0.46,   0.51,   0.57,   0.63,   0.69,   0.74,   0.78,   0.84,   0.89,   0.96,   0.99,   1.03</div></pre></td></tr></table></figure>
+</li>
+<li><p>mytest_YYYYMMDD_HHmm_trace.txt<br>跟踪了测试过程中各个数据点的各项数据，最为详细。可以看到随着数据点的增加，small的负载在不断增加，而large的负载保持为0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">ran (small): VLun = 0 Size = 107372216832</div><div class="line">ran (small): Index = 0  Count = 724213  Avg Lat =   0.08</div><div class="line">ran (small): Index = 1  Count = 724256  Avg Lat =   0.08</div><div class="line">ran (small): nio=1448469 nior=1448469 niow=0 req w%=0 act w%=0</div><div class="line">ran (small): my   2 oth   0 iops 24141 size 8 K lat   0.08 ms bw = 188.60 MBps dur  60.00 s READ</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">TEST START</div><div class="line"></div><div class="line">Point 1 (small=2, large=0) of 22</div><div class="line">Valid small 1 Valid large 1</div><div class="line">Valid</div><div class="line"></div><div class="line">ran (small): VLun = 0 Size = 107372216832</div><div class="line">ran (small): Index = 0  Count = 609842  Avg Lat =   0.10</div><div class="line">ran (small): Index = 1  Count = 609883  Avg Lat =   0.10</div><div class="line">ran (small): Index = 2  Count = 609788  Avg Lat =   0.10</div><div class="line">ran (small): Index = 3  Count = 609869  Avg Lat =   0.10</div><div class="line">ran (small): nio=2439382 nior=2439382 niow=0 req w%=0 act w%=0</div><div class="line">ran (small): my   4 oth   0 iops 40656 size 8 K lat   0.10 ms bw = 317.63 MBps dur  60.00 s READ</div><div class="line"></div><div class="line">Point 2 (small=4, large=0) of 22</div><div class="line">Valid small 1 Valid large 1</div><div class="line">Valid</div><div class="line"></div><div class="line">ran (small): VLun = 0 Size = 107372216832</div><div class="line">ran (small): Index = 0  Count = 374727  Avg Lat =   0.16</div><div class="line">ran (small): Index = 1  Count = 374789  Avg Lat =   0.16</div><div class="line">ran (small): Index = 2  Count = 374671  Avg Lat =   0.16</div><div class="line">ran (small): Index = 3  Count = 374833  Avg Lat =   0.16</div><div class="line">ran (small): Index = 4  Count = 374772  Avg Lat =   0.16</div><div class="line">ran (small): Index = 5  Count = 374718  Avg Lat =   0.16</div><div class="line">ran (small): nio=2248510 nior=2248510 niow=0 req w%=0 act w%=0</div><div class="line">ran (small): my   6 oth   0 iops 37475 size 8 K lat   0.16 ms bw = 292.77 MBps dur  60.00 s READ</div><div class="line"></div><div class="line">Point 3 (small=6, large=0) of 22</div><div class="line">...</div><div class="line"></div><div class="line">Point 20 (small=40, large=0) of 22</div><div class="line">Valid small 1 Valid large 1</div><div class="line">Valid</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">TEST END</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="7-Orion的优缺点"><a href="#7-Orion的优缺点" class="headerlink" title="7. Orion的优缺点"></a>7. Orion的优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>不需要安装Oracle数据库，不需要准备测试数据</li>
+<li>测试结束自动输出csv文件，方便画图分析<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4></li>
+<li>闭源工具，只有一个二进制的可执行文件，无法分析测试原理和具体实现</li>
+<li>无法自定义测试的总时间、加压幅度，完全是软件自动设置</li>
+<li>Oracle不对Orion提供支持</li>
+</ul>
+<h3 id="8-参考资料"><a href="#8-参考资料" class="headerlink" title="8. 参考资料"></a>8. 参考资料</h3><ul>
+<li><a href="http://www.oracle.com/technetwork/cn/topics/index-088165-zhs.html" target="_blank" rel="external">Oracle官网上对Orion的介绍及用户指南</a></li>
+<li><a href="https://yq.aliyun.com/articles/62615" target="_blank" rel="external">阿里云ECS使用Oracle</a></li>
+<li><a href="http://dbaplus.cn/news-10-190-1.html" target="_blank" rel="external">Oracle IO性能测试工具Orion详解</a></li>
+<li><a href="https://wenku.baidu.com/view/a2177b80680203d8ce2f24ff.html" target="_blank" rel="external">orion使用介绍</a></li>
+<li><a href="http://blog.csdn.net/shaunfang/article/details/11194289" target="_blank" rel="external">国内公有云对比（2）- 性能篇</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/测试/" rel="tag">#测试</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/30/oltp-sysbench/" rel="next" title="OLTP场景测试工具——sysbench">
+                <i class="fa fa-chevron-left"></i> OLTP场景测试工具——sysbench
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ock7ps6a9.bkt.clouddn.com/leon.jpg"
+               alt="Leon" />
+          <p class="site-author-name" itemprop="name">Leon</p>
+          <p class="site-description motion-element" itemprop="description">人生很长，什么都有可能发生。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caitianxiong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/darkhacker" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友链
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fullstack.love/" title="醉己斋" target="_blank">醉己斋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.blog.szcoder.com/" title="Neo Blog" target="_blank">Neo Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://unkownarea.com/" title="未知地界" target="_blank">未知地界</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tcztzy.github.io/" title="Tcztzy" target="_blank">Tcztzy</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-OLTP场景介绍"><span class="nav-text">1. OLTP场景介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Orion介绍"><span class="nav-text">2. Orion介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Orion的安装"><span class="nav-text">3. Orion的安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Orion的用法"><span class="nav-text">4. Orion的用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-常用测试参数说明"><span class="nav-text">4.1 常用测试参数说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-测试步骤"><span class="nav-text">4.2 测试步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-测试注意点"><span class="nav-text">5. 测试注意点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-测试结果解读"><span class="nav-text">6. 测试结果解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Orion的优缺点"><span class="nav-text">7. Orion的优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点"><span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点"><span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-参考资料"><span class="nav-text">8. 参考资料</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("YIJ5gxbEG1DDJrtEsLB5yzeE-gzGzoHsz", "q1UAnxXkMVrNVaH2FSq7DATV");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
