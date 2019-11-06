@@ -4,9 +4,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://caitianxiong.github.io/"/>
+  <link href="https://caitianxiong.com/"/>
   <updated>2017-03-30T12:02:38.000Z</updated>
-  <id>https://caitianxiong.github.io/</id>
+  <id>https://caitianxiong.com/</id>
   
   <author>
     <name>Leon</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>OLTP场景测试工具——Orion</title>
-    <link href="https://caitianxiong.github.io/2017/03/30/oltp-orion/"/>
-    <id>https://caitianxiong.github.io/2017/03/30/oltp-orion/</id>
+    <link href="https://caitianxiong.com/2017/03/30/oltp-orion/"/>
+    <id>https://caitianxiong.com/2017/03/30/oltp-orion/</id>
     <published>2017-03-30T11:45:01.000Z</published>
     <updated>2017-03-30T12:02:38.000Z</updated>
     
@@ -80,14 +80,14 @@
     </summary>
     
     
-      <category term="测试" scheme="https://caitianxiong.github.io/tags/%E6%B5%8B%E8%AF%95/"/>
+      <category term="测试" scheme="https://caitianxiong.com/tags/%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   
   <entry>
     <title>OLTP场景测试工具——sysbench</title>
-    <link href="https://caitianxiong.github.io/2017/03/30/oltp-sysbench/"/>
-    <id>https://caitianxiong.github.io/2017/03/30/oltp-sysbench/</id>
+    <link href="https://caitianxiong.com/2017/03/30/oltp-sysbench/"/>
+    <id>https://caitianxiong.com/2017/03/30/oltp-sysbench/</id>
     <published>2017-03-30T11:38:07.000Z</published>
     <updated>2017-03-30T11:44:25.000Z</updated>
     
@@ -209,14 +209,14 @@
     </summary>
     
     
-      <category term="测试" scheme="https://caitianxiong.github.io/tags/%E6%B5%8B%E8%AF%95/"/>
+      <category term="测试" scheme="https://caitianxiong.com/tags/%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   
   <entry>
     <title>集成Ceph到DevStack</title>
-    <link href="https://caitianxiong.github.io/2017/02/28/integrate-ceph-into-devstack/"/>
-    <id>https://caitianxiong.github.io/2017/02/28/integrate-ceph-into-devstack/</id>
+    <link href="https://caitianxiong.com/2017/02/28/integrate-ceph-into-devstack/"/>
+    <id>https://caitianxiong.com/2017/02/28/integrate-ceph-into-devstack/</id>
     <published>2017-02-28T06:35:53.000Z</published>
     <updated>2017-02-28T06:55:30.000Z</updated>
     
@@ -341,18 +341,18 @@
     </summary>
     
     
-      <category term="Ceph" scheme="https://caitianxiong.github.io/tags/Ceph/"/>
+      <category term="Ceph" scheme="https://caitianxiong.com/tags/Ceph/"/>
     
-      <category term="OpenStack" scheme="https://caitianxiong.github.io/tags/OpenStack/"/>
+      <category term="OpenStack" scheme="https://caitianxiong.com/tags/OpenStack/"/>
     
-      <category term="DevStack" scheme="https://caitianxiong.github.io/tags/DevStack/"/>
+      <category term="DevStack" scheme="https://caitianxiong.com/tags/DevStack/"/>
     
   </entry>
   
   <entry>
     <title>手动部署Ceph集群</title>
-    <link href="https://caitianxiong.github.io/2017/02/25/deploy-ceph-cluster-manually/"/>
-    <id>https://caitianxiong.github.io/2017/02/25/deploy-ceph-cluster-manually/</id>
+    <link href="https://caitianxiong.com/2017/02/25/deploy-ceph-cluster-manually/"/>
+    <id>https://caitianxiong.com/2017/02/25/deploy-ceph-cluster-manually/</id>
     <published>2017-02-25T11:16:30.000Z</published>
     <updated>2017-02-28T07:03:50.000Z</updated>
     
@@ -444,14 +444,14 @@
     </summary>
     
     
-      <category term="Ceph" scheme="https://caitianxiong.github.io/tags/Ceph/"/>
+      <category term="Ceph" scheme="https://caitianxiong.com/tags/Ceph/"/>
     
   </entry>
   
   <entry>
     <title>蔡旺作品展示</title>
-    <link href="https://caitianxiong.github.io/2017/02/07/caiwang-works/"/>
-    <id>https://caitianxiong.github.io/2017/02/07/caiwang-works/</id>
+    <link href="https://caitianxiong.com/2017/02/07/caiwang-works/"/>
+    <id>https://caitianxiong.com/2017/02/07/caiwang-works/</id>
     <published>2017-02-07T10:44:58.000Z</published>
     <updated>2019-11-06T09:04:57.450Z</updated>
     
@@ -483,14 +483,14 @@
     </summary>
     
     
-      <category term="摄影" scheme="https://caitianxiong.github.io/tags/%E6%91%84%E5%BD%B1/"/>
+      <category term="摄影" scheme="https://caitianxiong.com/tags/%E6%91%84%E5%BD%B1/"/>
     
   </entry>
   
   <entry>
     <title>Web应用设置缓存总结</title>
-    <link href="https://caitianxiong.github.io/2016/11/06/summary-of-web-cache/"/>
-    <id>https://caitianxiong.github.io/2016/11/06/summary-of-web-cache/</id>
+    <link href="https://caitianxiong.com/2016/11/06/summary-of-web-cache/"/>
+    <id>https://caitianxiong.com/2016/11/06/summary-of-web-cache/</id>
     <published>2016-11-06T11:17:54.000Z</published>
     <updated>2019-11-06T09:10:41.343Z</updated>
     
@@ -527,14 +527,14 @@
     </summary>
     
     
-      <category term="Web" scheme="https://caitianxiong.github.io/tags/Web/"/>
+      <category term="Web" scheme="https://caitianxiong.com/tags/Web/"/>
     
   </entry>
   
   <entry>
     <title>学习双拼自然码</title>
-    <link href="https://caitianxiong.github.io/2016/10/06/%E5%AD%A6%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%87%AA%E7%84%B6%E7%A0%81/"/>
-    <id>https://caitianxiong.github.io/2016/10/06/学习双拼自然码/</id>
+    <link href="https://caitianxiong.com/2016/10/06/%E5%AD%A6%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%87%AA%E7%84%B6%E7%A0%81/"/>
+    <id>https://caitianxiong.com/2016/10/06/学习双拼自然码/</id>
     <published>2016-10-06T03:10:30.000Z</published>
     <updated>2019-11-06T08:38:00.821Z</updated>
     
@@ -579,14 +579,14 @@
     </summary>
     
     
-      <category term="学习" scheme="https://caitianxiong.github.io/tags/%E5%AD%A6%E4%B9%A0/"/>
+      <category term="学习" scheme="https://caitianxiong.com/tags/%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
   <entry>
     <title>Openstack控制台项目Horizon后台代码结构分析</title>
-    <link href="https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/"/>
-    <id>https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/</id>
+    <link href="https://caitianxiong.com/2016/09/21/intro-to-openstack-dashboard/"/>
+    <id>https://caitianxiong.com/2016/09/21/intro-to-openstack-dashboard/</id>
     <published>2016-09-21T13:02:29.000Z</published>
     <updated>2019-11-06T09:18:45.818Z</updated>
     
@@ -631,14 +631,14 @@
     </summary>
     
     
-      <category term="OpenStack" scheme="https://caitianxiong.github.io/tags/OpenStack/"/>
+      <category term="OpenStack" scheme="https://caitianxiong.com/tags/OpenStack/"/>
     
   </entry>
   
   <entry>
     <title>Xenserver 7.0安装Ceph-10.2.2</title>
-    <link href="https://caitianxiong.github.io/2016/09/10/install-ceph-on-xenserver/"/>
-    <id>https://caitianxiong.github.io/2016/09/10/install-ceph-on-xenserver/</id>
+    <link href="https://caitianxiong.com/2016/09/10/install-ceph-on-xenserver/"/>
+    <id>https://caitianxiong.com/2016/09/10/install-ceph-on-xenserver/</id>
     <published>2016-09-10T12:51:37.000Z</published>
     <updated>2017-02-28T06:29:41.000Z</updated>
     
@@ -672,14 +672,14 @@
     </summary>
     
     
-      <category term="Ceph" scheme="https://caitianxiong.github.io/tags/Ceph/"/>
+      <category term="Ceph" scheme="https://caitianxiong.com/tags/Ceph/"/>
     
   </entry>
   
   <entry>
     <title>学习C语言调试工具gdb</title>
-    <link href="https://caitianxiong.github.io/2016/09/03/learn-gdb/"/>
-    <id>https://caitianxiong.github.io/2016/09/03/learn-gdb/</id>
+    <link href="https://caitianxiong.com/2016/09/03/learn-gdb/"/>
+    <id>https://caitianxiong.com/2016/09/03/learn-gdb/</id>
     <published>2016-09-03T00:21:56.000Z</published>
     <updated>2019-11-06T09:09:33.823Z</updated>
     
@@ -724,14 +724,14 @@
     </summary>
     
     
-      <category term="C语" scheme="https://caitianxiong.github.io/tags/C%E8%AF%AD/"/>
+      <category term="C语" scheme="https://caitianxiong.com/tags/C%E8%AF%AD/"/>
     
   </entry>
   
   <entry>
     <title>关于这个博客</title>
-    <link href="https://caitianxiong.github.io/2016/08/28/My-Own-Blog/"/>
-    <id>https://caitianxiong.github.io/2016/08/28/My-Own-Blog/</id>
+    <link href="https://caitianxiong.com/2016/08/28/My-Own-Blog/"/>
+    <id>https://caitianxiong.com/2016/08/28/My-Own-Blog/</id>
     <published>2016-08-28T05:01:50.000Z</published>
     <updated>2019-11-06T08:43:47.139Z</updated>
     
@@ -755,7 +755,7 @@
     </summary>
     
     
-      <category term="Blog" scheme="https://caitianxiong.github.io/tags/Blog/"/>
+      <category term="Blog" scheme="https://caitianxiong.com/tags/Blog/"/>
     
   </entry>
   
