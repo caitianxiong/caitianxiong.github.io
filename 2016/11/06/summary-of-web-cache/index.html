@@ -92,12 +92,12 @@
 <meta property="og:url" content="https://caitianxiong.github.io/2016/11/06/summary-of-web-cache/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
 <meta property="og:description" content="给Web应用设置缓存好处多多，可以提高访问速度，改善用户体验，减轻服务器压力等。本篇主要整理一下前段时间设置服务器端和浏览器端缓存的方法，以及几种做法的优点与弊端。虽然只是来自Django的经验，但我相信对于其他编程语言和框架，原理上应该是一样的。">
-<meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/web_cache.png">
-<meta property="og:updated_time" content="2016-11-06T11:27:31.000Z">
+<meta property="og:image" content="https://caitianxiong.github.io/image/web_cache.png">
+<meta property="og:updated_time" content="2019-11-06T09:10:41.343Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Web应用设置缓存总结">
 <meta name="twitter:description" content="给Web应用设置缓存好处多多，可以提高访问速度，改善用户体验，减轻服务器压力等。本篇主要整理一下前段时间设置服务器端和浏览器端缓存的方法，以及几种做法的优点与弊端。虽然只是来自Django的经验，但我相信对于其他编程语言和框架，原理上应该是一样的。">
-<meta name="twitter:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/web_cache.png">
+<meta name="twitter:image" content="https://caitianxiong.github.io/image/web_cache.png">
 
 
 
@@ -309,7 +309,7 @@
       
 
       
-        <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/web_cache.png" alt="web_cache"></p>
+        <p><img src="/image/web_cache.png" alt="web_cache"></p>
 <p>给Web应用设置缓存好处多多，可以提高访问速度，改善用户体验，减轻服务器压力等。本篇主要整理一下前段时间设置服务器端和浏览器端缓存的方法，以及几种做法的优点与弊端。虽然只是来自Django的经验，但我相信对于其他编程语言和框架，原理上应该是一样的。<br><a id="more"></a><br>首先，我们从一个HTTP请求的生命周期来看看，可以在哪些地方设置缓存。一个HTTP请求从浏览器发出，经过网络传输到硬件层面的服务器上，这台服务器上通常会配置有服务器软件（比如Nginx或者Apache），还可能配置有缓冲软件（比如Redis或者Memcached），然后才是正真干活处理请求的代码层面的server。</p>
 <p>从多级缓存的角度看，一般是越近的存储，访问速度越快。我们web应用发送的HTTP请求，如果能在client本地就获取到请求的HTML文档（JS/CSS/图片文件都由解析HTML得到请求路径，为方便起见，我们这里只讨论HTML），那必然再快不过。于是有了第一类缓存方式：浏览器本地缓存。</p>
 <h3 id="浏览器端判断是否使用缓存的方式分两类"><a href="#浏览器端判断是否使用缓存的方式分两类" class="headerlink" title="浏览器端判断是否使用缓存的方式分两类"></a>浏览器端判断是否使用缓存的方式分两类</h3><h4 id="1-需要跟服务器通信的：（validator）"><a href="#1-需要跟服务器通信的：（validator）" class="headerlink" title="1. 需要跟服务器通信的：（validator）"></a>1. 需要跟服务器通信的：（validator）</h4><ul>

@@ -92,14 +92,14 @@
 <meta property="og:url" content="https://caitianxiong.github.io/2016/09/21/intro-to-openstack-dashboard/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
 <meta property="og:description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。">
-<meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg">
-<meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/OpenStack_%20Dashboard.png">
-<meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/Django-workflow.png">
-<meta property="og:updated_time" content="2017-02-28T06:30:37.000Z">
+<meta property="og:image" content="https://caitianxiong.github.io/images/openstack-architecture.jpg">
+<meta property="og:image" content="https://caitianxiong.github.io/images/OpenStack_Dashboard.png">
+<meta property="og:image" content="https://caitianxiong.github.io/images/Django-workflow.png">
+<meta property="og:updated_time" content="2019-11-06T09:18:45.818Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Openstack控制台项目Horizon后台代码结构分析">
 <meta name="twitter:description" content="1. Horizon项目在Openstack中的位置控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。">
-<meta name="twitter:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg">
+<meta name="twitter:image" content="https://caitianxiong.github.io/images/openstack-architecture.jpg">
 
 
 
@@ -311,13 +311,13 @@
       
 
       
-        <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/openstack-architecture.jpg" alt="openstack-components"></p>
+        <p><img src="/images/openstack-architecture.jpg" alt="openstack-components"></p>
 <h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。<br><a id="more"></a></p>
 <h2 id="2-Horizon代码架构"><a href="#2-Horizon代码架构" class="headerlink" title="2. Horizon代码架构"></a>2. Horizon代码架构</h2><p>Horizon项目核心的代码包有两个：<code>openstack-dashboard</code>和<code>python-django-horizon</code>。</p>
 <p>第一个包是控制台代码的具体实现，是一个基于Django框架的web应用，安装后主要文件在<code>/usr/share/openstack-dashboard/</code>路径下。第二个包是通用的一些Python类库，也包括一些静态文件，安装后在<code>/usr/lib/python2.7/dist-packages/horizon</code>下。定制化开发，主要是修改业务代码，基本不需要修改<code>python-django-horizon</code>，所以我们分析的重点放在<code>openstack-dashboard</code>这个包上。</p>
-<h3 id="2-1-控制台组件名词说明"><a href="#2-1-控制台组件名词说明" class="headerlink" title="2.1 控制台组件名词说明"></a>2.1 控制台组件名词说明</h3><p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/OpenStack_%20Dashboard.png" alt="openstack-dashboard"></p>
+<h3 id="2-1-控制台组件名词说明"><a href="#2-1-控制台组件名词说明" class="headerlink" title="2.1 控制台组件名词说明"></a>2.1 控制台组件名词说明</h3><p><img src="/images/OpenStack_Dashboard.png" alt="openstack-dashboard"></p>
 <p>图中的7个名词在代码中都可以对应上，代码的层级结构还是很清晰的。</p>
-<h3 id="2-1-基于Django，MTV模式"><a href="#2-1-基于Django，MTV模式" class="headerlink" title="2.1 基于Django，MTV模式"></a>2.1 基于Django，MTV模式</h3><p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/Django-workflow.png" alt="Django-workflow"></p>
+<h3 id="2-1-基于Django，MTV模式"><a href="#2-1-基于Django，MTV模式" class="headerlink" title="2.1 基于Django，MTV模式"></a>2.1 基于Django，MTV模式</h3><p><img src="/images/Django-workflow.png" alt="Django-workflow"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/usr/share/openstack-dashboard/</div><div class="line">|-- bin                             # </div><div class="line">|-- manage.py                       # 一些django命令</div><div class="line">|-- openstack_dashboard             # 控制台项目代码</div><div class="line">|-- settings.py                     # Django项目配置文件</div><div class="line">└-- static                          # 压缩后的静态文件</div></pre></td></tr></table></figure>
 <p>从最外层目录看，这是一个典型的Django项目。再进去一层：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">/usr/share/openstack-dashboard/openstack_dashboard</div><div class="line">|-- __init__.py</div><div class="line">|-- urls.py</div><div class="line">|-- views.py</div><div class="line">|-- settings.py</div><div class="line">|-- api                                # 调用其他服务api接口的代码文件</div><div class="line">|-- conf</div><div class="line">|-- contrib</div><div class="line">|-- dashboards                         # 控制台的每个panel_group和panel</div><div class="line">|-- enabled                            # 定义panel是否显示及显示顺序</div><div class="line">|-- local</div><div class="line">|-- locale                             # 语言包所在</div><div class="line">|-- management</div><div class="line">|--...</div><div class="line">|-- static                             # 压缩前的静态文件</div><div class="line">|-- static_settings.py</div><div class="line">|-- templates                          # 基础模板文件</div><div class="line">|-- templatetags</div><div class="line">|-- themes                             # 主题包所在</div><div class="line">|-- usage                              # 关于项目用量的代码</div><div class="line">|-- utils</div><div class="line">└-- wsgi</div></pre></td></tr></table></figure></p>
 <p>沿着业务代码<code>dashboards</code>一路往里分析：</p>

@@ -92,12 +92,12 @@
 <meta property="og:url" content="https://caitianxiong.github.io/2016/09/03/learn-gdb/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
 <meta property="og:description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。">
-<meta property="og:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png">
-<meta property="og:updated_time" content="2016-11-06T11:21:30.000Z">
+<meta property="og:image" content="https://caitianxiong.github.io/images/gdb-logo.png">
+<meta property="og:updated_time" content="2019-11-06T09:09:33.823Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习C语言调试工具gdb">
 <meta name="twitter:description" content="最近在学C语，用的是《C语言程序设计（第4版）》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。">
-<meta name="twitter:image" content="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png">
+<meta name="twitter:image" content="https://caitianxiong.github.io/images/gdb-logo.png">
 
 
 
@@ -309,7 +309,7 @@
       
 
       
-        <p><img src="http://ock7ps6a9.bkt.clouddn.com/image/blog/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。<br><a id="more"></a></p>
+        <p><img src="/images/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。<br><a id="more"></a></p>
 <p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C等。gdb的官方介绍：</p>
 <blockquote>
 <p>What is GDB?<br>GDB, the GNU Project debugger, allows you to see what is going on `inside’ another program while it executes – or what another program was doing at the moment it crashed.<br>GDB can do four main kinds of things (plus other things in support of these) to help you catch bugs in the act:<br>Start your program, specifying anything that might affect its behavior.<br>Make your program stop on specified conditions.<br>Examine what has happened, when your program has stopped.<br>Change things in your program, so you can experiment with correcting the effects of one bug and go on to learn about another.<br>The program being debugged can be written in Ada, C, C++, Objective-C, Pascal (and many other languages). Those programs might be executing on the same machine as GDB (native) or on another machine (remote). GDB can run on most popular UNIX and Microsoft Windows variants.</p>
