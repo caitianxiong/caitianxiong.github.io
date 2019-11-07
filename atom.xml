@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.com/"/>
-  <updated>2017-03-30T12:02:38.000Z</updated>
+  <updated>2019-11-07T03:27:52.692Z</updated>
   <id>https://caitianxiong.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caitianxiong.com/2017/03/30/oltp-orion/"/>
     <id>https://caitianxiong.com/2017/03/30/oltp-orion/</id>
     <published>2017-03-30T11:45:01.000Z</published>
-    <updated>2017-03-30T12:02:38.000Z</updated>
+    <updated>2019-11-07T03:27:52.692Z</updated>
     
     <content type="html"><![CDATA[<h3 id="1-OLTP场景介绍"><a href="#1-OLTP场景介绍" class="headerlink" title="1. OLTP场景介绍"></a>1. OLTP场景介绍</h3><p>关于OLTP和其他相关概念的介绍见上篇，本篇不再赘述。<br><a id="more"></a></p>
 <h3 id="2-Orion介绍"><a href="#2-Orion介绍" class="headerlink" title="2. Orion介绍"></a>2. Orion介绍</h3><p>Orion是 Oracle IO Numbers的缩写，是Oracle公司提供的一个测试工具。<a href="http://www.oracle.com/technetwork/cn/topics/index-088165-zhs.html" target="_blank" rel="external">官网</a>介绍：</p>
@@ -89,7 +89,7 @@
     <link href="https://caitianxiong.com/2017/03/30/oltp-sysbench/"/>
     <id>https://caitianxiong.com/2017/03/30/oltp-sysbench/</id>
     <published>2017-03-30T11:38:07.000Z</published>
-    <updated>2017-03-30T11:44:25.000Z</updated>
+    <updated>2019-11-07T03:27:52.692Z</updated>
     
     <content type="html"><![CDATA[<h3 id="1-OLTP场景介绍"><a href="#1-OLTP场景介绍" class="headerlink" title="1. OLTP场景介绍"></a>1. OLTP场景介绍</h3><p>On-Line Transaction Processing (OLTP) 在线事务处理，是典型的数据库应用场景，随机读写频繁，IOPS是关键指标。在证券交易系统中，单个数据库每秒处理的事务往往超过几百个，设置几千个；select语句的执行数量每秒几千甚至几万个。例如银行、证券交易、机票预订、电子商务系统、大型商场eBay的业务管理数据库系统就是很典型的OLTP数据库。<br><a id="more"></a></p>
 <h4 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h4><ul>
@@ -218,7 +218,7 @@
     <link href="https://caitianxiong.com/2017/02/28/integrate-ceph-into-devstack/"/>
     <id>https://caitianxiong.com/2017/02/28/integrate-ceph-into-devstack/</id>
     <published>2017-02-28T06:35:53.000Z</published>
-    <updated>2017-02-28T06:55:30.000Z</updated>
+    <updated>2019-11-07T03:27:52.691Z</updated>
     
     <content type="html"><![CDATA[<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
 <li>已经搭建好的 <code>Mon*1 + OSD*3</code> 的Ceph-10.2.5测试集群</li>
@@ -354,7 +354,7 @@
     <link href="https://caitianxiong.com/2017/02/25/deploy-ceph-cluster-manually/"/>
     <id>https://caitianxiong.com/2017/02/25/deploy-ceph-cluster-manually/</id>
     <published>2017-02-25T11:16:30.000Z</published>
-    <updated>2017-02-28T07:03:50.000Z</updated>
+    <updated>2019-11-07T03:27:52.691Z</updated>
     
     <content type="html"><![CDATA[<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]# uname -r</div><div class="line">3.10.0-327.28.3.el7.x86_64</div><div class="line">[root@node1 ~]# cat /etc/redhat-release</div><div class="line">CentOS Linux release 7.3.1611 (Core)</div></pre></td></tr></table></figure>
 <a id="more"></a>
@@ -453,7 +453,7 @@
     <link href="https://caitianxiong.com/2017/02/07/caiwang-works/"/>
     <id>https://caitianxiong.com/2017/02/07/caiwang-works/</id>
     <published>2017-02-07T10:44:58.000Z</published>
-    <updated>2019-11-06T09:04:57.450Z</updated>
+    <updated>2019-11-07T03:27:54.429Z</updated>
     
     <content type="html"><![CDATA[<p>本篇用于展示蔡旺的设计作品和摄影作品。(可点击图片放大查看)<br><a id="more"></a></p>
 <hr>
@@ -492,7 +492,7 @@
     <link href="https://caitianxiong.com/2016/11/06/summary-of-web-cache/"/>
     <id>https://caitianxiong.com/2016/11/06/summary-of-web-cache/</id>
     <published>2016-11-06T11:17:54.000Z</published>
-    <updated>2019-11-06T09:10:41.343Z</updated>
+    <updated>2019-11-07T03:27:54.430Z</updated>
     
     <content type="html"><![CDATA[<p><img src="/image/web_cache.png" alt="web_cache"></p>
 <p>给Web应用设置缓存好处多多，可以提高访问速度，改善用户体验，减轻服务器压力等。本篇主要整理一下前段时间设置服务器端和浏览器端缓存的方法，以及几种做法的优点与弊端。虽然只是来自Django的经验，但我相信对于其他编程语言和框架，原理上应该是一样的。<br><a id="more"></a><br>首先，我们从一个HTTP请求的生命周期来看看，可以在哪些地方设置缓存。一个HTTP请求从浏览器发出，经过网络传输到硬件层面的服务器上，这台服务器上通常会配置有服务器软件（比如Nginx或者Apache），还可能配置有缓冲软件（比如Redis或者Memcached），然后才是正真干活处理请求的代码层面的server。</p>
@@ -536,7 +536,7 @@
     <link href="https://caitianxiong.com/2016/10/06/%E5%AD%A6%E4%B9%A0%E5%8F%8C%E6%8B%BC%E8%87%AA%E7%84%B6%E7%A0%81/"/>
     <id>https://caitianxiong.com/2016/10/06/学习双拼自然码/</id>
     <published>2016-10-06T03:10:30.000Z</published>
-    <updated>2019-11-06T08:38:00.821Z</updated>
+    <updated>2019-11-07T03:27:52.938Z</updated>
     
     <content type="html"><![CDATA[<p><img src="/images/双拼自然码布局.jpg" alt="布局图"></p>
 <h3 id="0-布局图"><a href="#0-布局图" class="headerlink" title="0. 布局图"></a>0. 布局图</h3><p>话说Leon吃完面，决定学习双拼自然码。于是盯着自然码布局图看。看了一会，恍然大悟：啊，我知道了！<br><a id="more"></a></p>
@@ -588,7 +588,7 @@
     <link href="https://caitianxiong.com/2016/09/21/intro-to-openstack-dashboard/"/>
     <id>https://caitianxiong.com/2016/09/21/intro-to-openstack-dashboard/</id>
     <published>2016-09-21T13:02:29.000Z</published>
-    <updated>2019-11-06T09:18:45.818Z</updated>
+    <updated>2019-11-07T03:27:54.429Z</updated>
     
     <content type="html"><![CDATA[<p><img src="/images/openstack-architecture.jpg" alt="openstack-components"></p>
 <h2 id="1-Horizon项目在Openstack中的位置"><a href="#1-Horizon项目在Openstack中的位置" class="headerlink" title="1. Horizon项目在Openstack中的位置"></a>1. Horizon项目在Openstack中的位置</h2><p>控制台是用户使用Openstack服务的入口，Openstack的所有服务都通过控制台呈现给用户。Horizon和所有其他组件都有交互，通过Keystone认证后，以调用其他组件api的形式来进行使用。<br><a id="more"></a></p>
@@ -640,7 +640,7 @@
     <link href="https://caitianxiong.com/2016/09/10/install-ceph-on-xenserver/"/>
     <id>https://caitianxiong.com/2016/09/10/install-ceph-on-xenserver/</id>
     <published>2016-09-10T12:51:37.000Z</published>
-    <updated>2017-02-28T06:29:41.000Z</updated>
+    <updated>2019-11-07T03:27:52.691Z</updated>
     
     <content type="html"><![CDATA[<ol>
 <li><p>配置好yum源，更新完ceph-deploy，直接用ceph-deploy安装会报平台不支持的错，找到检测平台的相关代码，添加一项：【荣耀归于Eden大师】</p>
@@ -681,7 +681,7 @@
     <link href="https://caitianxiong.com/2016/09/03/learn-gdb/"/>
     <id>https://caitianxiong.com/2016/09/03/learn-gdb/</id>
     <published>2016-09-03T00:21:56.000Z</published>
-    <updated>2019-11-06T09:09:33.823Z</updated>
+    <updated>2019-11-07T03:27:54.429Z</updated>
     
     <content type="html"><![CDATA[<p><img src="/images/gdb-logo.png" alt="gdb-logo"><br>最近在学C语，用的是《<a href="http://baike.baidu.com/link?url=mpMUMWU_KP3iuJvVDNRN2fJpddcPO87WcXAml61ManrvFZOJtKaiuqilEnZrDklonnhUWlgScBoAsTwMjWzscMIMpIzG7bYwaRvkTiQUpLwzWW47jLXOzDgGrtY8cguglkE-HfIDt2BzkzaMGDkJPHbQXLvjs79g7ajIcSWvDH5HTXEy2UKfKTwuU9islSgi" target="_blank" rel="external">C语言程序设计（第4版）</a>》。看到倒数第二章讲调试程序，我才第一次接触到gdb。想到python也有个调试工具叫pdb，估计也是从gdb演化过来的。打算去好好研究下pdb，不然调试web项目的时候总是用print/log的方式，一来效率低，二来很low。<br><a id="more"></a></p>
 <p>gdb是GNU项目的调试工具，可以用来调试C/C++/Objective-C等。gdb的官方介绍：</p>
@@ -733,7 +733,7 @@
     <link href="https://caitianxiong.com/2016/08/28/My-Own-Blog/"/>
     <id>https://caitianxiong.com/2016/08/28/My-Own-Blog/</id>
     <published>2016-08-28T05:01:50.000Z</published>
-    <updated>2019-11-06T08:43:47.139Z</updated>
+    <updated>2019-11-07T03:27:54.429Z</updated>
     
     <content type="html"><![CDATA[<p><img src="/images/have_a_nice_day.jpg" alt="Have A Nice Day"><br><a id="more"></a><br>距离上次发博客文章，已经有一年多了，当时是在CSDN上记录学习Flask的过程。后来忙于工作（懒），就只是草草记在自己的笔记软件上。</p>
 <p>一直想搭建自己的博客，这样能促使我认真写一些东西分享出来，毕竟，对于属于自己的东西，会多一份责任感。拖了好久，正好这周Crossin先生的公众号上发了两篇教程，于是决定利用这个周末搭一套出来。于是有了这个博客。</p>
