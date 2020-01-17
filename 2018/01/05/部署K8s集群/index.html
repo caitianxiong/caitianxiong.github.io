@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Kubernetes,K8s," />
 
 
 
@@ -86,15 +86,28 @@
 
 
 
-<meta name="description" content="人生很长，什么都有可能。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Have A Nice Day">
-<meta property="og:url" content="https://caitianxiong.com/tags/K8s/index.html">
+<meta name="description" content="0. 参考
+cloudman 博客
+K8s官方文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署K8s集群">
+<meta property="og:url" content="https://caitianxiong.com/2018/01/05/部署K8s集群/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
-<meta property="og:description" content="人生很长，什么都有可能。">
+<meta property="og:description" content="0. 参考
+cloudman 博客
+K8s官方文档">
+<meta property="og:image" content="https://caitianxiong.com/images/K8s报错1.png">
+<meta property="og:image" content="https://caitianxiong.com/images/K8s报错2.png">
+<meta property="og:image" content="https://caitianxiong.com/images/K8s报错3.png">
+<meta property="og:image" content="https://caitianxiong.com/images/K8s报错5.png">
+<meta property="og:image" content="https://caitianxiong.com/images/K8s报错6.png">
+<meta property="og:updated_time" content="2020-01-17T14:57:33.038Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Have A Nice Day">
-<meta name="twitter:description" content="人生很长，什么都有可能。">
+<meta name="twitter:title" content="部署K8s集群">
+<meta name="twitter:description" content="0. 参考
+cloudman 博客
+K8s官方文档">
+<meta name="twitter:image" content="https://caitianxiong.com/images/K8s报错1.png">
 
 
 
@@ -115,9 +128,9 @@
 
 
 
-  <link rel="canonical" href="https://caitianxiong.com/tags/K8s/"/>
+  <link rel="canonical" href="https://caitianxiong.com/2018/01/05/部署K8s集群/"/>
 
-  <title> 标签: K8s | Have A Nice Day </title>
+  <title> 部署K8s集群 | Have A Nice Day </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -148,7 +161,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -236,130 +249,180 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        K8s
-        <small>标签</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2019/08/01/K8s对接GlusterFS/" itemprop="url">
-              
-                <span itemprop="name">K8s对接GlusterFS</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-08-01T00:00:00+08:00"
-              content="2019-08-01" >
-          08-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/05/部署K8s集群/" itemprop="url">
-              
-                <span itemprop="name">部署K8s集群</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-05T00:00:00+08:00"
-              content="2018-01-05" >
-          01-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/18/Kubernetes生产模式以及反模式/" itemprop="url">
-              
-                <span itemprop="name">【翻译】Kubernetes生产模式以及反模式</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-18T00:00:00+08:00"
-              content="2017-08-18" >
-          08-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/15/K8s官方文档笔记/" itemprop="url">
-              
-                <span itemprop="name">K8s官方文档笔记</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-15T00:00:00+08:00"
-              content="2017-08-15" >
-          08-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </div>
 
   
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                部署K8s集群
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-05T00:00:00+08:00" content="2018-01-05">
+              2018-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/01/05/部署K8s集群/" class="leancloud_visitors" data-flag-title="部署K8s集群">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="0-参考"><a href="#0-参考" class="headerlink" title="0. 参考"></a>0. 参考</h3><ul>
+<li><a href="https://steemit.com/kubernetes/@cloudman6/k8s-cluster-kubernetes-5" target="_blank" rel="external">cloudman 博客</a></li>
+<li><a href="https://kubernetes.io/docs/setup/independent/install-kubeadm/" target="_blank" rel="external">K8s官方文档</a><a id="more"></a>
+</li>
+</ul>
+<h3 id="一、部署步骤"><a href="#一、部署步骤" class="headerlink" title="一、部署步骤"></a>一、部署步骤</h3><h4 id="1-所有节点装docker-io"><a href="#1-所有节点装docker-io" class="headerlink" title="1. 所有节点装docker.io"></a>1. 所有节点装docker.io</h4><table>
+<thead>
+<tr>
+<th>hostname</th>
+<th>内网IP</th>
+<th>外网IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k8smaster</td>
+<td>192.168.56.105</td>
+<td>172.20.22.106</td>
+</tr>
+<tr>
+<td>k8snode1</td>
+<td>192.168.56.106</td>
+<td>172.20.22.121</td>
+</tr>
+<tr>
+<td>k8snode2</td>
+<td>192.168.56.107</td>
+<td>172.20.22.154</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-所有节点装kubectl-kubeadm-kubelet"><a href="#2-所有节点装kubectl-kubeadm-kubelet" class="headerlink" title="2. 所有节点装kubectl / kubeadm / kubelet"></a>2. 所有节点装kubectl / kubeadm / kubelet</h4><p>在所有节点上安装 kubelet、kubeadm 和 kubectl。<br>kubelet 运行在 Cluster 所有节点上，负责启动 Pod 和容器。<br>kubeadm 用于初始化 Cluster。<br>kubectl 是 Kubernetes 命令行工具。通过 kubectl 可以部署和管理应用，查看各种资源，创建、删除和更新各种组件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">apt-get update &amp;&amp; apt-get install -y apt-transport-https</div><div class="line">curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -</div><div class="line">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list</div><div class="line">deb http://apt.kubernetes.io/ kubernetes-xenial main</div><div class="line">EOF</div><div class="line">apt-get update</div><div class="line">apt-get install -y kubelet kubeadm kubectl\</div></pre></td></tr></table></figure></p>
+<h4 id="3-手动下载Master组件docker-镜像"><a href="#3-手动下载Master组件docker-镜像" class="headerlink" title="3. 手动下载Master组件docker 镜像"></a>3. 手动下载Master组件docker 镜像</h4><p>gcr.io/google_containers/etcd-amd64:3.1.10<br>gcr.io/google_containers/kube-apiserver-amd64:v1.9.1<br>gcr.io/google_containers/kube-controller-manager-amd64:v1.9.1<br>gcr.io/google_containers/kube-scheduler-amd64:v1.9.1</p>
+<h4 id="4-初始化集群Master节点"><a href="#4-初始化集群Master节点" class="headerlink" title="4. 初始化集群Master节点"></a>4. 初始化集群Master节点</h4><p><code>kubelet init --XXXX</code></p>
+<h3 id="二、踩坑记录"><a href="#二、踩坑记录" class="headerlink" title="二、踩坑记录"></a>二、踩坑记录</h3><ul>
+<li>virtualbox上虚机网络配置<br>加一个内部网卡，自己给3台虚机配置同一网段的IP、GW，重启network service报错不管，三台能通</li>
+<li>配命令行翻墙代理<br>shadowsocks + polipo，配置文件记得改一致了</li>
+<li>关闭Ubuntu swap分区<br><code>swapoff -a</code></li>
+<li>初始化集群时，boot up control plane超时<br><img src="/images/K8s报错1.png" alt="K8s报错1"><br>提前拉取好dashboard的docker镜像，用 <code>docker load &lt; XXX</code> 装好</li>
+<li>初始化Master节点时，无法给Master节点添加标签<br><img src="/images/K8s报错2.png" alt="K8s报错2"><br>Ubuntu系统日志syslog中的报错：<br><img src="/images/K8s报错3.png" alt="K8s报错3"><br>改完hostname后（主机名不要带-），清理环境不彻底，导致还留有ubuntu-1的信息，要用<code>kubeadm reset</code>!!!</li>
+<li>切换网络后无法上外网的问题，参考 <a href="https://blog.jysoftware.com/2013/04/ubuntu设置缺省路由/" target="_blank" rel="external">https://blog.jysoftware.com/2013/04/ubuntu设置缺省路由/</a> </li>
+<li><code>kubeadm init</code> 完成后，查看kubectl Server版本报错【服务已经起了，非root用户可以正常查看】<br><img src="/images/K8s报错5.png" alt="K8s报错5"></li>
+<li>node节点加入集群后，状态NotReady<br>node节点上的proxy和flannel pod状态异常，已将flannel和proxy的docker镜像传到相应节点并load了。<br><img src="/images/K8s报错6.png" alt="K8s报错6"></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
+          
+            <a href="/tags/K8s/" rel="tag">#K8s</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/18/Kubernetes生产模式以及反模式/" rel="next" title="【翻译】Kubernetes生产模式以及反模式">
+                <i class="fa fa-chevron-left"></i> 【翻译】Kubernetes生产模式以及反模式
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/04/Ingress参数优化/" rel="prev" title="Ingress参数优化">
+                Ingress参数优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -367,6 +430,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -386,8 +453,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/leon.jpg"
@@ -483,6 +559,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-参考"><span class="nav-text">0. 参考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、部署步骤"><span class="nav-text">一、部署步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-所有节点装docker-io"><span class="nav-text">1. 所有节点装docker.io</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-所有节点装kubectl-kubeadm-kubelet"><span class="nav-text">2. 所有节点装kubectl / kubeadm / kubelet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-手动下载Master组件docker-镜像"><span class="nav-text">3. 手动下载Master组件docker 镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-初始化集群Master节点"><span class="nav-text">4. 初始化集群Master节点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、踩坑记录"><span class="nav-text">二、踩坑记录</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -586,6 +673,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 

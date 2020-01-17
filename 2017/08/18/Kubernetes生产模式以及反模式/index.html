@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="docker,Kubernetes,K8s," />
+  <meta name="keywords" content="Kubernetes,K8s,docker," />
 
 
 
@@ -314,7 +314,7 @@
       
         <h1 id="Kubernetes-Production-Patterns"><a href="#Kubernetes-Production-Patterns" class="headerlink" title="Kubernetes Production Patterns"></a>Kubernetes Production Patterns</h1><h1 id="Kubernetes生产模式"><a href="#Kubernetes生产模式" class="headerlink" title="Kubernetes生产模式"></a>Kubernetes生产模式</h1><h1 id="…-and-anti-patterns"><a href="#…-and-anti-patterns" class="headerlink" title="… and anti-patterns."></a>… and anti-patterns.</h1><h1 id="。。。及反模式。"><a href="#。。。及反模式。" class="headerlink" title="。。。及反模式。"></a>。。。及反模式。</h1><p>We are going to explore helpful techniques to improve resiliency and high availability<br>of Kubernetes deployments and will take a look at some common mistakes to avoid when<br>working with Docker and Kubernetes.<br>我们将探索一些有用的技术来提高Kubernetes部署的弹性和高可用性，同时看看一些和Docker和Kubernetes协作的常见错误，以避免犯错。<br><a id="more"></a></p>
 <h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>First, follow <a href="README.md#installation">installation instructions</a><br>首先，跟着<a href="README.md#installation">安装引导</a></p>
-<h3 id="Anti-Pattern-Mixing-build-environment-and-runtime-environment"><a href="#Anti-Pattern-Mixing-build-environment-and-runtime-environment" class="headerlink" title="Anti-Pattern: Mixing build environment and runtime environment"></a>Anti-Pattern: Mixing build environment and runtime environment</h3><h3 id="反模式：混淆构建环境和运行时环境"><a href="#反模式：混淆构建环境和运行时环境" class="headerlink" title="反模式：混淆构建环境和运行时环境"></a>反模式：混淆构建环境和运行时环境</h3><p>Let’s take a look at this dockerfile<br>来看下这个dockerfile<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">14.04</span></div><div class="line"></div><div class="line"><span class="keyword">RUN</span> apt-get update</div><div class="line"><span class="keyword">RUN</span> apt-get install gcc</div><div class="line"><span class="keyword">RUN</span> gcc hello.c -o /hello</div></pre></td></tr></table></figure></p>
+<h3 id="Anti-Pattern-Mixing-build-environment-and-runtime-environment"><a href="#Anti-Pattern-Mixing-build-environment-and-runtime-environment" class="headerlink" title="Anti-Pattern: Mixing build environment and runtime environment"></a>Anti-Pattern: Mixing build environment and runtime environment</h3><h3 id="反模式：混淆构建环境和运行时环境"><a href="#反模式：混淆构建环境和运行时环境" class="headerlink" title="反模式：混淆构建环境和运行时环境"></a>反模式：混淆构建环境和运行时环境</h3><p>Let’s take a look at this dockerfile<br>来看下这个dockerfile<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">14.04</span></div><div class="line"></div><div class="line"><span class="keyword">RUN</span> <span class="bash">apt-get update</span></div><div class="line"><span class="keyword">RUN</span> <span class="bash">apt-get install gcc</span></div><div class="line"><span class="keyword">RUN</span> <span class="bash">gcc hello.c -o /hello</span></div></pre></td></tr></table></figure></p>
 <p>It compiles and runs a simple helloworld program:<br>它将编译并运行一个简单的 helloword 程序：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> prod/build</div><div class="line">$ docker build -t prod .</div><div class="line">$ docker run prod</div><div class="line">Hello World</div></pre></td></tr></table></figure>
 <p>There are a couple of problems with the resulting Dockerfile:<br>生成的Dockerfile有好几个问题：</p>
@@ -485,11 +485,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/docker/" rel="tag">#docker</a>
-          
             <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
           
             <a href="/tags/K8s/" rel="tag">#K8s</a>
+          
+            <a href="/tags/docker/" rel="tag">#docker</a>
           
         </div>
       
@@ -506,8 +506,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/04/Ingress参数优化/" rel="prev" title="Ingress参数优化">
-                Ingress参数优化 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/05/部署K8s集群/" rel="prev" title="部署K8s集群">
+                部署K8s集群 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -576,7 +576,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -586,7 +586,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

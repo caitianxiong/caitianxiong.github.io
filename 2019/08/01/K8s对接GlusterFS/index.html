@@ -1,0 +1,805 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Kubernetes,K8s,GlussterFS," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Have A Nice Day" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/leon.jpg?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Kubernetes存储功能模块(GlusterFS)部署文档
+1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8s对接GlusterFS">
+<meta property="og:url" content="https://caitianxiong.com/2019/08/01/K8s对接GlusterFS/index.html">
+<meta property="og:site_name" content="Have A Nice Day">
+<meta property="og:description" content="Kubernetes存储功能模块(GlusterFS)部署文档
+1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能">
+<meta property="og:updated_time" content="2020-01-17T15:06:19.112Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="K8s对接GlusterFS">
+<meta name="twitter:description" content="Kubernetes存储功能模块(GlusterFS)部署文档
+1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://caitianxiong.com/2019/08/01/K8s对接GlusterFS/"/>
+
+  <title> K8s对接GlusterFS | Have A Nice Day </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?a85e033404111b6034dd3aa973708f20";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Have A Nice Day</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                K8s对接GlusterFS
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-08-01T00:00:00+08:00" content="2019-08-01">
+              2019-08-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2019/08/01/K8s对接GlusterFS/" class="leancloud_visitors" data-flag-title="K8s对接GlusterFS">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Kubernetes存储功能模块(GlusterFS)部署文档</p>
+<h2 id="1-部署架构"><a href="#1-部署架构" class="headerlink" title="1. 部署架构"></a>1. 部署架构</h2><p>Kubernetes —–&gt; Heketi  ——&gt; GlusterFS集群<br>Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能<br><a id="more"></a></p>
+<h2 id="2-环境准备（对接esb存储可忽略此步骤2-只需要提供集群ip及裸盘）"><a href="#2-环境准备（对接esb存储可忽略此步骤2-只需要提供集群ip及裸盘）" class="headerlink" title="2. 环境准备（对接esb存储可忽略此步骤2,只需要提供集群ip及裸盘）"></a>2. 环境准备（对接esb存储可忽略此步骤2,只需要提供集群ip及裸盘）</h2><h3 id="2-1-GlusterFS安装"><a href="#2-1-GlusterFS安装" class="headerlink" title="2.1 GlusterFS安装"></a>2.1 GlusterFS安装</h3><p><strong>每个存储节点</strong>需要提前安装GlusterFS客户端和服务。本次安装以3存储节点为例（glustefs版本为3.8.4）。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">yum install -y centos-release-gluster</div><div class="line">yum install -y glusterfs glusterfs-server glusterfs-fuse glusterfs-rdma</div><div class="line">systemctl start glusterd.service</div><div class="line">systemctl <span class="built_in">enable</span> glusterd.service</div></pre></td></tr></table></figure></p>
+<h3 id="2-2-裸盘准备"><a href="#2-2-裸盘准备" class="headerlink" title="2.2 裸盘准备"></a>2.2 裸盘准备</h3><p>每个存储节点需要至少准备一块裸盘用来做存储设备。登录每个节点，通过<code>lsblk</code>命令检查是否存在可用裸盘。<br>本次安装均以<code>/dev/sdb</code>为例。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># lsblk</span></div><div class="line">NAME                                                                              MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">fd0                                                                                 2:0    1    4K  0 disk</div><div class="line">sda                                                                                 8:0    0  100G  0 disk</div><div class="line">└─sda1                                                                              8:1    0  100G  0 part</div><div class="line">  └─centos-root                                                                   253:0    0  100G  0 lvm  /</div><div class="line">sdb                                                                                  8:16   0  100G  0 disk</div></pre></td></tr></table></figure></p>
+<h2 id="3-Heketi部署"><a href="#3-Heketi部署" class="headerlink" title="3. Heketi部署"></a>3. Heketi部署</h2><h3 id="3-1-准备heketi-json配置文件"><a href="#3-1-准备heketi-json配置文件" class="headerlink" title="3.1 准备heketi.json配置文件"></a>3.1 准备heketi.json配置文件</h3><p>通过configmap准备heketi.json文件</p>
+<h3 id="3-1-1-通过文件heketi-json创建configmap"><a href="#3-1-1-通过文件heketi-json创建configmap" class="headerlink" title="3.1.1 通过文件heketi.json创建configmap"></a>3.1.1 通过文件heketi.json创建configmap</h3><pre><code>kubectl create cm heketi --from-file=/root/heketi/heketi.json  --namespace=kube-system
+</code></pre><p>下面是一个heketi.json的配置文件示例</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"_port_comment"</span>: <span class="string">"Heketi Server Port Number"</span>,</div><div class="line">  <span class="attr">"port"</span>: <span class="string">"8080"</span>,</div><div class="line"></div><div class="line">  <span class="attr">"_use_auth"</span>: <span class="string">"Enable JWT authorization. Please enable for deployment"</span>,</div><div class="line">  <span class="attr">"use_auth"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">  <span class="attr">"_jwt"</span>: <span class="string">"Private keys for access"</span>,</div><div class="line">  <span class="attr">"jwt"</span>: &#123;</div><div class="line">    <span class="attr">"_admin"</span>: <span class="string">"Admin has access to all APIs"</span>,</div><div class="line">    <span class="attr">"admin"</span>: &#123;</div><div class="line">      <span class="attr">"key"</span>: <span class="string">"My Secret"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"_user"</span>: <span class="string">"User only has access to /volumes endpoint"</span>,</div><div class="line">    <span class="attr">"user"</span>: &#123;</div><div class="line">      <span class="attr">"key"</span>: <span class="string">"My Secret"</span></div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  <span class="attr">"_glusterfs_comment"</span>: <span class="string">"GlusterFS Configuration"</span>,</div><div class="line">  <span class="attr">"glusterfs"</span>: &#123;</div><div class="line">    <span class="attr">"_executor_comment"</span>: [</div><div class="line">      <span class="string">"Execute plugin. Possible choices: mock, ssh"</span>,</div><div class="line">      <span class="string">"mock: This setting is used for testing and development."</span>,</div><div class="line">      <span class="string">"      It will not send commands to any node."</span>,</div><div class="line">      <span class="string">"ssh:  This setting will notify Heketi to ssh to the nodes."</span>,</div><div class="line">      <span class="string">"      It will need the values in sshexec to be configured."</span>,</div><div class="line">      <span class="string">"kubernetes: Communicate with GlusterFS containers over"</span>,</div><div class="line">      <span class="string">"            Kubernetes exec api."</span></div><div class="line">    ],</div><div class="line">    <span class="attr">"executor"</span>: <span class="string">"ssh"</span>,</div><div class="line"></div><div class="line">    <span class="attr">"_sshexec_comment"</span>: <span class="string">"SSH username and private key file information"</span>,</div><div class="line">    <span class="attr">"sshexec"</span>: &#123;</div><div class="line">      <span class="attr">"keyfile"</span>: <span class="string">"/etc/heketi/ssh-key"</span>,</div><div class="line">      <span class="attr">"user"</span>: <span class="string">"root"</span>,</div><div class="line">      <span class="attr">"port"</span>: <span class="string">"22"</span>,</div><div class="line">      <span class="attr">"fstab"</span>: <span class="string">"/etc/fstab"</span></div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    <span class="attr">"_kubeexec_comment"</span>: <span class="string">"Kubernetes configuration"</span>,</div><div class="line">    <span class="attr">"kubeexec"</span>: &#123;</div><div class="line">      <span class="attr">"host"</span> :<span class="string">"https://kubernetes.host:8443"</span>,</div><div class="line">      <span class="attr">"cert"</span> : <span class="string">"/path/to/crt.file"</span>,</div><div class="line">      <span class="attr">"insecure"</span>: <span class="literal">false</span>,</div><div class="line">      <span class="attr">"user"</span>: <span class="string">"kubernetes username"</span>,</div><div class="line">      <span class="attr">"password"</span>: <span class="string">"password for kubernetes user"</span>,</div><div class="line">      <span class="attr">"namespace"</span>: <span class="string">"OpenShift project or Kubernetes namespace"</span>,</div><div class="line">      <span class="attr">"fstab"</span>: <span class="string">"Optional: Specify fstab file on node.  Default is /etc/fstab"</span></div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    <span class="attr">"_db_comment"</span>: <span class="string">"Database file name"</span>,</div><div class="line">    <span class="attr">"db"</span>: <span class="string">"/var/lib/heketi/heketi.db"</span>,</div><div class="line"></div><div class="line">    <span class="attr">"_loglevel_comment"</span>: [</div><div class="line">      <span class="string">"Set log level. Choices are:"</span>,</div><div class="line">      <span class="string">"  none, critical, error, warning, info, debug"</span>,</div><div class="line">      <span class="string">"Default is warning"</span></div><div class="line">    ],</div><div class="line">    <span class="attr">"loglevel"</span> : <span class="string">"debug"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>关键参数：</p>
+<p>a. <code>&quot;executor&quot;</code>，设置heketi与存储节点交互方式，默认<code>ssh</code>即可。</p>
+<p>b. <code>&quot;_sshexec_commen&quot;.&quot;keyfile&quot;</code>，启用<code>ssh</code>交互方式时<strong>私钥</strong>的路径。</p>
+<h3 id="3-2-准备sshkey"><a href="#3-2-准备sshkey" class="headerlink" title="3.2 准备sshkey"></a>3.2 准备sshkey</h3><p>heketi需要通过sshkey来进行存储节点的管理操作。为避免密码输入，需要准备一对公私钥。</p>
+<h4 id="3-2-1-密钥生成"><a href="#3-2-1-密钥生成" class="headerlink" title="3.2.1 密钥生成"></a>3.2.1 密钥生成</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir /etc/heketi</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa -q -f /etc/heketi/heketi_key -N &quot;&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod 600 /etc/heketi/heketi_key.pub</div></pre></td></tr></table></figure>
+<h4 id="3-2-2-ssh公钥传递，这里只以一个节点为例"><a href="#3-2-2-ssh公钥传递，这里只以一个节点为例" class="headerlink" title="3.2.2 ssh公钥传递，这里只以一个节点为例"></a>3.2.2 ssh公钥传递，这里只以一个节点为例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-copy-id -i /etc/heketi/heketi_key.pub root@192.168.75.175</div></pre></td></tr></table></figure>
+<p>==注：（需要刚公钥拷贝到所有glusterfs节点）==</p>
+<h4 id="3-2-3-验证是否能通过ssh密钥正常连接到glusterfs节点"><a href="#3-2-3-验证是否能通过ssh密钥正常连接到glusterfs节点" class="headerlink" title="3.2.3 验证是否能通过ssh密钥正常连接到glusterfs节点"></a>3.2.3 验证是否能通过ssh密钥正常连接到glusterfs节点</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh -i /etc/heketi/heketi_key root@192.168.75.175</div></pre></td></tr></table></figure>
+<h4 id="3-2-4-从sshkey私钥文件创建secret"><a href="#3-2-4-从sshkey私钥文件创建secret" class="headerlink" title="3.2.4 从sshkey私钥文件创建secret"></a>3.2.4 从sshkey私钥文件创建secret</h4><figure class="highlight plain"><figcaption><span>create secret generic  heketi --from-file=ssh-key=/etc/heketi/heketi_key -n kube-system```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 3.3 部署heketi(建议采用方式2)</div><div class="line"></div><div class="line">#### 3.3.1 部署heketi（方式1）</div><div class="line">命令如下：</div><div class="line"></div><div class="line">    kubectl create -f heketi-deploy.yaml</div><div class="line"></div><div class="line">heketi-deploy.yaml文件如下：</div><div class="line"></div><div class="line"></div><div class="line">``` yaml</div><div class="line">---</div><div class="line">kind: Service</div><div class="line">apiVersion: v1</div><div class="line">metadata:</div><div class="line">  name: heketi</div><div class="line">  namespace: kube-system</div><div class="line">  labels:</div><div class="line">    glusterfs: heketi-service</div><div class="line">    heketi: service</div><div class="line">  annotations:</div><div class="line">    description: Exposes Heketi Service</div><div class="line">spec:</div><div class="line">  selector:</div><div class="line">    glusterfs: heketi-pod</div><div class="line">  ports:</div><div class="line">  - name: heketi</div><div class="line">    port: 8080</div><div class="line">    targetPort: 8080</div><div class="line">---</div><div class="line">kind: Deployment</div><div class="line">apiVersion: extensions/v1beta1</div><div class="line">metadata:</div><div class="line">  name: heketi</div><div class="line">  namespace: kube-system</div><div class="line">  labels:</div><div class="line">    glusterfs: heketi-deployment</div><div class="line">    heketi: deployment</div><div class="line">  annotations:</div><div class="line">    description: Defines how to deploy Heketi</div><div class="line">spec:</div><div class="line">  replicas: 1</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      name: heketi</div><div class="line">      labels:</div><div class="line">        glusterfs: heketi-pod</div><div class="line">        heketi: pod</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - image: registry.paas/library/heketi:latest</div><div class="line">        imagePullPolicy: IfNotPresent</div><div class="line">        name: heketi</div><div class="line">        ports:</div><div class="line">        - containerPort: 8080</div><div class="line">        volumeMounts:</div><div class="line">        - name: db</div><div class="line">          mountPath: &quot;/var/lib/heketi&quot;</div><div class="line">        - name: config</div><div class="line">          mountPath: /etc/heketi/heketi.json</div><div class="line">          subPath: heketi.json</div><div class="line">        - name: ssh-key</div><div class="line">          mountPath: /etc/heketi/ssh-key</div><div class="line">          subPath: ssh-key</div><div class="line">        readinessProbe:</div><div class="line">          timeoutSeconds: 3</div><div class="line">          initialDelaySeconds: 3</div><div class="line">          httpGet:</div><div class="line">            path: &quot;/hello&quot;</div><div class="line">            port: 8080</div><div class="line">        livenessProbe:</div><div class="line">          timeoutSeconds: 3</div><div class="line">          initialDelaySeconds: 30</div><div class="line">          httpGet:</div><div class="line">            path: &quot;/hello&quot;</div><div class="line">            port: 8080</div><div class="line">      nodeSelector:</div><div class="line">        kubernetes.io/hostname: gdpaasn5</div><div class="line">      volumes:</div><div class="line">      - name: db</div><div class="line">        hostPath:</div><div class="line">          type: DirectoryOrCreate</div><div class="line">          path: /var/lib/heketi</div><div class="line">      - name: config</div><div class="line">        configMap:</div><div class="line">          name: heketi</div><div class="line">      - name: ssh-key</div><div class="line">        secret:</div><div class="line">          secretName: heketi</div></pre></td></tr></table></figure>
+<p>==kubernetes.io/hostname: gdpaasn5要修改成具体调度节点==.</p>
+<p>获取cluster ip<br><code>kubectl get svc -n kube-system | grep heketi</code>，执行<code>curl cluster-ip:8080/hello</code>看是否正常返回<code>Hello from Heketi</code></p>
+<h4 id="3-3-2-设置topoloy"><a href="#3-3-2-设置topoloy" class="headerlink" title="3.3.2 设置topoloy"></a>3.3.2 设置topoloy</h4><p>第一步：进入到heketi的pod，执行下面命令<code>heketi-cli topology load -j topology.json</code>, topoloy.json文件如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"clusters"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"nodes"</span>: [</div><div class="line">                &#123;</div><div class="line">                    <span class="attr">"node"</span>: &#123;</div><div class="line">                        <span class="attr">"hostnames"</span>: &#123;</div><div class="line">                            <span class="attr">"manage"</span>: [</div><div class="line">                                <span class="string">"192.168.1.19"</span></div><div class="line">                            ],</div><div class="line">                            <span class="attr">"storage"</span>: [</div><div class="line">                                <span class="string">"192.168.1.19"</span></div><div class="line">                            ]</div><div class="line">                        &#125;,</div><div class="line">                        <span class="attr">"zone"</span>: <span class="number">1</span></div><div class="line">                    &#125;,</div><div class="line">                    <span class="attr">"devices"</span>: [</div><div class="line">                        <span class="string">"/dev/sdb"</span></div><div class="line">                    ]</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    <span class="attr">"node"</span>: &#123;</div><div class="line">                        <span class="attr">"hostnames"</span>: &#123;</div><div class="line">                            <span class="attr">"manage"</span>: [</div><div class="line">                                <span class="string">"192.168.1.20"</span></div><div class="line">                            ],</div><div class="line">                            <span class="attr">"storage"</span>: [</div><div class="line">                                <span class="string">"192.168.1.20"</span></div><div class="line">                            ]</div><div class="line">                        &#125;,</div><div class="line">                        <span class="attr">"zone"</span>: <span class="number">2</span></div><div class="line">                    &#125;,</div><div class="line">                    <span class="attr">"devices"</span>: [</div><div class="line">                        <span class="string">"/dev/sdb"</span></div><div class="line">                    ]</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    <span class="attr">"node"</span>: &#123;</div><div class="line">                        <span class="attr">"hostnames"</span>: &#123;</div><div class="line">                            <span class="attr">"manage"</span>: [</div><div class="line">                                <span class="string">"192.168.1.21"</span></div><div class="line">                            ],</div><div class="line">                            <span class="attr">"storage"</span>: [</div><div class="line">                                <span class="string">"192.168.1.21"</span></div><div class="line">                            ]</div><div class="line">                        &#125;,</div><div class="line">                        <span class="attr">"zone"</span>: <span class="number">3</span></div><div class="line">                    &#125;,</div><div class="line">                    <span class="attr">"devices"</span>: [</div><div class="line">                        <span class="string">"/dev/sdb"</span></div><div class="line">                    ]</div><div class="line">                &#125;</div><div class="line">            ]</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中IP地址为glusterfs集群地址（注：glusterfs集群盘必须是裸盘），操作方法如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@heketi-69c758c9cc-7v97t heketi]# heketi-cli topology load --json=topology.json</div><div class="line">Creating cluster ... ID: fe3b97728a0d0267a247c28c37645288</div><div class="line">    Allowing file volumes on cluster.</div><div class="line">    Allowing block volumes on cluster.</div><div class="line">    Creating node 10.142.113.145 ... ID: 2f32bdac26a285e0b9a5438d83f0796b</div><div class="line">        Adding device /dev/sdb ... OK</div><div class="line">    Creating node 10.142.113.144 ... ID: 07cc108c81f3e3669070685951e67391</div><div class="line">        Adding device /dev/sdb ... OK</div></pre></td></tr></table></figure></p>
+<p>通过查看拓扑看是否成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">heketi-cli topology info 查看拓扑结构</div><div class="line">heketi-cli db dump --json 查看heketi.db数据</div></pre></td></tr></table></figure></p>
+<p>注意：</p>
+<p>这一步在创建集群的时候可能出现有node节点连接不成功的情况，可使用<code>heketi-cli node add xxx</code>等命令进行单节点或者单设备添加工作。</p>
+<h4 id="3-3-3-heketi数据高可用-方式2"><a href="#3-3-3-heketi数据高可用-方式2" class="headerlink" title="3.3.3 heketi数据高可用 (方式2)"></a>3.3.3 heketi数据高可用 (方式2)</h4><p>之前的heketi部署将db的数据保存在host的目录上，使用node selector绑定到指定节点。<br>可以将db数据也存到gluster集群上。</p>
+<ul>
+<li>步骤1： 事先在gluster集群创建好一个volume，此volume不能创建在要加载的裸盘上。 操作如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gluster volume create heketi-xj replica  2 192.168.1.20:/mnt/xj 192.168.1.21:/mnt/xj force</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gluster volume start heketi-xj</div></pre></td></tr></table></figure>
+<p>==注： k8s集群的slave节点要装glusterfs-client==</p>
+<ul>
+<li>步骤2: 创建endpoint和service，<code>kubectl create -f endpoint-gluster.yaml</code>， endpoint-gluster.yaml文件如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">apiVersion: v1</div><div class="line">kind: Endpoints</div><div class="line">metadata:</div><div class="line"> name: glusterfs-cluster</div><div class="line">subsets:</div><div class="line"> - addresses:</div><div class="line">   - ip: 192.168.1.20</div><div class="line">   ports:</div><div class="line">   - port: 1</div><div class="line">     protocol: TCP</div><div class="line"> - addresses:</div><div class="line">   - ip: 192.168.1.21</div><div class="line">   ports:</div><div class="line">   - port: 1</div><div class="line">     protocol: TCP</div><div class="line"> - addresses:</div><div class="line">   - ip: 192.168.1.19</div><div class="line">   ports:</div><div class="line">   - port: 1</div><div class="line">     protocol: TCP</div><div class="line">---</div><div class="line"></div><div class="line">kind: Service</div><div class="line">apiVersion: v1</div><div class="line">metadata:</div><div class="line">  name: glusterfs-cluster</div><div class="line">spec:</div><div class="line">  ports:</div><div class="line">  - port: 1</div></pre></td></tr></table></figure>
+<ul>
+<li>步骤3：deployment yaml文件更改如下：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="meta">---</span></div><div class="line"><span class="attr">kind:</span> Service</div><div class="line"><span class="attr">apiVersion:</span> v1</div><div class="line"><span class="attr">metadata:</span></div><div class="line"><span class="attr">  name:</span> heketi</div><div class="line"><span class="attr">  labels:</span></div><div class="line"><span class="attr">    glusterfs:</span> heketi-service</div><div class="line"><span class="attr">    heketi:</span> service</div><div class="line"><span class="attr">  annotations:</span></div><div class="line"><span class="attr">    description:</span> Exposes Heketi Service</div><div class="line"><span class="attr">spec:</span></div><div class="line"><span class="attr">  selector:</span></div><div class="line"><span class="attr">    glusterfs:</span> heketi-pod</div><div class="line"><span class="attr">  ports:</span></div><div class="line"><span class="attr">  - name:</span> heketi</div><div class="line"><span class="attr">    port:</span> <span class="number">8080</span></div><div class="line"><span class="attr">    targetPort:</span> <span class="number">8080</span></div><div class="line"><span class="meta">---</span></div><div class="line"><span class="attr">kind:</span> Deployment</div><div class="line"><span class="attr">apiVersion:</span> extensions/v1beta1</div><div class="line"><span class="attr">metadata:</span></div><div class="line"><span class="attr">  name:</span> heketi</div><div class="line"><span class="attr">  labels:</span></div><div class="line"><span class="attr">    glusterfs:</span> heketi-deployment</div><div class="line"><span class="attr">    heketi:</span> deployment</div><div class="line"><span class="attr">  annotations:</span></div><div class="line"><span class="attr">    description:</span> Defines how to deploy Heketi</div><div class="line"><span class="attr">spec:</span></div><div class="line"><span class="attr">  replicas:</span> <span class="number">1</span></div><div class="line"><span class="attr">  template:</span></div><div class="line"><span class="attr">    metadata:</span></div><div class="line"><span class="attr">      name:</span> heketi</div><div class="line"><span class="attr">      labels:</span></div><div class="line"><span class="attr">        glusterfs:</span> heketi-pod</div><div class="line"><span class="attr">        heketi:</span> pod</div><div class="line"><span class="attr">    spec:</span></div><div class="line"><span class="attr">      containers:</span></div><div class="line"><span class="attr">      - image:</span> registry.paas/library/heketi:latest</div><div class="line"><span class="attr">        imagePullPolicy:</span> IfNotPresent</div><div class="line"><span class="attr">        name:</span> heketi</div><div class="line"><span class="attr">        ports:</span></div><div class="line"><span class="attr">        - containerPort:</span> <span class="number">8080</span></div><div class="line"><span class="attr">        volumeMounts:</span></div><div class="line"><span class="attr">        - name:</span> db</div><div class="line"><span class="attr">          mountPath:</span> <span class="string">"/var/lib/heketi"</span></div><div class="line"><span class="attr">        - name:</span> config</div><div class="line"><span class="attr">          mountPath:</span> /etc/heketi/heketi.json</div><div class="line"><span class="attr">          subPath:</span> heketi.json</div><div class="line"><span class="attr">        - name:</span> ssh-key</div><div class="line"><span class="attr">          mountPath:</span> /etc/heketi/ssh-key</div><div class="line"><span class="attr">          subPath:</span> ssh-key</div><div class="line"><span class="attr">        readinessProbe:</span></div><div class="line"><span class="attr">          timeoutSeconds:</span> <span class="number">3</span></div><div class="line"><span class="attr">          initialDelaySeconds:</span> <span class="number">3</span></div><div class="line"><span class="attr">          httpGet:</span></div><div class="line"><span class="attr">            path:</span> <span class="string">"/hello"</span></div><div class="line"><span class="attr">            port:</span> <span class="number">8080</span></div><div class="line"><span class="attr">        livenessProbe:</span></div><div class="line"><span class="attr">          timeoutSeconds:</span> <span class="number">3</span></div><div class="line"><span class="attr">          initialDelaySeconds:</span> <span class="number">30</span></div><div class="line"><span class="attr">          httpGet:</span></div><div class="line"><span class="attr">            path:</span> <span class="string">"/hello"</span></div><div class="line"><span class="attr">            port:</span> <span class="number">8080</span></div><div class="line"><span class="attr">      nodeSelector:</span></div><div class="line">        kubernetes.io/hostname: gdpaasn5</div><div class="line"><span class="attr">      volumes:</span></div><div class="line"><span class="attr">      - name:</span> db</div><div class="line"><span class="attr">        glusterfs:</span></div><div class="line"><span class="attr">          endpoints:</span> glusterfs-cluster</div><div class="line"><span class="attr">          path:</span> heketi-xj  //事先创建好的gluster volume</div><div class="line"><span class="attr">      - name:</span> config</div><div class="line"><span class="attr">        configMap:</span></div><div class="line"><span class="attr">          name:</span> heketi</div><div class="line"><span class="attr">      - name:</span> ssh-key</div><div class="line"><span class="attr">        secret:</span></div><div class="line"><span class="attr">          secretName:</span> heketi</div></pre></td></tr></table></figure>
+<ul>
+<li>步骤4 ==同3.3.2一样，设置topoloy==</li>
+</ul>
+<h3 id="5-升级注意"><a href="#5-升级注意" class="headerlink" title="5. 升级注意"></a>5. 升级注意</h3><p>==如果升级已经存在heketi应用，需要保存好heketi.db数据。数据存储在heketi的pod /var/lib/heketi目录下==</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
+          
+            <a href="/tags/K8s/" rel="tag">#K8s</a>
+          
+            <a href="/tags/GlussterFS/" rel="tag">#GlussterFS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/04/Ingress参数优化/" rel="next" title="Ingress参数优化">
+                <i class="fa fa-chevron-left"></i> Ingress参数优化
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/leon.jpg"
+               alt="Leon" />
+          <p class="site-author-name" itemprop="name">Leon</p>
+          <p class="site-description motion-element" itemprop="description">人生很长，什么都有可能。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caitianxiong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/darkhacker" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友链
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fullstack.love/" title="醉己斋" target="_blank">醉己斋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.blog.szcoder.com/" title="Neo Blog" target="_blank">Neo Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://unkownarea.com/" title="未知地界" target="_blank">未知地界</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tcztzy.github.io/" title="Tcztzy" target="_blank">Tcztzy</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-部署架构"><span class="nav-text">1. 部署架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-环境准备（对接esb存储可忽略此步骤2-只需要提供集群ip及裸盘）"><span class="nav-text">2. 环境准备（对接esb存储可忽略此步骤2,只需要提供集群ip及裸盘）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-GlusterFS安装"><span class="nav-text">2.1 GlusterFS安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-裸盘准备"><span class="nav-text">2.2 裸盘准备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Heketi部署"><span class="nav-text">3. Heketi部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-准备heketi-json配置文件"><span class="nav-text">3.1 准备heketi.json配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-1-通过文件heketi-json创建configmap"><span class="nav-text">3.1.1 通过文件heketi.json创建configmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-准备sshkey"><span class="nav-text">3.2 准备sshkey</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-密钥生成"><span class="nav-text">3.2.1 密钥生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-ssh公钥传递，这里只以一个节点为例"><span class="nav-text">3.2.2 ssh公钥传递，这里只以一个节点为例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-3-验证是否能通过ssh密钥正常连接到glusterfs节点"><span class="nav-text">3.2.3 验证是否能通过ssh密钥正常连接到glusterfs节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-4-从sshkey私钥文件创建secret"><span class="nav-text">3.2.4 从sshkey私钥文件创建secret</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-设置topoloy"><span class="nav-text">3.3.2 设置topoloy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-3-heketi数据高可用-方式2"><span class="nav-text">3.3.3 heketi数据高可用 (方式2)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-升级注意"><span class="nav-text">5. 升级注意</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("YIJ5gxbEG1DDJrtEsLB5yzeE-gzGzoHsz", "q1UAnxXkMVrNVaH2FSq7DATV");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
