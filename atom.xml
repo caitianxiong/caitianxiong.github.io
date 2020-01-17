@@ -85,6 +85,28 @@
   </entry>
   
   <entry>
+    <title>OLTP场景测试工具——Orion</title>
+    <link href="https://caitianxiong.com/2017/03/30/test-date/"/>
+    <id>https://caitianxiong.com/2017/03/30/test-date/</id>
+    <published>2017-03-30T11:45:01.000Z</published>
+    <updated>2020-01-17T12:31:34.661Z</updated>
+    
+    <content type="html"><![CDATA[<p>测试日期<br> 2020年01月17日20:29:44</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;测试日期&lt;br&gt; 2020年01月17日20:29:44&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+      <category term="测试" scheme="https://caitianxiong.com/tags/%E6%B5%8B%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>OLTP场景测试工具——sysbench</title>
     <link href="https://caitianxiong.com/2017/03/30/oltp-sysbench/"/>
     <id>https://caitianxiong.com/2017/03/30/oltp-sysbench/</id>
