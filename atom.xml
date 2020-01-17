@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.com/"/>
-  <updated>2020-01-17T12:34:32.130Z</updated>
+  <updated>2020-01-17T12:55:04.992Z</updated>
   <id>https://caitianxiong.com/</id>
   
   <author>
@@ -16,24 +16,54 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>博客发布时间测试</title>
-    <link href="https://caitianxiong.com/2017/03/30/test-date/"/>
-    <id>https://caitianxiong.com/2017/03/30/test-date/</id>
-    <published>2017-03-30T11:45:01.000Z</published>
-    <updated>2020-01-17T12:34:32.130Z</updated>
+    <title>dcos基本概念学习</title>
+    <link href="https://caitianxiong.com/2017/07/14/dcos%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
+    <id>https://caitianxiong.com/2017/07/14/dcos学习——基本概念/</id>
+    <published>2017-07-13T16:00:00.000Z</published>
+    <updated>2020-01-17T12:55:04.992Z</updated>
     
-    <content type="html"><![CDATA[<p>测试日期<br> 2020年01月17日20:29:44</p>
+    <content type="html"><![CDATA[<h3 id="0-概况"><a href="#0-概况" class="headerlink" title="0 概况"></a>0 概况</h3><ul>
+<li>需求来源<br>一级私有云项目组技术储备需要，承蒙杜总的信任，给我分配了学习dcos的任务。</li>
+<li>任务时间<br>半个月</li>
+<li>任务内容<br>学习LXC原理、docker机制、k8s，了解dcos的功能和局限。</li>
+</ul>
+<a id="more"></a>
+<h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1 基本概念"></a>1 基本概念</h3><ul>
+<li>dcos（DC/OS）<br>是一种数据中心操作系统（Data Center Operation System），通常部署在IDC机房，用于构建和管理面向企业级、云端的大规模业务集群。</li>
+<li>容器（封装和隔离）<br>容器是一种轻量级、可移植、自包含的软件打包技术，使应用程序可以在几乎任何地方以相同的方式运行。开发人员在自己笔记本上创建并测试好的容器，无需任何修改就能够在生产系统的虚拟机、物理服务器或公有云主机上运行。<br>容器是一种轻量级的操作系统虚拟化，为App提供独立的、受控的运行环境。容器由两部分组成：应用程序本身和依赖。</li>
+<li><p>docker<br>Docker是容器管理工具，创建容器、启停容器、删除容器等。</p>
+</li>
+<li><p>应用（App）<br>容器服务的核心目标，可以是一个服务软件。</p>
+</li>
+<li><p>Mesos<br>最初由 UC Berkeley 的 AMP 实验室于 2009 年发起，遵循 Apache 协议，目前已经成立了 Mesosphere 公司进行运营。Mesos 可以将整个数据中心的资源（包括 CPU、内存、存储、网络等）进行抽象和调度，使得多个应用同时运行在集群中分享资源，并无需关心资源的物理分布情况。 Mesos 项目是 Mesosphere 公司 Datacenter Operating System (DCOS) 产品的<strong>核心部件</strong>。</p>
+</li>
+<li>Kubernetes<br>Google 团队发起的开源项目，它的目标是管理跨多个主机的容器，提供基本的部署，维护以及应用伸缩，主要实现语言为Go语言。</li>
+</ul>
+<h3 id="2-PPT笔记"><a href="#2-PPT笔记" class="headerlink" title="2 PPT笔记"></a>2 PPT笔记</h3><ul>
+<li>学习目标<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">掌握Docker是什么 </div><div class="line">掌握容器和虚拟机的区别 </div><div class="line">掌握容器实现的原理 </div><div class="line">掌握容器场景化应用 </div><div class="line">掌握Docker工具链使用</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Docker是什么"><a href="#Docker是什么" class="headerlink" title="Docker是什么"></a>Docker是什么</h4><p>Docker是容器管理工具，用于创建容器、启停容器、删除容器等。</p>
+<h4 id="容器和虚拟机的区别"><a href="#容器和虚拟机的区别" class="headerlink" title="容器和虚拟机的区别"></a>容器和虚拟机的区别</h4><p>谈到容器，就不得不将它与虚拟机进行对比，因为两者都是为应用提供封装和隔离。<br>容器由两部分组成：应用程序本身和依赖：比如应用程序需要的库或其他软件。<br> 容器在 Host 操作系统的用户空间中运行，与操作系统的其他进程隔离。这一点显著区别于的虚拟机。<br>传统的虚拟化技术，比如 VMWare, KVM, Xen，目标是创建完整的虚拟机。为了运行应用，除了部署应用本身及其依赖（通常几十 MB），还得安装整个操作系统（几十 GB）。<br>如图所示，由于所有的容器共享同一个 Host OS，这使得容器在体积上要比虚拟机小很多。另外，启动容器不需要启动整个操作系统，所以容器部署和启动速度更快，开销更小，也更容易迁移。</p>
+<h4 id="容器实现的原理"><a href="#容器实现的原理" class="headerlink" title="容器实现的原理"></a>容器实现的原理</h4><ul>
+<li>docker架构<br><img src="/images/container_vs_vm.png" alt="01 Container VS VM"></li>
+</ul>
+<h4 id="容器场景化应用"><a href="#容器场景化应用" class="headerlink" title="容器场景化应用"></a>容器场景化应用</h4><p><img src="/images/container_vs_vm.jpeg" alt="01 Container VS VM"></p>
+<h4 id="Docker工具链使用"><a href="#Docker工具链使用" class="headerlink" title="Docker工具链使用"></a>Docker工具链使用</h4><p><img src="/images/container_vs_vm.jpeg" alt="01 Container VS VM"></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;测试日期&lt;br&gt; 2020年01月17日20:29:44&lt;/p&gt;
-
+      &lt;h3 id=&quot;0-概况&quot;&gt;&lt;a href=&quot;#0-概况&quot; class=&quot;headerlink&quot; title=&quot;0 概况&quot;&gt;&lt;/a&gt;0 概况&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;需求来源&lt;br&gt;一级私有云项目组技术储备需要，承蒙杜总的信任，给我分配了学习dcos的任务。&lt;/li&gt;
+&lt;li&gt;任务时间&lt;br&gt;半个月&lt;/li&gt;
+&lt;li&gt;任务内容&lt;br&gt;学习LXC原理、docker机制、k8s，了解dcos的功能和局限。&lt;/li&gt;
+&lt;/ul&gt;
     
     </summary>
     
     
-      <category term="测试" scheme="https://caitianxiong.com/tags/%E6%B5%8B%E8%AF%95/"/>
+      <category term="docker" scheme="https://caitianxiong.com/tags/docker/"/>
     
   </entry>
   
