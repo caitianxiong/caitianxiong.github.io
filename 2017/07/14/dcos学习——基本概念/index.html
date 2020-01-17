@@ -99,9 +99,11 @@
 任务时间半个月
 任务内容学习LXC原理、docker机制、k8s，了解dcos的功能和局限。">
 <meta property="og:image" content="https://caitianxiong.com/images/container_vs_vm.png">
-<meta property="og:image" content="https://caitianxiong.com/images/container_vs_vm.jpeg">
-<meta property="og:image" content="https://caitianxiong.com/images/container_vs_vm.jpeg">
-<meta property="og:updated_time" content="2020-01-17T12:55:04.992Z">
+<meta property="og:image" content="https://caitianxiong.com/images/why_vm_heavy.png">
+<meta property="og:image" content="https://caitianxiong.com/images/docker实现原理.png">
+<meta property="og:image" content="https://caitianxiong.com/images/docker架构.png">
+<meta property="og:image" content="https://caitianxiong.com/images/docker_tools.png">
+<meta property="og:updated_time" content="2020-01-17T13:11:28.915Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dcos基本概念学习">
 <meta name="twitter:description" content="0 概况
@@ -342,12 +344,14 @@
 </li>
 </ul>
 <h4 id="Docker是什么"><a href="#Docker是什么" class="headerlink" title="Docker是什么"></a>Docker是什么</h4><p>Docker是容器管理工具，用于创建容器、启停容器、删除容器等。</p>
-<h4 id="容器和虚拟机的区别"><a href="#容器和虚拟机的区别" class="headerlink" title="容器和虚拟机的区别"></a>容器和虚拟机的区别</h4><p>谈到容器，就不得不将它与虚拟机进行对比，因为两者都是为应用提供封装和隔离。<br>容器由两部分组成：应用程序本身和依赖：比如应用程序需要的库或其他软件。<br> 容器在 Host 操作系统的用户空间中运行，与操作系统的其他进程隔离。这一点显著区别于的虚拟机。<br>传统的虚拟化技术，比如 VMWare, KVM, Xen，目标是创建完整的虚拟机。为了运行应用，除了部署应用本身及其依赖（通常几十 MB），还得安装整个操作系统（几十 GB）。<br>如图所示，由于所有的容器共享同一个 Host OS，这使得容器在体积上要比虚拟机小很多。另外，启动容器不需要启动整个操作系统，所以容器部署和启动速度更快，开销更小，也更容易迁移。</p>
+<h4 id="容器和虚拟机的区别"><a href="#容器和虚拟机的区别" class="headerlink" title="容器和虚拟机的区别"></a>容器和虚拟机的区别</h4><p><img src="/images/container_vs_vm.png" alt="Container VS VM"><br><img src="/images/why_vm_heavy.png" alt="为什么虚机开销大"><br>谈到容器，就不得不将它与虚拟机进行对比，因为两者都是为应用提供封装和隔离。<br>容器由两部分组成：应用程序本身和依赖：比如应用程序需要的库或其他软件。<br> 容器在 Host 操作系统的用户空间中运行，与操作系统的其他进程隔离。这一点显著区别于的虚拟机。<br>传统的虚拟化技术，比如 VMWare, KVM, Xen，目标是创建完整的虚拟机。为了运行应用，除了部署应用本身及其依赖（通常几十 MB），还得安装整个操作系统（几十 GB）。<br>如图所示，由于所有的容器共享同一个 Host OS，这使得容器在体积上要比虚拟机小很多。另外，启动容器不需要启动整个操作系统，所以容器部署和启动速度更快，开销更小，也更容易迁移。</p>
 <h4 id="容器实现的原理"><a href="#容器实现的原理" class="headerlink" title="容器实现的原理"></a>容器实现的原理</h4><ul>
-<li>docker架构<br><img src="/images/container_vs_vm.png" alt="01 Container VS VM"></li>
+<li><p>docker实现原理<br><img src="/images/docker实现原理.png" alt="docker实现原理"></p>
+</li>
+<li><p>docker架构<br><img src="/images/docker架构.png" alt="docker架构"></p>
+</li>
 </ul>
-<h4 id="容器场景化应用"><a href="#容器场景化应用" class="headerlink" title="容器场景化应用"></a>容器场景化应用</h4><p><img src="/images/container_vs_vm.jpeg" alt="01 Container VS VM"></p>
-<h4 id="Docker工具链使用"><a href="#Docker工具链使用" class="headerlink" title="Docker工具链使用"></a>Docker工具链使用</h4><p><img src="/images/container_vs_vm.jpeg" alt="01 Container VS VM"></p>
+<h4 id="Docker工具链使用"><a href="#Docker工具链使用" class="headerlink" title="Docker工具链使用"></a>Docker工具链使用</h4><p><img src="/images/docker_tools.png" alt="docker工具链"></p>
 
       
     </div>
@@ -545,7 +549,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-概况"><span class="nav-text">0 概况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-基本概念"><span class="nav-text">1 基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-PPT笔记"><span class="nav-text">2 PPT笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker是什么"><span class="nav-text">Docker是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器和虚拟机的区别"><span class="nav-text">容器和虚拟机的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器实现的原理"><span class="nav-text">容器实现的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器场景化应用"><span class="nav-text">容器场景化应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker工具链使用"><span class="nav-text">Docker工具链使用</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-概况"><span class="nav-text">0 概况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-基本概念"><span class="nav-text">1 基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-PPT笔记"><span class="nav-text">2 PPT笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker是什么"><span class="nav-text">Docker是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器和虚拟机的区别"><span class="nav-text">容器和虚拟机的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器实现的原理"><span class="nav-text">容器实现的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker工具链使用"><span class="nav-text">Docker工具链使用</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

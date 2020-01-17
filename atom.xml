@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://caitianxiong.com/"/>
-  <updated>2020-01-17T12:55:04.992Z</updated>
+  <updated>2020-01-17T13:11:28.915Z</updated>
   <id>https://caitianxiong.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://caitianxiong.com/2017/07/14/dcos%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
     <id>https://caitianxiong.com/2017/07/14/dcos学习——基本概念/</id>
     <published>2017-07-13T16:00:00.000Z</published>
-    <updated>2020-01-17T12:55:04.992Z</updated>
+    <updated>2020-01-17T13:11:28.915Z</updated>
     
     <content type="html"><![CDATA[<h3 id="0-概况"><a href="#0-概况" class="headerlink" title="0 概况"></a>0 概况</h3><ul>
 <li>需求来源<br>一级私有云项目组技术储备需要，承蒙杜总的信任，给我分配了学习dcos的任务。</li>
@@ -44,12 +44,14 @@
 </li>
 </ul>
 <h4 id="Docker是什么"><a href="#Docker是什么" class="headerlink" title="Docker是什么"></a>Docker是什么</h4><p>Docker是容器管理工具，用于创建容器、启停容器、删除容器等。</p>
-<h4 id="容器和虚拟机的区别"><a href="#容器和虚拟机的区别" class="headerlink" title="容器和虚拟机的区别"></a>容器和虚拟机的区别</h4><p>谈到容器，就不得不将它与虚拟机进行对比，因为两者都是为应用提供封装和隔离。<br>容器由两部分组成：应用程序本身和依赖：比如应用程序需要的库或其他软件。<br> 容器在 Host 操作系统的用户空间中运行，与操作系统的其他进程隔离。这一点显著区别于的虚拟机。<br>传统的虚拟化技术，比如 VMWare, KVM, Xen，目标是创建完整的虚拟机。为了运行应用，除了部署应用本身及其依赖（通常几十 MB），还得安装整个操作系统（几十 GB）。<br>如图所示，由于所有的容器共享同一个 Host OS，这使得容器在体积上要比虚拟机小很多。另外，启动容器不需要启动整个操作系统，所以容器部署和启动速度更快，开销更小，也更容易迁移。</p>
+<h4 id="容器和虚拟机的区别"><a href="#容器和虚拟机的区别" class="headerlink" title="容器和虚拟机的区别"></a>容器和虚拟机的区别</h4><p><img src="/images/container_vs_vm.png" alt="Container VS VM"><br><img src="/images/why_vm_heavy.png" alt="为什么虚机开销大"><br>谈到容器，就不得不将它与虚拟机进行对比，因为两者都是为应用提供封装和隔离。<br>容器由两部分组成：应用程序本身和依赖：比如应用程序需要的库或其他软件。<br> 容器在 Host 操作系统的用户空间中运行，与操作系统的其他进程隔离。这一点显著区别于的虚拟机。<br>传统的虚拟化技术，比如 VMWare, KVM, Xen，目标是创建完整的虚拟机。为了运行应用，除了部署应用本身及其依赖（通常几十 MB），还得安装整个操作系统（几十 GB）。<br>如图所示，由于所有的容器共享同一个 Host OS，这使得容器在体积上要比虚拟机小很多。另外，启动容器不需要启动整个操作系统，所以容器部署和启动速度更快，开销更小，也更容易迁移。</p>
 <h4 id="容器实现的原理"><a href="#容器实现的原理" class="headerlink" title="容器实现的原理"></a>容器实现的原理</h4><ul>
-<li>docker架构<br><img src="/images/container_vs_vm.png" alt="01 Container VS VM"></li>
+<li><p>docker实现原理<br><img src="/images/docker实现原理.png" alt="docker实现原理"></p>
+</li>
+<li><p>docker架构<br><img src="/images/docker架构.png" alt="docker架构"></p>
+</li>
 </ul>
-<h4 id="容器场景化应用"><a href="#容器场景化应用" class="headerlink" title="容器场景化应用"></a>容器场景化应用</h4><p><img src="/images/container_vs_vm.jpeg" alt="01 Container VS VM"></p>
-<h4 id="Docker工具链使用"><a href="#Docker工具链使用" class="headerlink" title="Docker工具链使用"></a>Docker工具链使用</h4><p><img src="/images/container_vs_vm.jpeg" alt="01 Container VS VM"></p>
+<h4 id="Docker工具链使用"><a href="#Docker工具链使用" class="headerlink" title="Docker工具链使用"></a>Docker工具链使用</h4><p><img src="/images/docker_tools.png" alt="docker工具链"></p>
 ]]></content>
     
     <summary type="html">
