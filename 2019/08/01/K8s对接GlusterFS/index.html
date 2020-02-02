@@ -87,18 +87,18 @@
 
 
 <meta name="description" content="Kubernetes存储功能模块(GlusterFS)部署文档
-1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能">
+1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能本文仅作一个记录，感谢我的同事@sixgod。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="K8s对接GlusterFS">
 <meta property="og:url" content="https://caitianxiong.com/2019/08/01/K8s对接GlusterFS/index.html">
 <meta property="og:site_name" content="Have A Nice Day">
 <meta property="og:description" content="Kubernetes存储功能模块(GlusterFS)部署文档
-1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能">
-<meta property="og:updated_time" content="2020-01-17T15:06:19.112Z">
+1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能本文仅作一个记录，感谢我的同事@sixgod。">
+<meta property="og:updated_time" content="2020-02-02T01:33:49.179Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="K8s对接GlusterFS">
 <meta name="twitter:description" content="Kubernetes存储功能模块(GlusterFS)部署文档
-1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能">
+1. 部署架构Kubernetes —–&amp;gt; Heketi  ——&amp;gt; GlusterFS集群Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能本文仅作一个记录，感谢我的同事@sixgod。">
 
 
 
@@ -311,7 +311,7 @@
 
       
         <p>Kubernetes存储功能模块(GlusterFS)部署文档</p>
-<h2 id="1-部署架构"><a href="#1-部署架构" class="headerlink" title="1. 部署架构"></a>1. 部署架构</h2><p>Kubernetes —–&gt; Heketi  ——&gt; GlusterFS集群<br>Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能<br><a id="more"></a></p>
+<h2 id="1-部署架构"><a href="#1-部署架构" class="headerlink" title="1. 部署架构"></a>1. 部署架构</h2><p>Kubernetes —–&gt; Heketi  ——&gt; GlusterFS集群<br>Heketi是GlusterFS集群的一个代理，提供REST API方式管理volume的功能<br>本文仅作一个记录，感谢我的同事@sixgod。<br><a id="more"></a></p>
 <h2 id="2-环境准备（对接esb存储可忽略此步骤2-只需要提供集群ip及裸盘）"><a href="#2-环境准备（对接esb存储可忽略此步骤2-只需要提供集群ip及裸盘）" class="headerlink" title="2. 环境准备（对接esb存储可忽略此步骤2,只需要提供集群ip及裸盘）"></a>2. 环境准备（对接esb存储可忽略此步骤2,只需要提供集群ip及裸盘）</h2><h3 id="2-1-GlusterFS安装"><a href="#2-1-GlusterFS安装" class="headerlink" title="2.1 GlusterFS安装"></a>2.1 GlusterFS安装</h3><p><strong>每个存储节点</strong>需要提前安装GlusterFS客户端和服务。本次安装以3存储节点为例（glustefs版本为3.8.4）。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">yum install -y centos-release-gluster</div><div class="line">yum install -y glusterfs glusterfs-server glusterfs-fuse glusterfs-rdma</div><div class="line">systemctl start glusterd.service</div><div class="line">systemctl <span class="built_in">enable</span> glusterd.service</div></pre></td></tr></table></figure></p>
 <h3 id="2-2-裸盘准备"><a href="#2-2-裸盘准备" class="headerlink" title="2.2 裸盘准备"></a>2.2 裸盘准备</h3><p>每个存储节点需要至少准备一块裸盘用来做存储设备。登录每个节点，通过<code>lsblk</code>命令检查是否存在可用裸盘。<br>本次安装均以<code>/dev/sdb</code>为例。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># lsblk</span></div><div class="line">NAME                                                                              MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">fd0                                                                                 2:0    1    4K  0 disk</div><div class="line">sda                                                                                 8:0    0  100G  0 disk</div><div class="line">└─sda1                                                                              8:1    0  100G  0 part</div><div class="line">  └─centos-root                                                                   253:0    0  100G  0 lvm  /</div><div class="line">sdb                                                                                  8:16   0  100G  0 disk</div></pre></td></tr></table></figure></p>
 <h2 id="3-Heketi部署"><a href="#3-Heketi部署" class="headerlink" title="3. Heketi部署"></a>3. Heketi部署</h2><h3 id="3-1-准备heketi-json配置文件"><a href="#3-1-准备heketi-json配置文件" class="headerlink" title="3.1 准备heketi.json配置文件"></a>3.1 准备heketi.json配置文件</h3><p>通过configmap准备heketi.json文件</p>

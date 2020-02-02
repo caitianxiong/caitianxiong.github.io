@@ -99,9 +99,10 @@ K8s官方文档">
 <meta property="og:image" content="https://caitianxiong.com/images/K8s报错1.png">
 <meta property="og:image" content="https://caitianxiong.com/images/K8s报错2.png">
 <meta property="og:image" content="https://caitianxiong.com/images/K8s报错3.png">
+<meta property="og:image" content="https://caitianxiong.com/images/K8s报错4.png">
 <meta property="og:image" content="https://caitianxiong.com/images/K8s报错5.png">
 <meta property="og:image" content="https://caitianxiong.com/images/K8s报错6.png">
-<meta property="og:updated_time" content="2020-01-17T14:57:33.038Z">
+<meta property="og:updated_time" content="2020-02-02T01:42:26.822Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="部署K8s集群">
 <meta name="twitter:description" content="0. 参考
@@ -359,7 +360,7 @@ K8s官方文档">
 <li>关闭Ubuntu swap分区<br><code>swapoff -a</code></li>
 <li>初始化集群时，boot up control plane超时<br><img src="/images/K8s报错1.png" alt="K8s报错1"><br>提前拉取好dashboard的docker镜像，用 <code>docker load &lt; XXX</code> 装好</li>
 <li>初始化Master节点时，无法给Master节点添加标签<br><img src="/images/K8s报错2.png" alt="K8s报错2"><br>Ubuntu系统日志syslog中的报错：<br><img src="/images/K8s报错3.png" alt="K8s报错3"><br>改完hostname后（主机名不要带-），清理环境不彻底，导致还留有ubuntu-1的信息，要用<code>kubeadm reset</code>!!!</li>
-<li>切换网络后无法上外网的问题，参考 <a href="https://blog.jysoftware.com/2013/04/ubuntu设置缺省路由/" target="_blank" rel="external">https://blog.jysoftware.com/2013/04/ubuntu设置缺省路由/</a> </li>
+<li>切换网络后无法上外网的问题，参考 <a href="https://blog.jysoftware.com/2013/04/ubuntu设置缺省路由/" target="_blank" rel="external">https://blog.jysoftware.com/2013/04/ubuntu设置缺省路由/</a><br><img src="/images/K8s报错4.png" alt="K8s报错4"></li>
 <li><code>kubeadm init</code> 完成后，查看kubectl Server版本报错【服务已经起了，非root用户可以正常查看】<br><img src="/images/K8s报错5.png" alt="K8s报错5"></li>
 <li>node节点加入集群后，状态NotReady<br>node节点上的proxy和flannel pod状态异常，已将flannel和proxy的docker镜像传到相应节点并load了。<br><img src="/images/K8s报错6.png" alt="K8s报错6"></li>
 </ul>
